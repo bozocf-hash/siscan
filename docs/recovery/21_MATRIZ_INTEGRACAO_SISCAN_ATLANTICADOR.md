@@ -1,0 +1,41 @@
+# 21 — Matriz de integração SISCAN ↔ ATLANTICADOR
+
+## Leitura da matriz
+
+As linhas indicam componentes encontrados no ZIP e possíveis relações conceituais. **Identificado** significa arquivo/código localizado; não comprova execução. **Não encontrado** significa que a auditoria estática delimitada não localizou componente no pacote. **Proposto** é possibilidade que depende de decisão, contrato e validação; não é integração disponível.
+
+| Módulo SISCAN | Componentes ATLANTICADOR identificados | O que não foi identificado como módulo SISCAN pronto | Interfaces/dependências necessárias | Situação e questões |
+|---|---|---|---|---|
+| **GEO — Geografia/cartografia** | Leaflet em `frontend/viewer.html`/`editor.html`; `viewer.mjs`, `renderer.mjs`, `geometry.mjs`, `cartography.mjs`, `utm.mjs`, `map-grids.mjs`, `map-import.mjs`, `map-export*.mjs`; backend de KMZ e `StructuredMap` | Validação SISCAN de máscara costa/terra, batimetria, posições de navios/submarinos e regras próprias de navegação não confirmadas | Esquema de geometria/CRS, fonte/licença de costa, API de leitura, ciclo de atualização, limites e tratamento de erro | **Reuso potencial** de UI/funções geométricas; dependência de bibliotecas vendorizadas e contratos de estado. Não é integração pronta |
+| **SYM — Simbologia** | `calunga.py`, `calunga-generator.mjs`, `symbols.mjs`, `assets.mjs`, catálogo Calunga | Catálogo SISCAN validado e cobertura de todos seus escalões/categorias | Catálogo mestre/versionado, códigos, metadados de configuração, licenças/atribuição e API de símbolos | **Reuso potencial**; compatibilidade nomenclatural e semântica pendente |
+| **AST — Cadastro de meios** | Dados de elementos e símbolo/atributos em situação; arquivo externo DB3K disponível para estudo | Cadastro mestre SISCAN de modelo/configuração/instância; vínculo individual de aeronave/hospedeira; importação DB3K pelo ATLANTICADOR não identificada | Definir entidades, identificadores próprios, fontes, confiabilidade, validade, unidades e origem; não presumir equivalência DB3K | **Pendente**; sem cadastro comum diretamente reutilizável comprovado |
+| **SCN — Cenários** | Cena/camadas no frontend (`scene.mjs`, `workflow.mjs`); estado congelado e fontes em `Situation.freeze/snapshot`; editor local | Gestão de cenários didáticos SISCAN, versionamento específico, curso de exercício e ciclo de avaliação | Contrato entre cena local e cenário versionado; estados, permissões, imutabilidade, catálogo e migração | **Reuso conceitual possível**; editor local não equivale ao módulo SCN |
+| **FOR — Forças** | Partidos, papéis, células, pastas/camadas e elementos geográficos; `profiles.py`, `party_proposals.py`, `Situation.roles` | Hierarquia de quatro níveis Marinha/FA/Exército definida na concepção SISCAN; cadastro de composição SISCAN e vínculos de força | Modelo explícito de escalões e membros, regras de subordinação/lotação, importação e autorização | **Não confundir** organização de usuários/camadas com organização de forças SISCAN; interface a definir |
+| **DID — Didático** | Fluxos de ingresso tutor/partidos, propostas, permissões e efeitos; páginas `tutores.html`, `azul.html`, `vermelho.html` | Exercício didático com submissão de composição/justificativa, avaliação de instrutor e rubrica SISCAN não foi localizado como produto correspondente | Papéis, visibilidade pré-liberação, ciclo de submissão, feedback, rubrica, prazo e auditoria pedagógica | **Pendente**; autenticação existente não resolve requisitos pedagógicos por si só |
+| **SIM — Simulação/adjudicação** | `effect_workflow.py`, `confrontations.py`, `confrontation-models.mjs`, `confrontation-game.mjs`; fluxo documentado de arbitragem humana | Motor naval do SISCAN e deslocamento temporal naval não identificados. O fluxo ATLANTICADOR de efeitos/confronto é operacional e de escopo distinto | Distinguir observação, proposta, decisão humana e efeito; definir domínio de exercício, eventos, modelos e limites | **Referência apenas**; não adotar cálculo nem automatizar emprego/resultado |
+| **ANA — Análise/relatórios** | `record_queries.py`, painel de efeitos/histórico, endpoint paginado de registros, exportação de pontos e auditoria | Relatórios e indicadores pedagógicos SISCAN, rubrica e análise de simulação não encontrados | Esquema de submissão/resultado, indicadores, filtros, proveniência e permissão de relatório | **Reuso potencial de padrões de consulta**; resultados ATLANTICADOR não equivalem a análise SISCAN |
+| **NAV — Navegação/tempo** | `game-calendar.mjs` exibe calendário/tempo do cenário; UI cartográfica permite edição geométrica | Modelo temporal de deslocamento, avanço/pausa/retrocesso e histórico de posição naval conforme decisão SISCAN não identificado | Relógio do exercício, unidades/velocidades, atualização de estado, reversão/ramificação e validação geográfica | **Não encontrado como módulo**; calendário de interface não equivale a engine de navegação |
+| **LOG — Logística** | Algumas pastas/feições cartográficas e fatores no modelo de confronto, sem cadastro logístico demonstrado | Consumo dinâmico por plataforma, autonomia, abastecimento, manutenção e estoques SISCAN não identificados | Cadastro técnico/logístico separado, unidades e curvas/fonte, intervalos, histórico, disponibilidade e reservas | **Não encontrado como módulo logístico**; camada cartográfica/fator do confronto não é MPNL |
+| **PRC — Indicadores didáticos** | `confrontation-models.mjs` calcula PRC e outros modelos para confrontos; evidência detalhada no doc 03 | PRC SISCAN configurável, validado academicamente e separado da arbitragem do ATLANTICADOR | Critérios didáticos, fontes, escalas, incerteza, pesos, versão e governança de uso | **Não reutilização automática**; existe cálculo de outro domínio, sem validação como PRC SISCAN |
+| **HIS — Histórico/auditoria** | Tabelas `audit`, `events`; `AccessAudit`, histórico de efeito/confronto e triggers append-only | Semântica de trilha SISCAN para autoria e mudanças de cada módulo ainda não definida | Eventos versionados, identidade, timestamp, retenção, imutabilidade, exportação e associação a objetos SISCAN | **Padrão conceitual potencial**; esquema e políticas devem ser aprovados |
+| **MPNL — Planejamento logístico** | Nenhum módulo ou processo bottom-up de necessidades foi localizado. A palavra logística em pastas/fatores de combate não corresponde à metodologia MPNL | Necessidades ascendentes, manutenção, estoque/sobressalentes, disponibilidade e posterior orçamento | Modelo de material, unidade, inventário, manutenção, demanda, escalões, compartilhamentos e bases técnica/logística/econômica | **Não encontrado**; executar independente do mapa é decisão conceitual, interfaces ainda pendentes |
+
+## Dependências e limites comuns
+
+- A interface cartográfica depende de Leaflet e módulos locais; fontes de mapa podem ser externas.
+- Frontend consulta backend same-origin; as APIs não constituem contratos externos versionados.
+- O backend persiste estado de operação em SQLite próprio. Não há evidência de conexão do código ao DB3K.
+- Autenticação e papéis existentes pertencem ao modelo de exercício/produção ATLANTICADOR; correspondência com perfis SISCAN ainda precisa de definição.
+- `viewer.mjs` mistura composição de mapa e instalação de módulos de UI; fronteiras de biblioteca/reuso podem exigir avaliação arquitetural posterior, não realizada nesta missão.
+
+## Questões arquiteturais pendentes
+
+1. SISCAN será módulo incorporado ao mesmo processo, cliente separado via API ou serviço independente?
+2. Qual sistema é autoridade para usuário, unidade, cenário, evento e auditoria?
+3. Onde termina a edição cartográfica local e começa o estado oficial/publicado?
+4. Quais contratos/versões e identidades conectariam geometria, forças, cenários e eventos?
+5. Como garantir segregação didática de submissões e trilha do instrutor sem herdar papéis operacionais diretamente?
+6. O que pode ser biblioteca reutilizada versus processo/estado do ATLANTICADOR que deve permanecer isolado?
+7. Como MPNL operará sem requisito de cartografia e sem usar PRC/valor de combate como demanda logística?
+
+As perguntas são **PENDENTES** e não receberam solução arquitetural nesta auditoria.

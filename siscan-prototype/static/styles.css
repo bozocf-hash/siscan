@@ -68,6 +68,8 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 3px s
 .flow-figure { margin: 10px 0 0; padding: 12px; background: #f8fafb; border: 1px solid var(--line); border-radius: 8px; text-align: center; }
 .flow-figure img { display: block; width: min(100%, 760px); max-height: 75vh; object-fit: contain; margin: 0 auto; }
 .report { max-width: 900px; }
+.notification-panel { margin-bottom: 18px; }
+.notification-panel summary { cursor: pointer; font-weight: 700; }
 .report dt { font-weight: 700; margin-top: 16px; break-after: avoid; }
 .report dd { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .report li { margin-bottom: 10px; overflow-wrap: anywhere; }

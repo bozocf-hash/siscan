@@ -114,6 +114,7 @@ function renderDashboard() {
   }
   app.append(el("h1", { class: "page-heading", text: exercise.title }));
   app.append(el("p", { class: "lede", text: exercise.objective }));
+  renderNotifications();
   if (currentUser.role === "student") app.append(el("p", { class: "notice", text: `${deadlineName[dashboardData.deadline_status] || ""}${exercise.due_at ? ` · Prazo: ${new Date(exercise.due_at).toLocaleString("pt-BR")}` : ""}. A indicação considera a versão mais recente e o prazo atual; não aplica penalização automática.` }));
   app.append(el("div", { class: "notice warning", text: "Exercício didático sintético. Não contém dados operacionais nem recomendações de emprego." }));
   if (dashboardData.error) {
@@ -122,6 +123,27 @@ function renderDashboard() {
   }
   if (currentUser.role === "student") renderStudent();
   else renderReviewer();
+}
+
+function renderNotifications() {
+  const items = dashboardData.notifications || [];
+  const unread = items.filter((item) => !item.read_at).length;
+  const panel = el("details", { class: "card notification-panel" });
+  panel.append(el("summary", { text: `Notificações · ${unread} não lidas` }));
+  panel.append(el("p", { class: "muted", text: "O registro de leitura não significa concordância e não altera prazos nem avaliações. A lista é atualizada ao recarregar o painel." }));
+  if (!items.length) panel.append(el("p", { text: "Nenhuma notificação recebida." }));
+  for (const item of items) {
+    const row = el("article", { class: "submission" }, [
+      el("strong", { text: item.title }),
+      el("p", { class: "muted", text: `${item.created_at}${item.read_at ? ` · Leitura registrada: ${item.read_at}` : " · Não lida"}` })
+    ]);
+    if (!item.read_at) row.append(el("button", { class: "btn btn-secondary", type: "button", text: "Marcar como lida", onclick: async () => {
+      try { await api("/api/notifications/read", { notification_id: item.id }); await loadDashboard(); }
+      catch (error) { showMessage(row, error.message, "notice error"); }
+    } }));
+    panel.append(row);
+  }
+  app.append(panel);
 }
 
 function renderStudent() {

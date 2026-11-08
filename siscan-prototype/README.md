@@ -31,6 +31,7 @@ Contas sintéticas: `instrutor`, `avaliador`, `azul-01` a `azul-08`, `vermelho-0
 4. Instrutor acompanha todas as equipes, solicita revisão ou libera o resultado após validação.
 5. Instrutor pode alterar título/objetivo do cenário durante o exercício após o aviso obrigatório; cada mudança cria versão e registra autoria, horário e justificativa quando informada.
 6. Eventos de autoria, revisão, submissão, liberação e mudança de cenário ficam registrados no backend.
+7. Novas submissões notificam instrutores/avaliadores atribuídos; devoluções e liberações notificam o aluno. Cada destinatário registra a leitura das próprias notificações. A leitura não significa concordância nem altera prazos. Notificações são internas, atualizadas ao recarregar o painel, e começam com as ações realizadas após este incremento.
 
 O fluxograma confirmado é exibido como referência de leitura. Este incremento implementa apenas a trilha de composição e revisão documental; não automatiza as decisões “Sim/Não” do diagrama.
 

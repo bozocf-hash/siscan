@@ -86,6 +86,19 @@ def main():
     statuses = {item["id"]: item["status"] for item in panel["participants"]}
     assert statuses[1] == "released" and statuses[2] is None
     print("PASS: participant overview includes latest revision and students who have not started")
+    student_notices = db.execute("SELECT * FROM notifications WHERE user_id=1 ORDER BY id").fetchall()
+    assert len(student_notices) == 2
+    assert "revisão" in student_notices[0]["title"] and "liberado" in student_notices[1]["title"]
+    identifier = student_notices[0]["id"]
+    h.read_notification(db, peer, {"notification_id": identifier})
+    assert responses[-1][0] == 404
+    assert db.execute("SELECT read_at FROM notifications WHERE id=?", (identifier,)).fetchone()[0] is None
+    h.read_notification(db, student, {"notification_id": identifier})
+    assert responses[-1][0] == 200
+    h.read_notification(db, student, {"notification_id": identifier})
+    assert db.execute("SELECT COUNT(*) FROM events WHERE event_type='notification.read'").fetchone()[0] == 1
+    assert db.execute("SELECT COUNT(*) FROM notifications WHERE user_id=5").fetchone()[0] == 0
+    print("PASS: notification recipients, peer denial and idempotent read tracking")
     db.close()
 
 

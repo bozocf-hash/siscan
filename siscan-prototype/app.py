@@ -116,6 +116,15 @@ CREATE TABLE IF NOT EXISTS sessions (
   csrf_token TEXT NOT NULL,
   expires_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS notifications (
+  id INTEGER PRIMARY KEY,
+  exercise_id INTEGER NOT NULL REFERENCES exercises(id),
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  event_id INTEGER NOT NULL REFERENCES events(id),
+  title TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  read_at TEXT
+);
 CREATE INDEX IF NOT EXISTS idx_submissions_student ON submissions(student_id,exercise_id,revision);
 CREATE INDEX IF NOT EXISTS idx_events_exercise ON events(exercise_id,created_at);
 """
@@ -136,11 +145,24 @@ def password_record(password: str, salt: bytes | None = None) -> tuple[bytes, by
 
 def event(db: sqlite3.Connection, actor: int, event_type: str, *, exercise: int | None = None,
           subject: int | None = None, submission: int | None = None, detail: dict | None = None) -> None:
-    db.execute(
+    cursor = db.execute(
         "INSERT INTO events(exercise_id,actor_id,subject_user_id,submission_id,event_type,detail_json) "
         "VALUES(?,?,?,?,?,?)",
         (exercise, actor, subject, submission, event_type, json.dumps(detail or {}, ensure_ascii=False)),
     )
+    recipients = []
+    title = None
+    if event_type == "submission.submitted":
+        recipients = [row[0] for row in db.execute(
+            "SELECT u.id FROM users u JOIN assignments a ON a.user_id=u.id "
+            "WHERE a.exercise_id=? AND u.active=1 AND u.role IN ('instructor','evaluator')", (exercise,))]
+        title = "Novo documento submetido para avaliação"
+    elif event_type in ("submission.returned", "submission.released") and subject:
+        recipients = [subject]
+        title = "Documento devolvido para revisão" if event_type == "submission.returned" else "Resultado liberado pelo instrutor"
+    if title:
+        db.executemany("INSERT INTO notifications(exercise_id,user_id,event_id,title) VALUES(?,?,?,?)",
+                       [(exercise, recipient, cursor.lastrowid, title) for recipient in recipients if recipient != actor])
 
 
 def initialize() -> None:
@@ -368,6 +390,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.configure_exercise(db, user, payload)
             elif path == "/api/scenario":
                 self.update_scenario(db, user, payload)
+            elif path == "/api/notifications/read":
+                self.read_notification(db, user, payload)
             else:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "Rota não encontrada."})
 
@@ -397,6 +421,10 @@ class Handler(BaseHTTPRequestHandler):
         exercise = db.execute("SELECT * FROM exercises ORDER BY id LIMIT 1").fetchone()
         base = {"user": self.user_json(user), "csrf": csrf,
                 "exercise": dict(exercise) if exercise else None}
+        base["notifications"] = [dict(row) for row in db.execute(
+            "SELECT n.id,n.title,n.created_at,n.read_at FROM notifications n "
+            "JOIN assignments a ON a.exercise_id=n.exercise_id AND a.user_id=n.user_id "
+            "WHERE n.user_id=? ORDER BY n.id DESC LIMIT 100", (user["uid"],))]
         if not exercise:
             return base
         assigned = db.execute("SELECT 1 FROM assignments WHERE exercise_id=? AND user_id=?",
@@ -614,6 +642,25 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.end_headers()
         self.wfile.write(page)
+
+    def read_notification(self, db: sqlite3.Connection, user: sqlite3.Row, payload: dict) -> None:
+        identifier = payload.get("notification_id")
+        if type(identifier) is not int:
+            self.send_json(400, {"error": "Notificação inválida."})
+            return
+        notification = db.execute(
+            "SELECT n.* FROM notifications n JOIN assignments a "
+            "ON a.exercise_id=n.exercise_id AND a.user_id=n.user_id WHERE n.id=? AND n.user_id=?",
+            (identifier, user["uid"])).fetchone()
+        if not notification:
+            self.send_json(404, {"error": "Notificação não encontrada."})
+            return
+        if not notification["read_at"]:
+            now = iso_now()
+            db.execute("UPDATE notifications SET read_at=? WHERE id=?", (now, identifier))
+            event(db, user["uid"], "notification.read", exercise=notification["exercise_id"],
+                  subject=user["uid"], detail={"notification_id": identifier, "read_at": now})
+        self.send_json(200, {"ok": True})
 
     def configure_exercise(self, db: sqlite3.Connection, user: sqlite3.Row, payload: dict) -> None:
         if user["role"] != "instructor":

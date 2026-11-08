@@ -25,7 +25,7 @@ Contas sintéticas: `instrutor`, `avaliador`, `azul-01` a `azul-08`, `vermelho-0
 
 ## Fluxo implementado
 
-1. Aluno autenticado vê somente meios da própria equipe e o fluxograma confirmado para consulta; prepara composição e salva rascunho.
+1. Instrutor aloca meios sintéticos da equipe a cada aluno no painel “Alocar meios ao aluno”. Aluno autenticado vê os meios recebidos e o fluxograma confirmado; prepara composição e salva rascunho. A alocação é permissão didática, sem controle de exclusividade física: o mesmo meio pode ser disponibilizado a mais de um aluno.
 2. Ao submeter sem justificativa, o sistema apresenta a advertência aprovada e registra a ausência se o aluno confirmar.
 3. Avaliador pode comentar, validar ou devolver. Versões anteriores são preservadas.
 4. Instrutor acompanha todas as equipes, solicita revisão ou libera o resultado após validação.
@@ -36,6 +36,8 @@ Contas sintéticas: `instrutor`, `avaliador`, `azul-01` a `azul-08`, `vermelho-0
 O fluxograma confirmado é exibido como referência de leitura. Este incremento implementa apenas a trilha de composição e revisão documental; não automatiza as decisões “Sim/Não” do diagrama.
 
 O relatório individual oferece impressão e salvamento como PDF pelo navegador, com layout de papel. Essa cópia não possui QR Code nem validação de autenticidade; a emissão autenticável permanece pendente.
+
+As alocações começam vazias. O instrutor deve configurá-las, inclusive em instâncias demonstrativas já existentes. Retirar um meio bloqueia sua seleção em novos salvamentos; documentos anteriores continuam preservados. A auditoria registra os meios adicionados/retirados e notifica o aluno. Este catálogo ainda não usa dados DB3K.
 
 ## Verificação da impressão
 

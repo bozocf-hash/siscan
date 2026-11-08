@@ -420,6 +420,8 @@ class Handler(BaseHTTPRequestHandler):
                                             "scenario_version", "status", "review_comment", "created_at",
                                             "submitted_at", "updated_at") if key in row.keys()}
         result["asset_ids"] = json.loads(row["asset_ids_json"])
+        if not include_private and row["status"] not in ("returned", "released"):
+            result["review_comment"] = ""
         if "display_name" in row.keys():
             result["student_name"] = row["display_name"]
             result["student_username"] = row["username"]
@@ -514,7 +516,7 @@ class Handler(BaseHTTPRequestHandler):
                    (status, user["uid"], comment, iso_now(), submission_id))
         event(db, user["uid"], "submission." + status, exercise=submission["exercise_id"],
               subject=submission["student_id"], submission=submission_id,
-              detail={"comment_present": bool(comment)})
+              detail={"comment_present": bool(comment), "comment": comment})
         self.send_json(HTTPStatus.OK, {"ok": True})
 
     def release(self, db: sqlite3.Connection, user: sqlite3.Row, payload: dict) -> None:
@@ -553,9 +555,18 @@ class Handler(BaseHTTPRequestHandler):
         scenario = db.execute("SELECT * FROM scenario_versions WHERE exercise_id=? AND version=?", (row["exercise_id"], row["scenario_version"])).fetchone()
         events = db.execute("SELECT e.*,u.display_name FROM events e JOIN users u ON u.id=e.actor_id WHERE submission_id=? ORDER BY e.id", (submission_id,)).fetchall()
         esc = lambda value: html.escape(str(value if value is not None else "—"))
+        selected_ids = json.loads(row["asset_ids_json"])
+        selected_assets = [dict(asset) for asset in db.execute("SELECT id,code,name,source_label FROM assets WHERE exercise_id=?", (row["exercise_id"],)) if asset["id"] in selected_ids]
+        asset_description = "; ".join(f"{asset['code']} — {asset['name']} ({asset['source_label']})" for asset in selected_assets) or "Nenhum meio selecionado"
         sections = [("Participante", row["display_name"]), ("Equipe", row["team"]), ("Documento", row["document_type"]), ("Revisão", row["revision"]), ("Grupamento", row["group_name"]), ("Cenário", f"v{row['scenario_version']} — {scenario['title'] if scenario else 'registro indisponível'}"), ("Objetivo na versão usada", scenario["objective"] if scenario else "Registro indisponível"), ("Meios sintéticos selecionados", row["asset_ids_json"]), ("Justificativa", row["rationale"] or "Ausência de justificativa registrada"), ("Comentário de avaliação", row["review_comment"] or "Sem comentário"), ("Situação", row["status"]), ("Submetido em", row["submitted_at"])]
+        sections = [(label, asset_description if label == "Meios sintéticos selecionados" else value) for label, value in sections]
         body = "".join(f"<dt>{esc(label)}</dt><dd>{esc(value)}</dd>" for label, value in sections)
-        timeline = "".join(f"<li>{esc(item['created_at'])} · {esc(item['display_name'])} · {esc(item['event_type'])}</li>" for item in events)
+        timeline_items = []
+        for item in events:
+            detail = json.loads(item["detail_json"])
+            comment = detail.get("comment", "")
+            timeline_items.append(f"<li>{esc(item['created_at'])} · {esc(item['display_name'])} · {esc(item['event_type'])}{(' · ' + esc(comment)) if comment else ''}</li>")
+        timeline = "".join(timeline_items)
         page = f"<!doctype html><html lang='pt-BR'><meta charset='utf-8'><title>Relatório SISCAN {submission_id}</title><link rel='stylesheet' href='/styles.css'><main class='container card'><h1>Relatório individual SISCAN</h1><p>Registro demonstrativo {submission_id} · gerado {esc(iso_now())} · dados sintéticos</p><dl>{body}</dl><h2>Histórico desta revisão</h2><ol>{timeline}</ol><p>Consulta autenticada. Esta página não é um PDF com autenticidade certificada.</p></main></html>".encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")

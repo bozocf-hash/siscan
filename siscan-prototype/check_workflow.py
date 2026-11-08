@@ -40,6 +40,9 @@ def main():
     sid = rows[1]["id"]
     h.review(db, evaluator, {"submission_id": sid, "status": "validated", "comment": "Validated"})
     assert responses[-1][0] == 200
+    validated = db.execute("SELECT * FROM submissions WHERE id=?", (sid,)).fetchone()
+    assert Handler.submission_json(validated, include_private=False)["review_comment"] == ""
+    assert Handler.submission_json(validated, include_private=True)["review_comment"] == "Validated"
     h.release(db, evaluator, {"submission_id": sid})
     assert responses[-1][0] == 403
     h.release(db, instructor, {"submission_id": sid})

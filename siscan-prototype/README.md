@@ -1,5 +1,7 @@
 # Protótipo didático SISCAN
 
+Para preparar uma amostra DB3K para revisão, execute `python tools/stage_db3k.py CAMINHO_DA_FONTE CAMINHO_DE_UM_NOVO_BANCO --limit-per-table 20`. A ferramenta não alimenta o exercício: nomes/IDs e códigos originais ficam em um banco separado, com origem e status pendente de revisão. O arquivo de origem é aberto somente para leitura. Confira a ferramenta com `python check_db3k_staging.py`.
+
 Primeiro incremento local do fluxo aprovado: cenário fictício, consulta aos meios sintéticos da equipe, composição de grupamento, documento/justificativa, revisão humana e liberação pelo instrutor. Esta pasta é independente; não integra nem altera ATLANTICADOR ou DB3K.
 
 ## Limites

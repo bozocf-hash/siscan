@@ -2,6 +2,8 @@
 
 Para preparar uma amostra DB3K para revisão, execute `python tools/stage_db3k.py CAMINHO_DA_FONTE CAMINHO_DE_UM_NOVO_BANCO --limit-per-table 20`. A ferramenta não alimenta o exercício: nomes/IDs e códigos originais ficam em um banco separado, com origem e status pendente de revisão. O arquivo de origem é aberto somente para leitura. Confira a ferramenta com `python check_db3k_staging.py`.
 
+Para consultar a amostra na interface, guarde o banco gerado em `data/db3k-review-01.sqlite3`. Um instrutor atribuído ao exercício pode abrir “Catálogo Command / DB3K para revisão” e pesquisar nome/ID ou filtrar a tabela de origem. A consulta retorna no máximo 500 candidatos pendentes, identifica a fonte pelo hash e não oferece promoção ou alocação. Execute `python check_candidate_catalog.py` para conferir autorização e preservação da fonte. O banco de candidatos permanece fora do GitHub.
+
 Primeiro incremento local do fluxo aprovado: cenário fictício, consulta aos meios sintéticos da equipe, composição de grupamento, documento/justificativa, revisão humana e liberação pelo instrutor. Esta pasta é independente; não integra nem altera ATLANTICADOR ou DB3K.
 
 ## Limites

@@ -260,6 +260,7 @@ function renderReviewer() {
     renderScenarioEditor(box);
     renderParticipants(box);
     renderAllocations(box);
+    renderCandidateCatalog(box);
   }
   const list = el("section", { class: `card ${currentUser.role === "instructor" ? "span-12" : "span-12"}` });
   list.append(el("h2", { text: currentUser.role === "instructor" ? "Submissões do exercício" : "Documentos para avaliação" }));
@@ -269,6 +270,49 @@ function renderReviewer() {
   box.append(list);
   if (currentUser.role === "instructor") renderEventLog(box);
   app.append(box);
+}
+
+function renderCandidateCatalog(parent) {
+  const card = el("section", { class: "card span-12" });
+  card.append(el("h2", { text: "Catálogo Command / DB3K para revisão" }));
+  card.append(el("p", { class: "notice warning", text: "Candidatos pendentes de validação. Esta consulta não oficializa dados e não disponibiliza estes registros para alocação. Códigos da fonte são exibidos sem interpretação; atributos técnicos ainda não foram importados." }));
+  const load = el("button", { class: "btn btn-secondary", type: "button", text: "Consultar candidatos DB3K" });
+  const content = el("div");
+  load.addEventListener("click", async () => {
+    load.disabled = true;
+    content.replaceChildren();
+    try {
+      const result = await api("/api/catalog-candidates");
+      content.append(el("p", { class: "muted", text: `Fonte: ${result.source.file_name} · leitura ${result.source.read_at}` }),
+        el("p", { class: "source-hash", text: `SHA-256: ${result.source.sha256}` }));
+      const search = el("input", { type: "search", placeholder: "Pesquisar nome ou ID na amostra", "aria-label": "Pesquisar candidatos DB3K" });
+      const filter = el("select", { "aria-label": "Filtrar tabela de origem" });
+      filter.append(el("option", { value: "", text: "Todas as tabelas" }));
+      for (const table of [...new Set(result.candidates.map((row) => row.source_table))]) filter.append(el("option", { value: table, text: table }));
+      const count = el("p", { role: "status", class: "muted" });
+      const list = el("div", { class: "candidate-list" });
+      const render = () => {
+        const term = search.value.trim().toLocaleLowerCase("pt-BR");
+        const rows = result.candidates.filter((row) => (!filter.value || row.source_table === filter.value) && `${row.source_name || ""} ${row.external_id}`.toLocaleLowerCase("pt-BR").includes(term));
+        count.textContent = `${rows.length} encontrados nesta amostra · ${result.candidates.length} carregados de ${result.total} candidatos pendentes (limite ${result.limit})`;
+        list.replaceChildren();
+        for (const row of rows) list.append(el("article", { class: "submission" }, [
+          el("strong", { text: row.source_name || "Nome ausente na fonte" }),
+          el("p", { class: "muted", text: `${row.source_table} · ID externo ${row.external_id} · Pendente de validação` }),
+          el("p", { text: `Códigos originais: ${row.raw_codes_json}` })
+        ]));
+        if (!rows.length) list.append(el("p", { class: "empty", text: "Nenhum candidato corresponde à pesquisa." }));
+      };
+      search.addEventListener("input", render);
+      filter.addEventListener("change", render);
+      content.append(search, filter, count, list);
+      render();
+      load.hidden = true;
+    } catch (error) { showMessage(content, error.message, "notice error"); }
+    finally { load.disabled = false; }
+  });
+  card.append(load, content);
+  parent.append(card);
 }
 
 function renderAllocations(parent) {

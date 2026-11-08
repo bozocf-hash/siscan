@@ -70,6 +70,8 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 3px s
 .report { max-width: 900px; }
 .notification-panel { margin-bottom: 18px; }
 .notification-panel summary { cursor: pointer; font-weight: 700; }
+.source-hash { overflow-wrap: anywhere; font-size: .85rem; }
+.candidate-list { max-height: 480px; overflow-y: auto; padding: 4px; }
 .report dt { font-weight: 700; margin-top: 16px; break-after: avoid; }
 .report dd { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .report li { margin-bottom: 10px; overflow-wrap: anywhere; }

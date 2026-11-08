@@ -11,6 +11,7 @@ import os
 import secrets
 import sqlite3
 import time
+from contextlib import closing
 from datetime import datetime, timezone
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -22,6 +23,7 @@ ROOT = Path(__file__).resolve().parent
 STATIC = ROOT / "static"
 DATA_DIR = ROOT / "data"
 DB_PATH = DATA_DIR / "siscan-demo.sqlite3"
+REVIEW_DB_PATH = DATA_DIR / "db3k-review-01.sqlite3"
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("SISCAN_PORT", "8787"))
 SESSION_SECONDS = 8 * 60 * 60
@@ -356,6 +358,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path == "/api/catalog-candidates":
+                current = self.require_user(db)
+                if current:
+                    self.candidate_catalog(db, current[1])
+                return
             if path.startswith("/report/"):
                 current = self.require_user(db)
                 if not current:
@@ -685,6 +692,27 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.end_headers()
         self.wfile.write(page)
+
+    def candidate_catalog(self, db: sqlite3.Connection, user: sqlite3.Row) -> None:
+        assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()
+        if user["role"] != "instructor" or not assigned:
+            self.send_json(403, {"error": "Consulta restrita ao instrutor atribuído ao exercício."})
+            return
+        if not REVIEW_DB_PATH.is_file():
+            self.send_json(404, {"error": "Amostra DB3K para revisão ainda não preparada nesta instalação."})
+            return
+        try:
+            with closing(sqlite3.connect(REVIEW_DB_PATH.resolve().as_uri() + "?mode=ro", uri=True)) as source:
+                source.row_factory = sqlite3.Row
+                source.execute("PRAGMA query_only=ON")
+                provenance = source.execute("SELECT file_name,sha256,read_at FROM source LIMIT 1").fetchone()
+                candidates = source.execute("SELECT candidate_id,source_table,external_id,source_name,raw_codes_json,review_status FROM candidates WHERE review_status='needs_review' ORDER BY source_table,external_id LIMIT 500").fetchall()
+                total = source.execute("SELECT COUNT(*) FROM candidates WHERE review_status='needs_review'").fetchone()[0]
+                if not provenance:
+                    raise ValueError("Missing provenance")
+                self.send_json(200, {"source": dict(provenance), "candidates": [dict(row) for row in candidates], "total": total, "limit": 500})
+        except (sqlite3.Error, ValueError):
+            self.send_json(503, {"error": "A amostra de revisão não está disponível em formato válido."})
 
     def allocate_assets(self, db: sqlite3.Connection, user: sqlite3.Row, payload: dict) -> None:
         if user["role"] != "instructor":

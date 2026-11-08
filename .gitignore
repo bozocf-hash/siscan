@@ -3,6 +3,7 @@
 **/data/
 .env
 .env.*
+/tmp/
 *.db3
 *.sqlite3
 *.sqlite3-*

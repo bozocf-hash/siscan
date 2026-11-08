@@ -2,6 +2,8 @@
 import io
 import json
 import sqlite3
+import sys
+from pathlib import Path
 
 from app import Handler, SCHEMA, deadline_status
 from datetime import datetime, timezone
@@ -32,6 +34,8 @@ def main():
     evaluator = {"uid": 3, "role": "evaluator"}
     instructor = {"uid": 4, "role": "instructor"}
     payload = {"document_type": "EPO", "group_name": "Group", "asset_ids": [], "rationale": "Reason", "submit": True}
+    if "--print-fixture" in sys.argv:
+        payload["rationale"] = "\n\n".join(f"Parágrafo demonstrativo {i}: análise didática com acentuação, revisão humana e rastreabilidade. " * 3 for i in range(1, 31))
     h.save_submission(db, student, payload)
     assert responses[-1][0] == 200, responses[-1]
     sid = db.execute("SELECT id FROM submissions").fetchone()[0]
@@ -68,6 +72,11 @@ def main():
     content = h.wfile.getvalue().decode()
     assert "Scenario" in content and "Validated" in content and "Resultado liberado" in content
     assert "print-report" in content and "/report.js" in content
+    if "--print-fixture" in sys.argv:
+        target = Path(__file__).resolve().parent.parent / "tmp" / "print" / "report.html"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")
+        print(f"Print fixture: {target}")
     h.report(db, peer, str(sid))
     assert responses[-1][0] == 403
     print("PASS: submission, preserved revision, evaluator validation, instructor release, report access and peer denial")

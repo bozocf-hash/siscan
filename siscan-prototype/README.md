@@ -35,3 +35,7 @@ Contas sintéticas: `instrutor`, `avaliador`, `azul-01` a `azul-08`, `vermelho-0
 O fluxograma confirmado é exibido como referência de leitura. Este incremento implementa apenas a trilha de composição e revisão documental; não automatiza as decisões “Sim/Não” do diagrama.
 
 O relatório individual oferece impressão e salvamento como PDF pelo navegador, com layout de papel. Essa cópia não possui QR Code nem validação de autenticidade; a emissão autenticável permanece pendente.
+
+## Verificação da impressão
+
+`python check_workflow.py --print-fixture` cria um relatório HTML isolado em `tmp/print/report.html`, com justificativa longa e dados sintéticos. O arquivo temporário não é versionado. A conferência realizada no Edge gerou quatro páginas A4; as páginas foram renderizadas e inspecionadas, o conteúdo final e o histórico foram recuperados por extração de texto e os controles de impressão ficaram ocultos. Isso verifica a amostra usada; documentos com outros conteúdos continuam sujeitos a revisão de paginação.

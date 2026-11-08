@@ -3,10 +3,18 @@ import io
 import json
 import sqlite3
 
-from app import Handler, SCHEMA
+from app import Handler, SCHEMA, deadline_status
+from datetime import datetime, timezone
 
 
 def main():
+    now = datetime(2026, 11, 8, 15, 0, tzinfo=timezone.utc)
+    assert deadline_status(None, now=now) == "no_deadline"
+    assert deadline_status("2026-11-08T12:00:00-03:00", now=now) == "within_deadline"
+    assert deadline_status("2026-11-08T14:59:00Z", now=now) == "overdue"
+    assert deadline_status("2026-11-08T15:00:00Z", "2026-11-08T15:00:01Z") == "submitted_late"
+    assert deadline_status("2026-11-08T15:00:00Z", "2026-11-08T15:00:00Z") == "submitted_on_time"
+    assert deadline_status("2026-11-08T15:00:00") == "needs_timezone"
     db = sqlite3.connect(":memory:")
     db.row_factory = sqlite3.Row
     db.executescript(SCHEMA)

@@ -11,6 +11,7 @@ import os
 import secrets
 import sqlite3
 import time
+from datetime import datetime, timezone
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -207,6 +208,23 @@ def iso_now() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
+def deadline_status(due_at, submitted_at=None, now=None):
+    if not due_at:
+        return "no_deadline"
+    try:
+        due = datetime.fromisoformat(due_at.replace("Z", "+00:00"))
+        if due.tzinfo is None:
+            return "needs_timezone"
+        if submitted_at:
+            submitted = datetime.fromisoformat(submitted_at.replace("Z", "+00:00"))
+            if submitted.tzinfo is None:
+                return "needs_timezone"
+            return "submitted_late" if submitted > due else "submitted_on_time"
+        return "overdue" if (now or datetime.now(timezone.utc)) > due else "within_deadline"
+    except (ValueError, TypeError, AttributeError):
+        return "needs_timezone"
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "SISCAN-Demo/0.1"
 
@@ -396,6 +414,7 @@ class Handler(BaseHTTPRequestHandler):
                                      (exercise["id"], user["uid"])).fetchall()
             base.update({"assets": [dict(row) for row in assets],
                          "submissions": [self.submission_json(row, include_private=False) for row in submissions]})
+            base["deadline_status"] = deadline_status(exercise["due_at"], submissions[0]["submitted_at"] if submissions else None)
         elif user["role"] in ("instructor", "evaluator"):
             rows = db.execute(
                 "SELECT s.*,u.username,u.display_name,u.team FROM submissions s JOIN users u ON u.id=s.student_id "
@@ -413,12 +432,14 @@ class Handler(BaseHTTPRequestHandler):
             )]
             if user["role"] == "instructor":
                 base["participants"] = [dict(row) for row in db.execute(
-                    "SELECT u.id,u.display_name,u.team,s.status,s.revision,s.document_type,s.updated_at "
+                    "SELECT u.id,u.display_name,u.team,s.status,s.revision,s.document_type,s.updated_at,s.submitted_at "
                     "FROM assignments a JOIN users u ON u.id=a.user_id "
                     "LEFT JOIN submissions s ON s.id=(SELECT id FROM submissions "
                     "WHERE exercise_id=a.exercise_id AND student_id=u.id ORDER BY revision DESC LIMIT 1) "
                     "WHERE a.exercise_id=? AND u.role='student' ORDER BY u.team,u.display_name",
                     (exercise["id"],))]
+                for participant in base["participants"]:
+                    participant["deadline_status"] = deadline_status(exercise["due_at"], participant["submitted_at"])
                 base["assets"] = [dict(row) for row in db.execute(
                     "SELECT id,code,name,category,team,fiche,source_label FROM assets WHERE exercise_id=? ORDER BY team,id",
                     (exercise["id"],))]
@@ -610,6 +631,9 @@ class Handler(BaseHTTPRequestHandler):
             attempts = None
         if due_at and (not isinstance(due_at, str) or len(due_at) > 40):
             self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Prazo inválido."})
+            return
+        if due_at and deadline_status(due_at) == "needs_timezone":
+            self.send_json(HTTPStatus.BAD_REQUEST, {"error": "O prazo deve conter data, horário e fuso válidos."})
             return
         exercise = db.execute("SELECT * FROM exercises ORDER BY id LIMIT 1").fetchone()
         db.execute("UPDATE exercises SET max_attempts=?,due_at=?,updated_at=? WHERE id=?",

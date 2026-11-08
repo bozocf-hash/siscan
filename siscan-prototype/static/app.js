@@ -9,6 +9,13 @@ const statusName = {
   draft: "Em elaboração", submitted: "Aguardando avaliador", returned: "Em revisão",
   validated: "Aguardando instrutor", released: "Resultado liberado"
 };
+const deadlineName = { no_deadline: "Sem prazo configurado", needs_timezone: "Prazo anterior sem fuso: o instrutor deve salvá-lo novamente", within_deadline: "Dentro do prazo", overdue: "Entrega pendente após o prazo", submitted_late: "Versão entregue após o prazo", submitted_on_time: "Versão entregue dentro do prazo" };
+function localInputDate(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}T${String(date.getHours()).padStart(2,"0")}:${String(date.getMinutes()).padStart(2,"0")}`;
+}
 
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
@@ -107,6 +114,7 @@ function renderDashboard() {
   }
   app.append(el("h1", { class: "page-heading", text: exercise.title }));
   app.append(el("p", { class: "lede", text: exercise.objective }));
+  if (currentUser.role === "student") app.append(el("p", { class: "notice", text: `${deadlineName[dashboardData.deadline_status] || ""}${exercise.due_at ? ` · Prazo: ${new Date(exercise.due_at).toLocaleString("pt-BR")}` : ""}. A indicação considera a versão mais recente e o prazo atual; não aplica penalização automática.` }));
   app.append(el("div", { class: "notice warning", text: "Exercício didático sintético. Não contém dados operacionais nem recomendações de emprego." }));
   if (dashboardData.error) {
     app.append(el("div", { class: "card empty", text: dashboardData.error }));
@@ -299,7 +307,8 @@ function renderParticipants(parent) {
       list.append(el("article", { class: "submission" }, [
         el("strong", { text: `${item.display_name} · ${item.team}` }),
         el("span", { class: `badge status-${item.status || "not-started"}`, text: statusName[item.status] || "Não iniciado" }),
-        el("p", { class: "muted", text: item.revision ? `${item.document_type} · versão ${item.revision} · última atualização ${item.updated_at}` : "Nenhum rascunho ou documento registrado." })
+        el("p", { class: "muted", text: item.revision ? `${item.document_type} · versão ${item.revision} · última atualização ${item.updated_at}` : "Nenhum rascunho ou documento registrado." }),
+        el("p", { text: deadlineName[item.deadline_status] || "" })
       ]));
     }
   };
@@ -315,7 +324,7 @@ function renderExerciseConfig(parent) {
   card.append(el("p", { class: "muted", text: "Prazos e tentativas são configurados por exercício. Deixar tentativas sem limite e prazo vazio é apenas a configuração demonstrativa atual." }));
   const form = el("form", { class: "grid" });
   const attempts = el("input", { type: "number", min: "1", max: "100", id: "max-attempts", value: dashboardData.exercise.max_attempts || "" });
-  const due = el("input", { type: "datetime-local", id: "due-at", value: dashboardData.exercise.due_at || "" });
+  const due = el("input", { type: "datetime-local", id: "due-at", value: localInputDate(dashboardData.exercise.due_at) });
   const save = el("button", { class: "btn", type: "submit", text: "Salvar configuração" });
   form.append(el("div", { class: "span-6" }, [el("label", { class: "label", for: "max-attempts", text: "Tentativas máximas (vazio = sem limite)" }), attempts]),
     el("div", { class: "span-6" }, [el("label", { class: "label", for: "due-at", text: "Prazo (opcional)" }), due]),
@@ -323,7 +332,7 @@ function renderExerciseConfig(parent) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
-      await api("/api/exercise-config", { max_attempts: attempts.value || null, due_at: due.value || null });
+      await api("/api/exercise-config", { max_attempts: attempts.value || null, due_at: due.value ? new Date(due.value).toISOString() : null });
       showMessage(card, "Configuração registrada no histórico.", "notice success");
       await loadDashboard();
     } catch (error) { showMessage(card, error.message, "notice error"); }

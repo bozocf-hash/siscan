@@ -224,6 +224,7 @@ function renderReviewer() {
   if (currentUser.role === "instructor") {
     renderExerciseConfig(box);
     renderScenarioEditor(box);
+    renderParticipants(box);
   }
   const list = el("section", { class: `card ${currentUser.role === "instructor" ? "span-12" : "span-12"}` });
   list.append(el("h2", { text: currentUser.role === "instructor" ? "Submissões do exercício" : "Documentos para avaliação" }));
@@ -275,6 +276,36 @@ function renderScenarioEditor(parent) {
     ]));
   }
   card.append(history);
+  parent.append(card);
+}
+
+function renderParticipants(parent) {
+  const card = el("section", { class: "card span-12" });
+  card.append(el("h2", { text: "Acompanhamento da turma" }));
+  const participants = dashboardData.participants || [];
+  const filter = el("select", { "aria-label": "Filtrar participantes por equipe" }, [
+    el("option", { value: "", text: "Todas as equipes" }),
+    el("option", { value: "AZUL", text: "Azul" }),
+    el("option", { value: "VERMELHO", text: "Vermelho" })
+  ]);
+  const summary = el("p", { class: "muted", role: "status" });
+  const list = el("div");
+  const render = () => {
+    const shown = participants.filter((item) => !filter.value || item.team === filter.value);
+    summary.textContent = `${shown.length} participantes · ${shown.filter((item) => !item.status).length} não iniciaram · ${shown.filter((item) => item.status === "released").length} com resultado liberado`;
+    list.replaceChildren();
+    if (!shown.length) list.append(el("p", { class: "empty", text: "Nenhum participante nesta seleção." }));
+    for (const item of shown) {
+      list.append(el("article", { class: "submission" }, [
+        el("strong", { text: `${item.display_name} · ${item.team}` }),
+        el("span", { class: `badge status-${item.status || "not-started"}`, text: statusName[item.status] || "Não iniciado" }),
+        el("p", { class: "muted", text: item.revision ? `${item.document_type} · versão ${item.revision} · última atualização ${item.updated_at}` : "Nenhum rascunho ou documento registrado." })
+      ]));
+    }
+  };
+  filter.addEventListener("change", render);
+  card.append(filter, summary, list);
+  render();
   parent.append(card);
 }
 

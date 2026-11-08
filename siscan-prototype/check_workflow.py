@@ -62,6 +62,12 @@ def main():
     h.report(db, peer, str(sid))
     assert responses[-1][0] == 403
     print("PASS: submission, preserved revision, evaluator validation, instructor release, report access and peer denial")
+    instructor.update(username="4", display_name="Instructor", team=None)
+    panel = h.dashboard(db, instructor, "test-csrf")
+    assert len(panel["participants"]) == 2
+    statuses = {item["id"]: item["status"] for item in panel["participants"]}
+    assert statuses[1] == "released" and statuses[2] is None
+    print("PASS: participant overview includes latest revision and students who have not started")
     db.close()
 
 

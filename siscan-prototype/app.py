@@ -412,6 +412,13 @@ class Handler(BaseHTTPRequestHandler):
                 "WHERE exercise_id=? ORDER BY version DESC", (exercise["id"],)
             )]
             if user["role"] == "instructor":
+                base["participants"] = [dict(row) for row in db.execute(
+                    "SELECT u.id,u.display_name,u.team,s.status,s.revision,s.document_type,s.updated_at "
+                    "FROM assignments a JOIN users u ON u.id=a.user_id "
+                    "LEFT JOIN submissions s ON s.id=(SELECT id FROM submissions "
+                    "WHERE exercise_id=a.exercise_id AND student_id=u.id ORDER BY revision DESC LIMIT 1) "
+                    "WHERE a.exercise_id=? AND u.role='student' ORDER BY u.team,u.display_name",
+                    (exercise["id"],))]
                 base["assets"] = [dict(row) for row in db.execute(
                     "SELECT id,code,name,category,team,fiche,source_label FROM assets WHERE exercise_id=? ORDER BY team,id",
                     (exercise["id"],))]

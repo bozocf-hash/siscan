@@ -27,6 +27,10 @@ def main():
     h.save_submission(db, student, payload)
     assert responses[-1][0] == 200, responses[-1]
     sid = db.execute("SELECT id FROM submissions").fetchone()[0]
+    db.execute("INSERT INTO users(id,username,display_name,role,salt,password_hash) VALUES(5,'unassigned','Unassigned','evaluator',?,?)", (b"salt", b"hash"))
+    h.review(db, {"uid": 5, "role": "evaluator"}, {"submission_id": sid, "status": "validated"})
+    assert responses[-1][0] == 403
+    assert db.execute("SELECT status FROM submissions WHERE id=?", (sid,)).fetchone()[0] == "submitted"
     h.report(db, student, str(sid))
     assert responses[-1][0] == 403
     h.report(db, peer, str(sid))

@@ -383,6 +383,9 @@ class Handler(BaseHTTPRequestHandler):
             return base
         assigned = db.execute("SELECT 1 FROM assignments WHERE exercise_id=? AND user_id=?",
                               (exercise["id"], user["uid"])).fetchone()
+        if not assigned:
+            return {"user": self.user_json(user), "csrf": csrf, "exercise": None,
+                    "error": "Este participante não está atribuído ao exercício."}
         if user["role"] == "student":
             if not assigned:
                 base["error"] = "Este participante não está atribuído ao exercício."
@@ -505,6 +508,9 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Decisão de revisão inválida."})
             return
         submission = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
+        if submission and not db.execute("SELECT 1 FROM assignments WHERE exercise_id=? AND user_id=?", (submission["exercise_id"], user["uid"])).fetchone():
+            self.send_json(HTTPStatus.FORBIDDEN, {"error": "Sem atribuição para revisar este exercício."})
+            return
         allowed_statuses = ("submitted", "validated") if user["role"] == "instructor" else ("submitted",)
         if not submission or submission["status"] not in allowed_statuses:
             self.send_json(HTTPStatus.CONFLICT, {"error": "Somente documento submetido pode ser revisado."})
@@ -529,6 +535,9 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Submissão inválida."})
             return
         submission = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
+        if submission and not db.execute("SELECT 1 FROM assignments WHERE exercise_id=? AND user_id=?", (submission["exercise_id"], user["uid"])).fetchone():
+            self.send_json(HTTPStatus.FORBIDDEN, {"error": "Sem atribuição para liberar este exercício."})
+            return
         if not submission or submission["status"] != "validated":
             self.send_json(HTTPStatus.CONFLICT, {"error": "O instrutor libera após validação do avaliador."})
             return

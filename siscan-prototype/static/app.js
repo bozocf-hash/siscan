@@ -101,6 +101,10 @@ function renderDashboard() {
   if (!dashboardData || !currentUser) return renderLogin();
   app.replaceChildren();
   const exercise = dashboardData.exercise;
+  if (!exercise) {
+    app.append(el("div", { class: "card empty", text: dashboardData.error || "Nenhum exercício atribuído." }));
+    return;
+  }
   app.append(el("h1", { class: "page-heading", text: exercise.title }));
   app.append(el("p", { class: "lede", text: exercise.objective }));
   app.append(el("div", { class: "notice warning", text: "Exercício didático sintético. Não contém dados operacionais nem recomendações de emprego." }));

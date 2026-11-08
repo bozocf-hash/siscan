@@ -17,3 +17,9 @@ A ferramenta `tools/inspect_db3k_domains.py` recuperou descrições literais par
 O relatório local `prototype/data/db3k-domains-01.json` mantém o hash da fonte e da amostra, tabela/ID de origem, código bruto, tabela Enum, descrição literal e situação da correspondência. Nenhum candidato foi aprovado ou disponibilizado para alocação. A ferramenta abre ambas as fontes somente para leitura, verifica os hashes antes/depois, rejeita fonte diferente da usada na amostra e cria apenas um novo arquivo de relatório. Os dados extraídos permanecem fora do GitHub.
 
 As descrições do relatório podem ser consultadas na interface do instrutor. O backend confere o hash da fonte registrado na amostra e o hash do banco da amostra antes de associar as evidências pelo identificador do candidato. Evidências ausentes, inválidas ou divergentes são sinalizadas sem impedir a consulta dos códigos originais. A exibição mantém a situação de revisão pendente; descrições literais de Enum não validam automaticamente o significado dos campos nem representam atributos técnicos aprovados.
+
+## Observações da revisão
+
+O instrutor atribuído ao exercício pode registrar observações por candidato. As anotações são acrescentadas ao banco do protótipo com autoria, horário UTC, exercício, identificador do candidato e hash da fonte. A consulta mantém anotações de fontes/exercícios diferentes separadas e não oferece edição ou exclusão de anotações anteriores. Cada inclusão gera evento de auditoria. Registrar observações não altera a amostra DB3K, não aprova o meio nem concede alocação ao partido.
+
+Foram testados o bloqueio ao aluno/instrutor sem atribuição, candidato inexistente, texto vazio, fonte divergente, acréscimo de duas observações e preservação do banco de revisão. No navegador, a conservação do rascunho ao filtrar e a exibição literal de texto foram conferidas com salvamento simulado; não foram inseridas anotações de teste no exercício da prévia.

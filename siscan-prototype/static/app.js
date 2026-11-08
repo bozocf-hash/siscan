@@ -293,6 +293,7 @@ function renderCandidateCatalog(parent) {
       for (const table of [...new Set(result.candidates.map((row) => row.source_table))]) filter.append(el("option", { value: table, text: table }));
       const count = el("p", { role: "status", class: "muted" });
       const list = el("div", { class: "candidate-list" });
+      const noteDrafts = new Map();
       const render = () => {
         const term = search.value.trim().toLocaleLowerCase("pt-BR");
         const rows = result.candidates.filter((row) => (!filter.value || row.source_table === filter.value) && `${row.source_name || ""} ${row.external_id}`.toLocaleLowerCase("pt-BR").includes(term));
@@ -312,6 +313,36 @@ function renderCandidateCatalog(parent) {
             for (const [field, domain] of domains) details.append(el("p", { text: `${labels[field] || field}: ${domain.raw_code ?? "ausente"} — ${domain.description || "descrição não recuperada"} · Fonte: ${domain.enum_table || "domínio não identificado"} · ${domain.relation_status === "declared_fk" ? "FK declarada; significado ainda sujeito à revisão" : "vínculo nominal sem FK confirmada"}` }));
             entry.append(details);
           }
+          const notes = el("details");
+          notes.append(el("summary", { text: "Observações da revisão" }));
+          notes.append(el("p", { class: "muted", text: "Anote dúvidas, divergências ou referências. A observação não aprova o meio nem o libera para alocação." }));
+          const history = el("div");
+          const appendNote = (note) => history.append(el("article", { class: "submission" }, [
+            el("strong", { text: `${note.author} · ${note.created_at} UTC` }), el("p", { class: "review-note-text", text: note.note })
+          ]));
+          for (const note of row.review_notes || []) appendNote(note);
+          const form = el("form");
+          const fieldId = `candidate-note-${row.candidate_id}`;
+          const field = el("textarea", { id: fieldId, maxlength: "4000", required: "required" });
+          field.value = noteDrafts.get(row.candidate_id) || "";
+          field.addEventListener("input", () => noteDrafts.set(row.candidate_id, field.value));
+          const save = el("button", { class: "btn btn-secondary", type: "submit", text: "Salvar observação" });
+          form.append(el("label", { class: "label", for: fieldId, text: "Nova observação" }), field, el("div", { class: "actions" }, [save]));
+          form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            save.disabled = true;
+            try {
+              const response = await api("/api/catalog-review-note", { candidate_id: row.candidate_id, source_sha256: result.source.sha256, note: field.value });
+              row.review_notes = [...(row.review_notes || []), response.review_note];
+              appendNote(response.review_note);
+              noteDrafts.delete(row.candidate_id);
+              field.value = "";
+              showMessage(notes, "Observação registrada. O candidato continua pendente de validação.", "notice success");
+            } catch (error) { showMessage(notes, error.message, "notice error"); }
+            finally { save.disabled = false; }
+          });
+          notes.append(history, form);
+          entry.append(notes);
           list.append(entry);
         }
         if (!rows.length) list.append(el("p", { class: "empty", text: "Nenhum candidato corresponde à pesquisa." }));

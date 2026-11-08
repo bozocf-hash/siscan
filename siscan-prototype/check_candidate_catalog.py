@@ -56,6 +56,27 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
         assert all(row["review_status"] == "needs_review" for row in result["candidates"])
         assert result["source"]["sha256"] == digest(source)
         assert digest(review) == before
+        original_id = result["candidates"][0]["candidate_id"]
+        note = {"candidate_id": original_id, "source_sha256": digest(source), "note": "Conferir categoria <referência>"}
+        h.add_catalog_note(db, {"uid": 2, "role": "student"}, note)
+        assert responses[-1][0] == 403
+        h.add_catalog_note(db, {"uid": 2, "role": "instructor"}, note)
+        assert responses[-1][0] == 403
+        h.add_catalog_note(db, {"uid": 1, "role": "instructor"}, dict(note, note=" "))
+        assert responses[-1][0] == 400
+        h.add_catalog_note(db, {"uid": 1, "role": "instructor"}, dict(note, candidate_id="missing"))
+        assert responses[-1][0] == 404
+        h.add_catalog_note(db, {"uid": 1, "role": "instructor"}, dict(note, source_sha256="different"))
+        assert responses[-1][0] == 409
+        h.add_catalog_note(db, {"uid": 1, "role": "instructor"}, note)
+        assert responses[-1][0] == 200
+        h.add_catalog_note(db, {"uid": 1, "role": "instructor"}, dict(note, note="Segunda observação"))
+        assert responses[-1][0] == 200
+        h.candidate_catalog(db, {"uid": 1, "role": "instructor"})
+        notes = responses[-1][1]["candidates"][0]["review_notes"]
+        assert len(notes) == 2 and notes[0]["note"] == note["note"]
+        assert notes[0]["author"] == "Teacher" and notes[0]["created_at"]
+        assert digest(review) == before
         assert db.execute("SELECT COUNT(*) FROM assets").fetchone()[0] == 0
         app.REVIEW_DB_PATH = Path(folder) / "absent.sqlite3"
         h.candidate_catalog(db, {"uid": 1, "role": "instructor"})

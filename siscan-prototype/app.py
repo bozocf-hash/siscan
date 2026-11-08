@@ -146,6 +146,15 @@ CREATE TABLE IF NOT EXISTS notifications (
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   read_at TEXT
 );
+CREATE TABLE IF NOT EXISTS catalog_review_notes (
+  id INTEGER PRIMARY KEY,
+  exercise_id INTEGER NOT NULL REFERENCES exercises(id),
+  source_sha256 TEXT NOT NULL,
+  candidate_id TEXT NOT NULL,
+  author_id INTEGER NOT NULL REFERENCES users(id),
+  note TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 CREATE INDEX IF NOT EXISTS idx_submissions_student ON submissions(student_id,exercise_id,revision);
 CREATE INDEX IF NOT EXISTS idx_events_exercise ON events(exercise_id,created_at);
 """
@@ -428,6 +437,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.read_notification(db, user, payload)
             elif path == "/api/allocations":
                 self.allocate_assets(db, user, payload)
+            elif path == "/api/catalog-review-note":
+                self.add_catalog_note(db, user, payload)
             else:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "Rota não encontrada."})
 
@@ -694,6 +705,38 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(page)
 
+    def add_catalog_note(self, db: sqlite3.Connection, user: sqlite3.Row, payload: dict) -> None:
+        assignment = db.execute("SELECT exercise_id FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()
+        if user["role"] != "instructor" or not assignment:
+            self.send_json(403, {"error": "Observações restritas ao instrutor atribuído ao exercício."})
+            return
+        identifier, note, source_hash = payload.get("candidate_id"), payload.get("note"), payload.get("source_sha256")
+        if not isinstance(identifier, str) or not identifier or len(identifier) > 100 or not isinstance(note, str) or not note.strip() or len(note) > 4000 or not isinstance(source_hash, str):
+            self.send_json(400, {"error": "Informe o candidato, a fonte e uma observação de até 4000 caracteres."})
+            return
+        if not REVIEW_DB_PATH.is_file():
+            self.send_json(404, {"error": "Amostra de revisão não encontrada."})
+            return
+        try:
+            with closing(sqlite3.connect(REVIEW_DB_PATH.resolve().as_uri()+"?mode=ro", uri=True)) as source:
+                source.execute("PRAGMA query_only=ON")
+                provenance = source.execute("SELECT sha256 FROM source LIMIT 1").fetchone()
+                if not provenance or provenance[0] != source_hash:
+                    self.send_json(409, {"error": "A fonte mudou. Reabra a consulta antes de registrar a observação."})
+                    return
+                if not source.execute("SELECT 1 FROM candidates WHERE candidate_id=? AND review_status='needs_review'", (identifier,)).fetchone():
+                    self.send_json(404, {"error": "Candidato pendente não encontrado."})
+                    return
+        except sqlite3.Error:
+            self.send_json(503, {"error": "Amostra de revisão indisponível."})
+            return
+        cursor = db.execute("INSERT INTO catalog_review_notes(exercise_id,source_sha256,candidate_id,author_id,note) VALUES(?,?,?,?,?)",
+                            (assignment[0], source_hash, identifier, user["uid"], note.strip()))
+        saved = db.execute("SELECT n.id,n.note,n.created_at,u.display_name AS author FROM catalog_review_notes n JOIN users u ON u.id=n.author_id WHERE n.id=?", (cursor.lastrowid,)).fetchone()
+        event(db, user["uid"], "catalog.review_note_added", exercise=assignment[0],
+              detail={"note_id": saved["id"], "candidate_id": identifier, "source_sha256": source_hash})
+        self.send_json(200, {"ok": True, "review_note": dict(saved)})
+
     def candidate_catalog(self, db: sqlite3.Connection, user: sqlite3.Row) -> None:
         assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()
         if user["role"] != "instructor" or not assigned:
@@ -712,6 +755,11 @@ class Handler(BaseHTTPRequestHandler):
                 if not provenance:
                     raise ValueError("Missing provenance")
                 records = [dict(row) for row in candidates]
+                notes_by_candidate = {}
+                for note in db.execute("SELECT n.id,n.candidate_id,n.note,n.created_at,u.display_name AS author FROM catalog_review_notes n JOIN users u ON u.id=n.author_id WHERE n.source_sha256=? AND n.exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1) ORDER BY n.id", (provenance["sha256"],)):
+                    notes_by_candidate.setdefault(note["candidate_id"], []).append({key: note[key] for key in ("id", "note", "created_at", "author")})
+                for record in records:
+                    record["review_notes"] = notes_by_candidate.get(record["candidate_id"], [])
                 evidence_status = "not_available"
                 if DOMAIN_REPORT_PATH.is_file():
                     try:

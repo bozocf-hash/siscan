@@ -294,7 +294,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             return
-        if path in ("/app.js", "/styles.css", "/fluxograma.jpg"):
+        if path in ("/app.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
             target = STATIC / path.rsplit("/", 1)[1]
             data = target.read_bytes()
             content_type = ("text/javascript; charset=utf-8" if path.endswith(".js") else
@@ -599,12 +599,14 @@ class Handler(BaseHTTPRequestHandler):
         sections = [(label, asset_description if label == "Meios sintéticos selecionados" else value) for label, value in sections]
         body = "".join(f"<dt>{esc(label)}</dt><dd>{esc(value)}</dd>" for label, value in sections)
         timeline_items = []
+        event_labels = {"submission.draft_saved": "Rascunho salvo", "submission.submitted": "Documento submetido", "submission.returned": "Devolução para revisão", "submission.validated": "Documento validado", "submission.released": "Resultado liberado"}
         for item in events:
             detail = json.loads(item["detail_json"])
             comment = detail.get("comment", "")
-            timeline_items.append(f"<li>{esc(item['created_at'])} · {esc(item['display_name'])} · {esc(item['event_type'])}{(' · ' + esc(comment)) if comment else ''}</li>")
+            label = event_labels.get(item["event_type"], "Ação registrada")
+            timeline_items.append(f"<li>{esc(item['created_at'])} · {esc(item['display_name'])} · {esc(label)}{(' · ' + esc(comment)) if comment else ''}</li>")
         timeline = "".join(timeline_items)
-        page = f"<!doctype html><html lang='pt-BR'><meta charset='utf-8'><title>Relatório SISCAN {submission_id}</title><link rel='stylesheet' href='/styles.css'><main class='container card'><h1>Relatório individual SISCAN</h1><p>Registro demonstrativo {submission_id} · gerado {esc(iso_now())} · dados sintéticos</p><dl>{body}</dl><h2>Histórico desta revisão</h2><ol>{timeline}</ol><p>Consulta autenticada. Esta página não é um PDF com autenticidade certificada.</p></main></html>".encode("utf-8")
+        page = f"<!doctype html><html lang='pt-BR'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Relatório SISCAN {submission_id}</title><link rel='stylesheet' href='/styles.css'><script src='/report.js' defer></script></head><body><main class='container card report'><div class='report-tools'><button class='btn' id='print-report' type='button'>Imprimir / salvar como PDF</button><p>Na janela de impressão, escolha salvar como PDF para obter uma cópia.</p></div><h1>Relatório individual SISCAN</h1><p>Registro demonstrativo {submission_id} · gerado {esc(iso_now())} · dados sintéticos</p><p>Horários com sufixo Z estão em UTC.</p><dl>{body}</dl><h2>Histórico desta revisão</h2><ol>{timeline}</ol><p class='report-note'>Cópia de consulta. A emissão de PDF com QR Code e validação de autenticidade ainda não está disponível.</p></main></body></html>".encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Cache-Control", "no-store")

@@ -67,6 +67,21 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 3px s
 .tag-row { display: flex; gap: 7px; flex-wrap: wrap; margin: 10px 0; }
 .flow-figure { margin: 10px 0 0; padding: 12px; background: #f8fafb; border: 1px solid var(--line); border-radius: 8px; text-align: center; }
 .flow-figure img { display: block; width: min(100%, 760px); max-height: 75vh; object-fit: contain; margin: 0 auto; }
+.report { max-width: 900px; }
+.report dt { font-weight: 700; margin-top: 16px; break-after: avoid; }
+.report dd { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.report li { margin-bottom: 10px; overflow-wrap: anywhere; }
+.report-tools { padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.report-note { border-top: 1px solid var(--line); margin-top: 24px; padding-top: 12px; font-size: .85rem; }
+@media print {
+  @page { size: A4; margin: 18mm; }
+  body { background: white; color: black; font-size: 11pt; }
+  .report-tools { display: none; }
+  .report.container.card { width: 100%; max-width: none; margin: 0; padding: 0; border: 0; box-shadow: none; }
+  .report h1 { font-size: 20pt; }
+  .report h2 { font-size: 14pt; break-after: avoid; }
+  .report p, .report dd, .report li { orphans: 3; widows: 3; }
+}
 @media (max-width: 760px) {
   .span-8, .span-7, .span-6, .span-5, .span-4 { grid-column: span 12; }
   .asset-list { grid-template-columns: 1fr; }

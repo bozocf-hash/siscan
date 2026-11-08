@@ -33,3 +33,5 @@ Contas sintéticas: `instrutor`, `avaliador`, `azul-01` a `azul-08`, `vermelho-0
 6. Eventos de autoria, revisão, submissão, liberação e mudança de cenário ficam registrados no backend.
 
 O fluxograma confirmado é exibido como referência de leitura. Este incremento implementa apenas a trilha de composição e revisão documental; não automatiza as decisões “Sim/Não” do diagrama.
+
+O relatório individual oferece impressão e salvamento como PDF pelo navegador, com layout de papel. Essa cópia não possui QR Code nem validação de autenticidade; a emissão autenticável permanece pendente.

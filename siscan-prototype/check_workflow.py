@@ -66,7 +66,8 @@ def main():
     h.report(db, student, str(sid))
     assert responses[-1][0] == 200
     content = h.wfile.getvalue().decode()
-    assert "Scenario" in content and "Validated" in content and "submission.released" in content
+    assert "Scenario" in content and "Validated" in content and "Resultado liberado" in content
+    assert "print-report" in content and "/report.js" in content
     h.report(db, peer, str(sid))
     assert responses[-1][0] == 403
     print("PASS: submission, preserved revision, evaluator validation, instructor release, report access and peer denial")

@@ -24,6 +24,7 @@ STATIC = ROOT / "static"
 DATA_DIR = ROOT / "data"
 DB_PATH = DATA_DIR / "siscan-demo.sqlite3"
 REVIEW_DB_PATH = DATA_DIR / "db3k-review-01.sqlite3"
+DOMAIN_REPORT_PATH = DATA_DIR / "db3k-domains-01.json"
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("SISCAN_PORT", "8787"))
 SESSION_SECONDS = 8 * 60 * 60
@@ -710,7 +711,33 @@ class Handler(BaseHTTPRequestHandler):
                 total = source.execute("SELECT COUNT(*) FROM candidates WHERE review_status='needs_review'").fetchone()[0]
                 if not provenance:
                     raise ValueError("Missing provenance")
-                self.send_json(200, {"source": dict(provenance), "candidates": [dict(row) for row in candidates], "total": total, "limit": 500})
+                records = [dict(row) for row in candidates]
+                evidence_status = "not_available"
+                if DOMAIN_REPORT_PATH.is_file():
+                    try:
+                        evidence = json.loads(DOMAIN_REPORT_PATH.read_text(encoding="utf-8"))
+                        if not isinstance(evidence, dict) or not isinstance(evidence.get("source"), dict) or not isinstance(evidence.get("candidates"), list):
+                            raise ValueError("Invalid evidence structure")
+                        with REVIEW_DB_PATH.open("rb") as stream:
+                            review_hash = hashlib.file_digest(stream, "sha256").hexdigest()
+                        if evidence.get("status") != "evidence_only_not_approved" or evidence["source"].get("sha256") != provenance["sha256"] or evidence.get("review_sha256") != review_hash:
+                            evidence_status = "mismatch"
+                        else:
+                            by_id = {}
+                            for item in evidence["candidates"]:
+                                if not isinstance(item, dict) or not isinstance(item.get("candidate_id"), str) or not isinstance(item.get("domains"), dict):
+                                    raise ValueError("Invalid candidate evidence")
+                                for domain in item["domains"].values():
+                                    if not isinstance(domain, dict) or any(domain.get(key) is not None and not isinstance(domain.get(key), str) for key in ("description", "enum_table", "status", "relation_status")):
+                                        raise ValueError("Invalid domain evidence")
+                                by_id[item["candidate_id"]] = item["domains"]
+                            for record in records:
+                                record["domain_evidence"] = by_id.get(record["candidate_id"], {})
+                            evidence_status = "available"
+                    except (OSError, ValueError, TypeError):
+                        evidence_status = "invalid"
+                self.send_json(200, {"source": dict(provenance), "candidates": records, "total": total, "limit": 500,
+                                     "domain_evidence_status": evidence_status})
         except (sqlite3.Error, ValueError):
             self.send_json(503, {"error": "A amostra de revisão não está disponível em formato válido."})
 

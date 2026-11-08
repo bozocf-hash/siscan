@@ -285,6 +285,8 @@ function renderCandidateCatalog(parent) {
       const result = await api("/api/catalog-candidates");
       content.append(el("p", { class: "muted", text: `Fonte: ${result.source.file_name} · leitura ${result.source.read_at}` }),
         el("p", { class: "source-hash", text: `SHA-256: ${result.source.sha256}` }));
+      const evidenceMessages = { available: "Descrições literais disponíveis. Correspondência por código não equivale a validação semântica.", not_available: "Relatório de domínios não disponível; somente códigos originais serão mostrados.", mismatch: "Relatório de domínios de outra fonte ou amostra: descrições bloqueadas até gerar evidências correspondentes.", invalid: "Relatório de domínios inválido; descrições não foram carregadas." };
+      content.append(el("p", { class: "notice", text: evidenceMessages[result.domain_evidence_status] || evidenceMessages.invalid }));
       const search = el("input", { type: "search", placeholder: "Pesquisar nome ou ID na amostra", "aria-label": "Pesquisar candidatos DB3K" });
       const filter = el("select", { "aria-label": "Filtrar tabela de origem" });
       filter.append(el("option", { value: "", text: "Todas as tabelas" }));
@@ -296,11 +298,22 @@ function renderCandidateCatalog(parent) {
         const rows = result.candidates.filter((row) => (!filter.value || row.source_table === filter.value) && `${row.source_name || ""} ${row.external_id}`.toLocaleLowerCase("pt-BR").includes(term));
         count.textContent = `${rows.length} encontrados nesta amostra · ${result.candidates.length} carregados de ${result.total} candidatos pendentes (limite ${result.limit})`;
         list.replaceChildren();
-        for (const row of rows) list.append(el("article", { class: "submission" }, [
+        for (const row of rows) {
+          const entry = el("article", { class: "submission" }, [
           el("strong", { text: row.source_name || "Nome ausente na fonte" }),
           el("p", { class: "muted", text: `${row.source_table} · ID externo ${row.external_id} · Pendente de validação` }),
           el("p", { text: `Códigos originais: ${row.raw_codes_json}` })
-        ]));
+          ]);
+          const domains = Object.entries(row.domain_evidence || {});
+          if (domains.length) {
+            const details = el("details");
+            details.append(el("summary", { text: "Descrições e evidências dos códigos" }));
+            const labels = { Category: "Categoria", Type: "Tipo", OperatorCountry: "País do operador", OperatorService: "Serviço do operador" };
+            for (const [field, domain] of domains) details.append(el("p", { text: `${labels[field] || field}: ${domain.raw_code ?? "ausente"} — ${domain.description || "descrição não recuperada"} · Fonte: ${domain.enum_table || "domínio não identificado"} · ${domain.relation_status === "declared_fk" ? "FK declarada; significado ainda sujeito à revisão" : "vínculo nominal sem FK confirmada"}` }));
+            entry.append(details);
+          }
+          list.append(entry);
+        }
         if (!rows.length) list.append(el("p", { class: "empty", text: "Nenhum candidato corresponde à pesquisa." }));
       };
       search.addEventListener("input", render);

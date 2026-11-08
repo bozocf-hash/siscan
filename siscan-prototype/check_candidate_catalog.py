@@ -3,6 +3,7 @@ from contextlib import closing
 from pathlib import Path
 import sqlite3
 import tempfile
+import json
 import app
 from tools.stage_db3k import TABLES, stage, digest
 
@@ -17,6 +18,7 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
             db.execute(f'INSERT INTO "{table}" VALUES(1,?)', ("Nome <não executar>",))
     stage(source, review, 1)
     app.REVIEW_DB_PATH = review
+    app.DOMAIN_REPORT_PATH = Path(folder) / "domains.json"
     before = digest(review)
     with closing(sqlite3.connect(":memory:")) as db:
         db.row_factory = sqlite3.Row
@@ -34,6 +36,23 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
         h.candidate_catalog(db, {"uid": 1, "role": "instructor"})
         status, result = responses[-1]
         assert status == 200 and len(result["candidates"]) == 4
+        assert result["domain_evidence_status"] == "not_available"
+        candidate_id = result["candidates"][0]["candidate_id"]
+        evidence = {"status": "evidence_only_not_approved", "source": {"sha256": digest(source)}, "review_sha256": digest(review),
+                    "candidates": [{"candidate_id": candidate_id, "domains": {"Category": {"raw_code": 1, "description": "Descrição literal <teste>", "enum_table": "EnumAircraftCategory", "status": "literal_code_match", "relation_status": "nominal_match_without_fk"}}}]}
+        app.DOMAIN_REPORT_PATH.write_text(json.dumps(evidence), encoding="utf-8")
+        h.candidate_catalog(db, {"uid": 1, "role": "instructor"})
+        status, enriched = responses[-1]
+        assert status == 200 and enriched["domain_evidence_status"] == "available"
+        assert enriched["candidates"][0]["domain_evidence"]["Category"]["description"] == "Descrição literal <teste>"
+        evidence["review_sha256"] = "mismatch"
+        app.DOMAIN_REPORT_PATH.write_text(json.dumps(evidence), encoding="utf-8")
+        h.candidate_catalog(db, {"uid": 1, "role": "instructor"})
+        assert responses[-1][1]["domain_evidence_status"] == "mismatch"
+        assert all(not row.get("domain_evidence") for row in responses[-1][1]["candidates"])
+        app.DOMAIN_REPORT_PATH.write_text('{"invalid":', encoding="utf-8")
+        h.candidate_catalog(db, {"uid": 1, "role": "instructor"})
+        assert responses[-1][0] == 200 and responses[-1][1]["domain_evidence_status"] == "invalid"
         assert all(row["review_status"] == "needs_review" for row in result["candidates"])
         assert result["source"]["sha256"] == digest(source)
         assert digest(review) == before
@@ -45,4 +64,4 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
             empty.execute("CREATE TABLE unrelated(id INTEGER)")
         h.candidate_catalog(db, {"uid": 1, "role": "instructor"})
         assert responses[-1][0] == 503
-    print("PASS: instructor scope, read-only provenance, pending records, no promotion and missing file")
+    print("PASS: instructor scope, read-only provenance, evidence matching, invalid evidence fallback and no promotion")

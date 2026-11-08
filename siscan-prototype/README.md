@@ -6,6 +6,8 @@ Para consultar a amostra na interface, guarde o banco gerado em `data/db3k-revie
 
 Para investigar descrições literais dos códigos, na pasta do protótipo execute `python -m tools.inspect_db3k_domains CAMINHO_DB3K CAMINHO_AMOSTRA NOVO_RELATORIO.json`. O relatório distingue correspondência literal, ausência de código/domínio e vínculo sem FK; não aprova semântica nem altera a amostra. Confira com `python check_db3k_domains.py`. Guarde resultados em `data/` para mantê-los fora do GitHub.
 
+A ferramenta também compara ID, nome e todos os códigos do candidato diretamente com o registro original antes de emitir evidências. Divergências interrompem a emissão. A promoção para catálogo utilizável exige aprovação explícita do responsável pelo projeto (documento 53); observações de instrutores não substituem essa aprovação.
+
 A tela consulta as descrições do arquivo local `data/db3k-domains-01.json`. Os hashes da fonte e da amostra devem corresponder aos do relatório; se houver divergência ou formato inválido, a consulta mantém os códigos originais e informa que as descrições não foram carregadas. Cada candidato oferece “Descrições e evidências dos códigos”, sem aprovação ou promoção automática.
 
 Em “Observações da revisão”, o instrutor atribuído pode acrescentar anotações de até 4000 caracteres. O histórico preserva autor, horário UTC, candidato, hash da fonte e exercício; anotações são adicionadas, não substituídas. Elas ficam no banco do protótipo e não alteram o DB3K, a amostra ou a situação pendente dos candidatos. A troca da amostra exige reabrir a consulta antes de registrar anotações para sua fonte.

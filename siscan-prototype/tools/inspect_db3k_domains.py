@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import sqlite3
 from datetime import datetime, timezone
-from tools.stage_db3k import TABLES, digest
+from tools.stage_db3k import TABLES, RAW_CODES, digest
 
 DOMAINS = {
     "DataShip": {"Category": "EnumShipCategory", "Type": "EnumShipType"},
@@ -29,13 +29,23 @@ def inspect_domains(source, review):
         tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         result = []
         counts = Counter()
-        for candidate in staged.execute("SELECT candidate_id,source_table,external_id,raw_codes_json FROM candidates ORDER BY source_table,external_id"):
+        for candidate in staged.execute("SELECT candidate_id,source_table,external_id,source_name,raw_codes_json FROM candidates ORDER BY source_table,external_id"):
             table = candidate["source_table"]
             if table not in TABLES:
                 raise ValueError("Tabela de origem não permitida.")
+            columns = {row[1] for row in db.execute(f'PRAGMA table_info("{table}")')}
+            code_fields = [field for field in RAW_CODES if field in columns]
+            fields = ",".join(f'"{field}"' for field in ["ID", "Name", *code_fields])
+            original = db.execute(f'SELECT {fields} FROM "{table}" WHERE ID=?', (candidate["external_id"],)).fetchone()
+            raw_codes = json.loads(candidate["raw_codes_json"])
+            if not original or str(original["ID"]) != candidate["external_id"] or original["Name"] != candidate["source_name"]:
+                raise ValueError(f"Identificação do candidato diverge da fonte: {table}/{candidate['external_id']}")
+            expected_codes = {field: original[field] for field in code_fields}
+            if not isinstance(raw_codes, dict) or json.dumps(raw_codes, sort_keys=True) != json.dumps(expected_codes, sort_keys=True):
+                raise ValueError(f"Códigos do candidato divergem da fonte: {table}/{candidate['external_id']}")
             mapping = {**DOMAINS[table], "OperatorCountry": "EnumOperatorCountry", "OperatorService": "EnumOperatorService"}
             domains = {}
-            for field, code in json.loads(candidate["raw_codes_json"]).items():
+            for field, code in raw_codes.items():
                 enum = mapping.get(field)
                 record = {"raw_code": code, "enum_table": enum, "description": None,
                           "relation_status": "nominal_match_without_fk"}
@@ -59,12 +69,12 @@ def inspect_domains(source, review):
                 counts[record["status"]] += 1
                 domains[field] = record
             result.append({"candidate_id": candidate["candidate_id"], "source_table": table,
-                           "external_id": candidate["external_id"], "domains": domains})
+                           "external_id": candidate["external_id"], "literal_source_check": "matched", "domains": domains})
     if before != (digest(source), digest(review)):
         raise RuntimeError("Uma fonte mudou durante a inspeção; descarte o resultado.")
     return {"source": dict(provenance), "review_sha256": before[1],
             "generated_at": datetime.now(timezone.utc).isoformat(),
-            "status": "evidence_only_not_approved", "summary": dict(counts), "candidates": result}
+            "status": "evidence_only_not_approved", "literal_records_verified": len(result), "summary": dict(counts), "candidates": result}
 
 
 if __name__ == "__main__":

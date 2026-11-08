@@ -101,29 +101,35 @@ def main():
     print("PASS: notification recipients, peer denial and idempotent read tracking")
     db.execute("INSERT INTO assets(id,exercise_id,team,code,name,category,fiche) VALUES(1,1,'AZUL','A1','Meio Azul','Didático','Sintético')")
     db.execute("INSERT INTO assets(id,exercise_id,team,code,name,category,fiche) VALUES(2,1,'VERMELHO','V1','Meio Vermelho','Didático','Sintético')")
-    h.allocate_assets(db, student, {"student_id": 1, "asset_ids": [1]})
+    db.execute("INSERT INTO users(id,username,display_name,role,team,salt,password_hash) VALUES(6,'blue2','Segundo Azul','student','AZUL',?,?)", (b"salt", b"hash"))
+    db.execute("INSERT INTO assignments VALUES(1,6)")
+    h.allocate_assets(db, student, {"team": "AZUL", "asset_ids": [1]})
     assert responses[-1][0] == 403
-    h.allocate_assets(db, instructor, {"student_id": 1, "asset_ids": [2]})
+    h.allocate_assets(db, instructor, {"team": "AZUL", "asset_ids": [2]})
     assert responses[-1][0] == 403
     attempt = dict(payload, asset_ids=[1])
     h.save_submission(db, student, attempt)
     assert responses[-1][0] == 403
-    h.allocate_assets(db, instructor, {"student_id": 1, "asset_ids": [1]})
+    h.allocate_assets(db, instructor, {"team": "AZUL", "asset_ids": [1]})
     assert responses[-1][0] == 200
     student.update(username="1", display_name="Student")
     panel = h.dashboard(db, student, "test")
     assert [asset["id"] for asset in panel["assets"]] == [1]
+    teammate = {"uid": 6, "role": "student", "team": "AZUL", "username": "blue2", "display_name": "Segundo Azul"}
+    assert [asset["id"] for asset in h.dashboard(db, teammate, "test")["assets"]] == [1]
+    assert db.execute("SELECT COUNT(*) FROM notifications WHERE user_id=6").fetchone()[0] == 1
     peer.update(username="2", display_name="Peer")
     assert h.dashboard(db, peer, "test")["assets"] == []
-    h.allocate_assets(db, instructor, {"student_id": 1, "asset_ids": []})
+    h.allocate_assets(db, instructor, {"team": "AZUL", "asset_ids": []})
     panel = h.dashboard(db, student, "test")
     assert panel["assets"] == [] and panel["historical_assets"][0]["id"] == 1
+    assert h.dashboard(db, teammate, "test")["assets"] == []
     assert db.execute("SELECT COUNT(*) FROM submissions").fetchone()[0] == 2
-    h.allocate_assets(db, instructor, {"student_id": 2, "asset_ids": [2]})
+    h.allocate_assets(db, instructor, {"team": "VERMELHO", "asset_ids": [2]})
     h.save_submission(db, peer, dict(payload, asset_ids=[2]))
     assert responses[-1][0] == 200
     assert db.execute("SELECT asset_ids_json FROM submissions WHERE student_id=2").fetchone()[0] == "[2]"
-    print("PASS: instructor allocation, team and student scope, revocation and preserved history")
+    print("PASS: party allocation shared by teammates, opposing party isolation, revocation and history")
     db.close()
 
 

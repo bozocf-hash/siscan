@@ -109,6 +109,15 @@ CREATE TABLE IF NOT EXISTS asset_allocations (
   updated_at TEXT NOT NULL,
   PRIMARY KEY(exercise_id,student_id,asset_id)
 );
+CREATE TABLE IF NOT EXISTS party_allocations (
+  exercise_id INTEGER NOT NULL REFERENCES exercises(id),
+  team TEXT NOT NULL CHECK(team IN ('AZUL','VERMELHO')),
+  asset_id INTEGER NOT NULL REFERENCES assets(id),
+  allocated_by INTEGER NOT NULL REFERENCES users(id),
+  active INTEGER NOT NULL CHECK(active IN (0,1)),
+  updated_at TEXT NOT NULL,
+  PRIMARY KEY(exercise_id,team,asset_id)
+);
 CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY,
   exercise_id INTEGER REFERENCES exercises(id),
@@ -172,6 +181,11 @@ def event(db: sqlite3.Connection, actor: int, event_type: str, *, exercise: int 
     elif event_type == "assets.allocated" and subject:
         recipients = [subject]
         title = "Sua alocação de meios foi atualizada pelo instrutor"
+    elif event_type == "assets.party_allocated":
+        recipients = [row[0] for row in db.execute(
+            "SELECT u.id FROM users u JOIN assignments a ON a.user_id=u.id WHERE a.exercise_id=? AND u.team=? AND u.role='student' AND u.active=1",
+            (exercise, (detail or {}).get("team")))]
+        title = "Os meios disponíveis para seu partido foram atualizados"
     if title:
         db.executemany("INSERT INTO notifications(exercise_id,user_id,event_id,title) VALUES(?,?,?,?)",
                        [(exercise, recipient, cursor.lastrowid, title) for recipient in recipients if recipient != actor])
@@ -451,13 +465,13 @@ class Handler(BaseHTTPRequestHandler):
                 base["error"] = "Este participante não está atribuído ao exercício."
                 return base
             assets = db.execute("SELECT m.id,m.code,m.name,m.category,m.fiche,m.source_label FROM assets m "
-                                "JOIN asset_allocations a ON a.asset_id=m.id AND a.exercise_id=m.exercise_id "
-                                "WHERE m.exercise_id=? AND m.team=? AND a.student_id=? AND a.active=1 ORDER BY m.id",
-                                (exercise["id"], user["team"], user["uid"])).fetchall()
+                                "JOIN party_allocations a ON a.asset_id=m.id AND a.exercise_id=m.exercise_id AND a.team=m.team "
+                                "WHERE m.exercise_id=? AND m.team=? AND a.active=1 ORDER BY m.id",
+                                (exercise["id"], user["team"])).fetchall()
             base["historical_assets"] = [dict(row) for row in db.execute(
                 "SELECT id,code,name FROM assets WHERE exercise_id=? AND team=? AND id IN "
-                "(SELECT asset_id FROM asset_allocations WHERE exercise_id=? AND student_id=?)",
-                (exercise["id"], user["team"], exercise["id"], user["uid"]))]
+                "(SELECT asset_id FROM party_allocations WHERE exercise_id=? AND team=?)",
+                (exercise["id"], user["team"], exercise["id"], user["team"]))]
             submissions = db.execute("SELECT * FROM submissions WHERE exercise_id=? AND student_id=? ORDER BY revision DESC",
                                      (exercise["id"], user["uid"])).fetchall()
             base.update({"assets": [dict(row) for row in assets],
@@ -489,8 +503,11 @@ class Handler(BaseHTTPRequestHandler):
                 for participant in base["participants"]:
                     participant["deadline_status"] = deadline_status(exercise["due_at"], participant["submitted_at"])
                     participant["allocated_asset_ids"] = [row[0] for row in db.execute(
-                        "SELECT asset_id FROM asset_allocations WHERE exercise_id=? AND student_id=? AND active=1 ORDER BY asset_id",
-                        (exercise["id"], participant["id"]))]
+                        "SELECT asset_id FROM party_allocations WHERE exercise_id=? AND team=? AND active=1 ORDER BY asset_id",
+                        (exercise["id"], participant["team"]))]
+                base["party_allocations"] = {team: [row[0] for row in db.execute(
+                    "SELECT asset_id FROM party_allocations WHERE exercise_id=? AND team=? AND active=1 ORDER BY asset_id",
+                    (exercise["id"], team))] for team in ("AZUL", "VERMELHO")}
                 base["assets"] = [dict(row) for row in db.execute(
                     "SELECT id,code,name,category,team,fiche,source_label FROM assets WHERE exercise_id=? ORDER BY team,id",
                     (exercise["id"],))]
@@ -532,11 +549,11 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Seleção de meios inválida."})
             return
         own_assets = {row[0] for row in db.execute(
-            "SELECT m.id FROM assets m JOIN asset_allocations a ON a.asset_id=m.id AND a.exercise_id=m.exercise_id "
-            "WHERE m.exercise_id=? AND m.team=? AND a.student_id=? AND a.active=1",
-            (exercise["id"], user["team"], user["uid"]))}
+            "SELECT m.id FROM assets m JOIN party_allocations a ON a.asset_id=m.id AND a.exercise_id=m.exercise_id AND a.team=m.team "
+            "WHERE m.exercise_id=? AND m.team=? AND a.active=1",
+            (exercise["id"], user["team"]))}
         if not set(asset_ids).issubset(own_assets):
-            self.send_json(HTTPStatus.FORBIDDEN, {"error": "A seleção inclui meios não alocados a este aluno."})
+            self.send_json(HTTPStatus.FORBIDDEN, {"error": "A seleção inclui meios não alocados ao partido do aluno."})
             return
 
         previous = db.execute("SELECT * FROM submissions WHERE exercise_id=? AND student_id=? ORDER BY revision DESC LIMIT 1",
@@ -673,36 +690,32 @@ class Handler(BaseHTTPRequestHandler):
         if user["role"] != "instructor":
             self.send_json(403, {"error": "Somente o instrutor pode alocar meios."})
             return
-        student_id = payload.get("student_id")
+        team = payload.get("team")
         ids = payload.get("asset_ids")
-        if type(student_id) is not int or not isinstance(ids, list) or len(ids) > 1000 or any(type(value) is not int for value in ids):
-            self.send_json(400, {"error": "Aluno ou seleção de meios inválidos."})
+        if team not in ("AZUL", "VERMELHO") or not isinstance(ids, list) or len(ids) > 1000 or any(type(value) is not int for value in ids):
+            self.send_json(400, {"error": "Partido ou seleção de meios inválidos."})
             return
         exercise = db.execute("SELECT * FROM exercises ORDER BY id LIMIT 1").fetchone()
         if not exercise or not db.execute("SELECT 1 FROM assignments WHERE exercise_id=? AND user_id=?", (exercise["id"], user["uid"])).fetchone():
             self.send_json(403, {"error": "Instrutor sem atribuição ao exercício."})
             return
-        student = db.execute("SELECT u.* FROM users u JOIN assignments a ON a.user_id=u.id WHERE a.exercise_id=? AND u.id=? AND u.role='student' AND u.active=1", (exercise["id"], student_id)).fetchone()
-        if not student:
-            self.send_json(404, {"error": "Aluno não encontrado neste exercício."})
-            return
-        allowed = {row[0] for row in db.execute("SELECT id FROM assets WHERE exercise_id=? AND team=?", (exercise["id"], student["team"]))}
+        allowed = {row[0] for row in db.execute("SELECT id FROM assets WHERE exercise_id=? AND team=?", (exercise["id"], team))}
         selected = set(ids)
         if not selected.issubset(allowed):
-            self.send_json(403, {"error": "Selecione somente meios da equipe do aluno neste exercício."})
+            self.send_json(403, {"error": "Selecione somente meios do partido neste exercício."})
             return
-        previous = {row[0] for row in db.execute("SELECT asset_id FROM asset_allocations WHERE exercise_id=? AND student_id=? AND active=1", (exercise["id"], student_id))}
+        previous = {row[0] for row in db.execute("SELECT asset_id FROM party_allocations WHERE exercise_id=? AND team=? AND active=1", (exercise["id"], team))}
         if selected == previous:
             self.send_json(200, {"ok": True, "changed": False})
             return
         now = iso_now()
-        db.execute("UPDATE asset_allocations SET active=0,allocated_by=?,updated_at=? WHERE exercise_id=? AND student_id=? AND active=1", (user["uid"], now, exercise["id"], student_id))
+        db.execute("UPDATE party_allocations SET active=0,allocated_by=?,updated_at=? WHERE exercise_id=? AND team=? AND active=1", (user["uid"], now, exercise["id"], team))
         for asset_id in selected:
-            db.execute("INSERT INTO asset_allocations(exercise_id,student_id,asset_id,allocated_by,active,updated_at) VALUES(?,?,?,?,1,?) "
-                       "ON CONFLICT(exercise_id,student_id,asset_id) DO UPDATE SET active=1,allocated_by=excluded.allocated_by,updated_at=excluded.updated_at",
-                       (exercise["id"], student_id, asset_id, user["uid"], now))
-        event(db, user["uid"], "assets.allocated", exercise=exercise["id"], subject=student_id,
-              detail={"before": sorted(previous), "after": sorted(selected), "added": sorted(selected-previous), "removed": sorted(previous-selected)})
+            db.execute("INSERT INTO party_allocations(exercise_id,team,asset_id,allocated_by,active,updated_at) VALUES(?,?,?,?,1,?) "
+                       "ON CONFLICT(exercise_id,team,asset_id) DO UPDATE SET active=1,allocated_by=excluded.allocated_by,updated_at=excluded.updated_at",
+                       (exercise["id"], team, asset_id, user["uid"], now))
+        event(db, user["uid"], "assets.party_allocated", exercise=exercise["id"],
+              detail={"team": team, "before": sorted(previous), "after": sorted(selected), "added": sorted(selected-previous), "removed": sorted(previous-selected)})
         self.send_json(200, {"ok": True, "changed": True})
 
     def read_notification(self, db: sqlite3.Connection, user: sqlite3.Row, payload: dict) -> None:

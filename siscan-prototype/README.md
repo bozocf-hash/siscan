@@ -25,7 +25,7 @@ Contas sintéticas: `instrutor`, `avaliador`, `azul-01` a `azul-08`, `vermelho-0
 
 ## Fluxo implementado
 
-1. Instrutor aloca meios sintéticos da equipe a cada aluno no painel “Alocar meios ao aluno”. Aluno autenticado vê os meios recebidos e o fluxograma confirmado; prepara composição e salva rascunho. A alocação é permissão didática, sem controle de exclusividade física: o mesmo meio pode ser disponibilizado a mais de um aluno.
+1. Instrutor aloca meios sintéticos ao partido Azul ou Vermelho no painel “Alocar meios ao partido”. Aluno autenticado vê os meios recebidos e o fluxograma confirmado; prepara composição e salva rascunho. Todos os alunos atribuídos ao partido acessam o mesmo conjunto disponibilizado.
 2. Ao submeter sem justificativa, o sistema apresenta a advertência aprovada e registra a ausência se o aluno confirmar.
 3. Avaliador pode comentar, validar ou devolver. Versões anteriores são preservadas.
 4. Instrutor acompanha todas as equipes, solicita revisão ou libera o resultado após validação.
@@ -37,8 +37,10 @@ O fluxograma confirmado é exibido como referência de leitura. Este incremento 
 
 O relatório individual oferece impressão e salvamento como PDF pelo navegador, com layout de papel. Essa cópia não possui QR Code nem validação de autenticidade; a emissão autenticável permanece pendente.
 
-As alocações começam vazias. O instrutor deve configurá-las, inclusive em instâncias demonstrativas já existentes. Retirar um meio bloqueia sua seleção em novos salvamentos; documentos anteriores continuam preservados. A auditoria registra os meios adicionados/retirados e notifica o aluno. Este catálogo ainda não usa dados DB3K.
+As alocações começam vazias. O instrutor deve configurá-las, inclusive em instâncias demonstrativas já existentes. Retirar um meio bloqueia sua seleção em novos salvamentos; documentos anteriores continuam preservados. A auditoria registra os meios adicionados/retirados e notifica os alunos do partido. Este catálogo ainda não usa dados DB3K.
 
 ## Verificação da impressão
 
 `python check_workflow.py --print-fixture` cria um relatório HTML isolado em `tmp/print/report.html`, com justificativa longa e dados sintéticos. O arquivo temporário não é versionado. A conferência realizada no Edge gerou quatro páginas A4; as páginas foram renderizadas e inspecionadas, o conteúdo final e o histórico foram recuperados por extração de texto e os controles de impressão ficaram ocultos. Isso verifica a amostra usada; documentos com outros conteúdos continuam sujeitos a revisão de paginação.
+
+A regra vigente é alocação por partido, conforme correção expressa do responsável. Registros antigos por aluno permanecem apenas como histórico e não concedem acesso; as alocações por partido devem ser configuradas pelo instrutor.

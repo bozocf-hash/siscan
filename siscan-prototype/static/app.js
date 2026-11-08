@@ -162,7 +162,7 @@ function renderStudent() {
     const text = el("span", {}, [el("strong", { text: `${asset.name} · ${asset.category}` }), el("small", { text: `${asset.code} — ${asset.source_label}. ${asset.fiche}` })]);
     assets.append(el("label", { class: "asset", for: `asset-${asset.id}` }, [check, text]));
   }
-  if (!(dashboardData.assets || []).length) assets.append(el("p", { class: "notice", text: "O instrutor ainda não alocou meios para você. Sua composição poderá usar os meios após a alocação." }));
+  if (!(dashboardData.assets || []).length) assets.append(el("p", { class: "notice", text: "O instrutor ainda não alocou meios para seu partido. Sua composição poderá usar os meios após a alocação." }));
   const rationale = el("textarea", { id: "rationale", name: "rationale", maxlength: "12000", placeholder: "Justificativa facultativa. Se enviada vazia, será exibido o aviso aprovado e a ausência ficará registrada." });
   const save = el("button", { class: "btn btn-secondary", type: "button", text: "Salvar rascunho" });
   const submit = el("button", { class: "btn", type: "button", text: "Submeter ao avaliador" });
@@ -273,34 +273,34 @@ function renderReviewer() {
 
 function renderAllocations(parent) {
   const card = el("section", { class: "card span-12" });
-  card.append(el("h2", { text: "Alocar meios ao aluno" }));
-  card.append(el("p", { class: "muted", text: "Escolha o aluno e os meios de sua equipe disponíveis para composição. Neste protótipo a alocação é uma permissão didática: o mesmo meio pode ser disponibilizado a mais de um aluno. Alterações não apagam documentos já registrados." }));
+  card.append(el("h2", { text: "Alocar meios ao partido" }));
+  card.append(el("p", { class: "muted", text: "Escolha o partido Azul ou Vermelho. Todos os alunos atribuídos a esse partido terão acesso aos meios disponibilizados. Alterações não apagam documentos já registrados." }));
   const form = el("form");
-  const select = el("select", { id: "allocation-student", required: "required" });
-  select.append(el("option", { value: "", text: "Selecione um aluno" }));
-  for (const student of dashboardData.participants || []) select.append(el("option", { value: String(student.id), text: `${student.display_name} · ${student.team}` }));
+  const select = el("select", { id: "allocation-team", required: "required" });
+  select.append(el("option", { value: "", text: "Selecione um partido" }));
+  for (const team of ["AZUL", "VERMELHO"]) select.append(el("option", { value: team, text: team }));
   const choices = el("div", { class: "asset-list" });
   const save = el("button", { class: "btn", type: "submit", text: "Salvar alocação" });
   save.disabled = true;
   select.addEventListener("change", () => {
     choices.replaceChildren();
-    const student = (dashboardData.participants || []).find((item) => item.id === Number(select.value));
-    save.disabled = !student;
-    if (!student) return;
-    for (const asset of (dashboardData.assets || []).filter((item) => item.team === student.team)) {
+    const team = select.value;
+    save.disabled = !team;
+    if (!team) return;
+    for (const asset of (dashboardData.assets || []).filter((item) => item.team === team)) {
       const check = el("input", { type: "checkbox", name: "allocated_asset", value: String(asset.id) });
-      check.checked = (student.allocated_asset_ids || []).includes(asset.id);
+      check.checked = (dashboardData.party_allocations?.[team] || []).includes(asset.id);
       choices.append(el("label", { class: "asset" }, [check, el("span", {}, [el("strong", { text: `${asset.code} — ${asset.name}` }), el("small", { text: `${asset.category} · ${asset.source_label}` })])]));
     }
   });
-  form.append(el("label", { class: "label", for: "allocation-student", text: "Aluno" }), select, choices, el("div", { class: "actions" }, [save]));
+  form.append(el("label", { class: "label", for: "allocation-team", text: "Partido" }), select, choices, el("div", { class: "actions" }, [save]));
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const assetIds = [...choices.querySelectorAll("input:checked")].map((item) => Number(item.value));
-    if (!assetIds.length && !window.confirm("Salvar sem meios alocados para este aluno?")) return;
+    if (!assetIds.length && !window.confirm("Salvar sem meios alocados para este partido?")) return;
     save.disabled = true;
     try {
-      await api("/api/allocations", { student_id: Number(select.value), asset_ids: assetIds });
+      await api("/api/allocations", { team: select.value, asset_ids: assetIds });
       await loadDashboard();
     } catch (error) { showMessage(card, error.message, "notice error"); save.disabled = false; }
   });

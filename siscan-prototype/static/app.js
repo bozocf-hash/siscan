@@ -131,6 +131,22 @@ function renderStudent() {
   const rationale = el("textarea", { id: "rationale", name: "rationale", maxlength: "12000", placeholder: "Justificativa facultativa. Se enviada vazia, será exibido o aviso aprovado e a ausência ficará registrada." });
   const save = el("button", { class: "btn btn-secondary", type: "button", text: "Salvar rascunho" });
   const submit = el("button", { class: "btn", type: "button", text: "Submeter ao avaliador" });
+  const latest = (dashboardData.submissions || [])[0];
+  const editable = !latest || ["draft", "returned"].includes(latest.status);
+  if (latest) {
+    type.value = latest.document_type;
+    group.value = latest.group_name;
+    rationale.value = latest.rationale;
+    for (const check of assets.querySelectorAll('input[name="asset"]')) {
+      check.checked = latest.asset_ids.includes(Number(check.value));
+    }
+  }
+  if (!editable) {
+    for (const input of [type, group, rationale, ...assets.querySelectorAll("input"), save, submit]) input.disabled = true;
+    formCard.append(el("p", { class: "notice", text: "Documento submetido. O conteúdo permanece disponível para consulta; uma nova versão poderá ser preparada após devolução para revisão." }));
+  } else if (latest) {
+    formCard.append(el("p", { class: "notice", text: latest.status === "draft" ? `Rascunho da versão ${latest.revision} recuperado.` : `Conteúdo devolvido da versão ${latest.revision} recuperado. Ao salvar, será criada uma nova versão.` }));
+  }
   form.append(el("label", { class: "label", for: "document-type", text: "Documento" }), type,
     el("label", { class: "label", for: "group-name", text: "Nome do grupamento" }), group,
     el("span", { class: "label", text: "Meios didáticos disponíveis" }), assets,
@@ -173,6 +189,13 @@ function renderStudent() {
     entry.append(el("div", { class: "submission-meta" }, [el("strong", { text: `${item.document_type} · versão ${item.revision}` }),
       el("span", { class: `badge status-${item.status}`, text: shownStatus })]));
     entry.append(el("p", { class: "muted", text: `Grupamento: ${item.group_name} · registrada ${item.updated_at}` }));
+    const content = el("details");
+    const selectedNames = (dashboardData.assets || []).filter((asset) => item.asset_ids.includes(asset.id)).map((asset) => `${asset.code} — ${asset.name}`);
+    content.append(el("summary", { text: "Consultar conteúdo desta versão" }),
+      el("p", { text: `Meios: ${selectedNames.join("; ") || "nenhum selecionado"}` }),
+      el("p", { text: item.rationale || "Justificativa não apresentada." }),
+      el("p", { class: "muted", text: `Cenário de referência: versão ${item.scenario_version}` }));
+    entry.append(content);
     if (item.status === "returned" || item.status === "released") {
       entry.append(el("p", { text: item.review_comment ? `Comentário: ${item.review_comment}` : "Sem comentário registrado." }));
     }

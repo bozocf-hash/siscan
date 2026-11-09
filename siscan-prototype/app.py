@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 from tools.register_source_references import REFERENCE_SCHEMA
 from tools.import_technical_values import TECHNICAL_SCHEMA
 
@@ -372,6 +372,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path == "/api/catalog-references":
+                current = self.require_user(db)
+                if current:
+                    self.reference_catalog(db, current[1], urlparse(self.path).query)
+                return
             if path == "/api/catalog-candidates":
                 current = self.require_user(db)
                 if current:
@@ -740,6 +745,56 @@ class Handler(BaseHTTPRequestHandler):
         event(db, user["uid"], "catalog.review_note_added", exercise=assignment[0],
               detail={"note_id": saved["id"], "candidate_id": identifier, "source_sha256": source_hash})
         self.send_json(200, {"ok": True, "review_note": dict(saved)})
+
+    def reference_catalog(self, db: sqlite3.Connection, user: sqlite3.Row, query: str) -> None:
+        assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()
+        if user["role"] != "instructor" or not assigned:
+            self.send_json(403, {"error": "Consulta restrita ao instrutor atribuído ao exercício."})
+            return
+        try:
+            params = parse_qs(query, keep_blank_values=True, max_num_fields=3)
+            if any(k not in ("page", "q", "table") or len(v) != 1 for k, v in params.items()):
+                raise ValueError("Invalid query")
+            page = int(params.get("page", ["1"])[0])
+            term = params.get("q", [""])[0].strip()
+            table = params.get("table", [""])[0]
+            if not 1 <= page <= 1000000 or len(term) > 120 or table not in ("", "DataAircraft", "DataShip", "DataSubmarine", "DataGroundUnit"):
+                raise ValueError("Invalid filters")
+        except ValueError:
+            self.send_json(400, {"error": "Página ou filtros de catálogo inválidos."})
+            return
+        where = "WHERE (?='' OR r.source_table=?) AND (?='' OR r.external_id=? OR (?=0 AND instr(lower(coalesce(r.source_name,'')),lower(?))>0))"
+        args = (table, table, term, term, int(term.isdecimal()), term)
+        try:
+            total = db.execute("SELECT count(*) FROM catalog_source_references r " + where, args).fetchone()[0]
+            pages = max(1, (total + 49) // 50)
+            page = min(page, pages)
+            references = [dict(row) for row in db.execute(
+                "SELECT r.reference_id,r.source_table,r.external_id,r.source_name,r.source_sha256,r.source_file_name,r.registered_at "
+                "FROM catalog_source_references r " + where +
+                " ORDER BY r.source_sha256,r.source_table,CAST(r.external_id AS INTEGER),r.external_id,r.reference_id LIMIT 50 OFFSET ?",
+                (*args, (page - 1) * 50))]
+            fields_by_reference = {row["reference_id"]: [] for row in references}
+            if references:
+                placeholders = ",".join("?" for _ in references)
+                for row in db.execute(
+                    "SELECT v.reference_id,v.field_name,v.raw_value_json,v.sqlite_declared_type,v.unit,v.validation_status,v.evidence_sha256 "
+                    "FROM catalog_technical_values v JOIN catalog_technical_imports i ON i.evidence_sha256=v.evidence_sha256 "
+                    "JOIN catalog_source_references r ON r.reference_id=v.reference_id "
+                    f"WHERE v.reference_id IN ({placeholders}) AND i.source_sha256=r.source_sha256 ORDER BY v.reference_id,v.field_name",
+                    tuple(fields_by_reference)):
+                    value = json.loads(row["raw_value_json"])
+                    if row["unit"] is not None or row["validation_status"] != "pending_unit_and_semantics" or (value is not None and type(value) not in (str, int, float)):
+                        raise ValueError("Invalid technical evidence")
+                    json.dumps(value, allow_nan=False)
+                    fields_by_reference[row["reference_id"]].append({"field_name": row["field_name"], "value": value,
+                                   "sqlite_type": row["sqlite_declared_type"], "unit": None,
+                                   "validation_status": row["validation_status"], "evidence_sha256": row["evidence_sha256"]})
+            for reference in references:
+                reference["technical_fields"] = fields_by_reference[reference["reference_id"]]
+            self.send_json(200, {"references": references, "total": total, "page": page, "pages": pages, "page_size": 50})
+        except (sqlite3.Error, ValueError, TypeError):
+            self.send_json(503, {"error": "O catálogo cadastrado não está disponível em formato válido."})
 
     def candidate_catalog(self, db: sqlite3.Connection, user: sqlite3.Row) -> None:
         assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()

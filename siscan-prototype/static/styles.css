@@ -44,6 +44,7 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 3px s
 .actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
 .btn { border: 1px solid transparent; border-radius: 6px; padding: 9px 14px; font-weight: 650; background: var(--navy); color: white; }
 .btn:hover { filter: brightness(1.08); } .btn-secondary { background: white; border-color: var(--line); color: var(--ink); }
+.btn:disabled { opacity: .55; cursor: default; }
 .btn-positive { background: var(--green); } .btn-warn { background: var(--amber); } .btn-danger { background: var(--red); }
 .notice { border-left: 4px solid var(--blue); background: var(--blue-soft); padding: 12px 14px; border-radius: 5px; margin: 14px 0; }
 .notice.warning { border-color: var(--amber); background: var(--amber-soft); }
@@ -72,6 +73,8 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 3px s
 .notification-panel summary { cursor: pointer; font-weight: 700; }
 .source-hash { overflow-wrap: anywhere; font-size: .85rem; }
 .candidate-list { max-height: 480px; overflow-y: auto; padding: 4px; }
+.reference-list { overflow-wrap: anywhere; }
+.actions[hidden] { display: none; }
 .review-note-text { white-space: pre-wrap; overflow-wrap: anywhere; }
 .report dt { font-weight: 700; margin-top: 16px; break-after: avoid; }
 .report dd { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }

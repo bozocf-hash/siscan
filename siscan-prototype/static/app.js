@@ -260,6 +260,7 @@ function renderReviewer() {
     renderScenarioEditor(box);
     renderParticipants(box);
     renderAllocations(box);
+    renderReferenceCatalog(box);
     renderCandidateCatalog(box);
   }
   const list = el("section", { class: `card ${currentUser.role === "instructor" ? "span-12" : "span-12"}` });
@@ -272,10 +273,89 @@ function renderReviewer() {
   app.append(box);
 }
 
+function renderReferenceCatalog(parent) {
+  const card = el("section", { class: "card span-12", "aria-label": "Catálogo cadastrado" });
+  card.append(el("h2", { text: "Catálogo cadastrado — referências e valores técnicos" }),
+    el("p", { class: "notice warning", text: "Referências de identificação cadastradas. Os valores técnicos são brutos e permanecem pendentes de unidade e significado; não estão liberados para cálculos ou alocação." }));
+  const form = el("form");
+  const search = el("input", { id: "reference-search", type: "search", maxlength: "120", placeholder: "Nome ou ID externo" });
+  const filter = el("select", { id: "reference-table" });
+  for (const [value, text] of [["", "Todos os tipos"], ["DataAircraft", "Aeronaves"], ["DataShip", "Navios"], ["DataSubmarine", "Submarinos"], ["DataGroundUnit", "Unidades terrestres"]]) {
+    filter.append(el("option", { value, text }));
+  }
+  const submit = el("button", { class: "btn btn-secondary", type: "submit", text: "Consultar referências cadastradas" });
+  form.append(el("label", { class: "label", for: "reference-search", text: "Pesquisar no catálogo cadastrado" }), search,
+    el("label", { class: "label", for: "reference-table", text: "Tipo de plataforma" }), filter,
+    el("div", { class: "actions" }, [submit]));
+  const status = el("p", { role: "status", "aria-live": "polite", class: "muted" });
+  const previous = el("button", { class: "btn btn-secondary", type: "button", text: "Página anterior" });
+  const next = el("button", { class: "btn btn-secondary", type: "button", text: "Próxima página" });
+  const navigation = el("nav", { class: "actions", "aria-label": "Páginas do catálogo cadastrado", hidden: "hidden" }, [previous, next]);
+  const content = el("div", { class: "candidate-list reference-list", tabindex: "0", "aria-label": "Referências encontradas" });
+  let busy = false;
+  let currentPage = 1;
+  let activeFilters = { q: "", table: "" };
+  const load = async (page, filters) => {
+    if (busy) return;
+    busy = true;
+    for (const control of [search, filter, submit, previous, next]) control.disabled = true;
+    navigation.hidden = true;
+    content.replaceChildren();
+    card.setAttribute("aria-busy", "true");
+    status.textContent = "Consultando referências…";
+    try {
+      const query = new URLSearchParams({ page: String(page), ...filters });
+      const result = await api(`/api/catalog-references?${query}`);
+      currentPage = result.page;
+      activeFilters = filters;
+      const foundLabel = result.total === 1 ? "referência encontrada" : "referências encontradas";
+      status.textContent = `${result.total} ${foundLabel} · Página ${result.page} de ${result.pages} · ${result.references.length} nesta página`;
+      for (const row of result.references) {
+        const entry = el("article", { class: "submission" }, [
+          el("strong", { text: row.source_name || "Nome ausente na fonte" }),
+          el("p", { class: "muted", text: `${row.source_table} · ID externo ${row.external_id} · Identificação cadastrada` }),
+          el("p", { class: "source-hash", text: `ID SISCAN: ${row.reference_id}` }),
+          el("p", { class: "source-hash", text: `Fonte: ${row.source_file_name} · SHA-256: ${row.source_sha256}` })
+        ]);
+        if (row.technical_fields.length) {
+          const fields = el("details");
+          fields.append(el("summary", { text: `Valores técnicos brutos (${row.technical_fields.length})` }),
+            el("p", { class: "notice warning", text: "Unidade e significado pendentes. Zero, NULL e sinais são preservados sem interpretação." }));
+          for (const field of row.technical_fields) {
+            fields.append(el("p", { text: `${field.field_name}: ${field.value === null ? "NULL" : String(field.value)} · Tipo SQLite: ${field.sqlite_type || "não declarado"} · Pendente de validação` }),
+              el("p", { class: "source-hash", text: `Evidência SHA-256: ${field.evidence_sha256}` }));
+          }
+          entry.append(fields);
+        } else entry.append(el("p", { class: "muted", text: "Sem valores técnicos incorporados para esta referência." }));
+        content.append(entry);
+      }
+      if (!result.references.length) content.append(el("p", { class: "empty", text: "Nenhuma referência corresponde à pesquisa." }));
+      navigation.hidden = false;
+      previous.disabled = result.page <= 1;
+      next.disabled = result.page >= result.pages;
+    } catch (error) {
+      status.textContent = "Consulta não concluída. Tente novamente.";
+      showMessage(content, error.message, "notice error");
+    } finally {
+      busy = false;
+      card.removeAttribute("aria-busy");
+      for (const control of [search, filter, submit]) control.disabled = false;
+    }
+  };
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    load(1, { q: search.value.trim(), table: filter.value });
+  });
+  previous.addEventListener("click", () => load(currentPage - 1, activeFilters));
+  next.addEventListener("click", () => load(currentPage + 1, activeFilters));
+  card.append(form, status, navigation, content);
+  parent.append(card);
+}
+
 function renderCandidateCatalog(parent) {
   const card = el("section", { class: "card span-12" });
   card.append(el("h2", { text: "Catálogo Command / DB3K para revisão" }));
-  card.append(el("p", { class: "notice warning", text: "Candidatos pendentes de validação. Esta consulta não oficializa dados e não disponibiliza estes registros para alocação. Códigos da fonte são exibidos sem interpretação; atributos técnicos ainda não foram importados." }));
+  card.append(el("p", { class: "notice warning", text: "Amostra inicial de candidatos e observações preservadas. Códigos são exibidos sem interpretação. Para consultar o catálogo ampliado e os valores incorporados ao banco, use o painel Catálogo cadastrado. A validação técnica permanece pendente." }));
   const load = el("button", { class: "btn btn-secondary", type: "button", text: "Consultar candidatos DB3K" });
   const content = el("div");
   load.addEventListener("click", async () => {

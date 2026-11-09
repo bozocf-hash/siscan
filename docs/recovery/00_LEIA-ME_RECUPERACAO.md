@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Atualização de execução sintética — 2026-11-09:** [72 — Estado, relógio e consumo transacional](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md) entrega saldo atual separado do snapshot, avanço manual idempotente e ledger atômico. Uma execução controlada de 30 min deixou 540 kg de 600 kg por unidade. Dados Command continuam pendentes para cálculos; afirmações anteriores de ausência de consumo referem-se às entregas anteriores.
+
 ## Atualização posterior às missões documentais
 
 **Unidades e snapshots entregues:** [71](71_IDENTIDADE_CONFIGURACAO_E_SNAPSHOT_UNIDADES.md) registra duas unidades sintéticas, uma por partido, com UUIDs individuais, configuração versionada e snapshots imutáveis. Oito meios anteriores e alocações foram preservados; o instrutor continua responsável pela disponibilização. Quinze verificadores passaram, incluindo idempotência, rollback e acesso compartilhado por partido. Ainda não há execução/consumo.

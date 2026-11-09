@@ -80,3 +80,7 @@ As alocações começam vazias. O instrutor deve configurá-las, inclusive em in
 `python check_workflow.py --print-fixture` cria um relatório HTML isolado em `tmp/print/report.html`, com justificativa longa e dados sintéticos. O arquivo temporário não é versionado. A conferência realizada no Edge gerou quatro páginas A4; as páginas foram renderizadas e inspecionadas, o conteúdo final e o histórico foram recuperados por extração de texto e os controles de impressão ficaram ocultos. Isso verifica a amostra usada; documentos com outros conteúdos continuam sujeitos a revisão de paginação.
 
 A regra vigente é alocação por partido, conforme correção expressa do responsável. Registros antigos por aluno permanecem apenas como histórico e não concedem acesso; as alocações por partido devem ser configuradas pelo instrutor.
+
+## Ensaio sintético de combustível
+
+No painel “Unidades sintéticas”, o instrutor pode inicializar uma execução e avançar um intervalo manual. A taxa controlada é 2 kg/min e cada unidade começa com 600 kg. A tabela separa saldo inicial, saldo atual e consumido, com histórico por comando. Repetições não debitam novamente. Alunos leem apenas unidades alocadas ao próprio partido. Este teste não usa taxas Command. Veja [contrato, evidências e limites](../docs/recovery/72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md). Execute `python check_engine_runtime.py` para verificar transações, conflitos, conservação e concorrência com duas conexões.

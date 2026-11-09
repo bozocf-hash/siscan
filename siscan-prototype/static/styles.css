@@ -165,6 +165,9 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 3px s
 .engine-manifest { overflow-wrap:anywhere; font-size:.75rem; }
 .engine-units-panel { margin-bottom:20px; }
 .unit-identity { overflow-wrap:anywhere; font-size:.8rem; }
+.runtime-panel { margin-top:20px; }
+.runtime-form input { max-width:180px; }
+.runtime-ledger,.runtime-manifest { overflow-wrap:anywhere; font-size:.75rem; line-height:1.6; }
 .payload-family select { width:100%; max-width:100%; margin-bottom:12px; }
 .payload-matrix td:first-child,.payload-matrix td:last-child { white-space:normal; min-width:170px; max-width:230px; }
 .technical-matrix tbody tr:nth-child(even) { background:#f8fafc; }

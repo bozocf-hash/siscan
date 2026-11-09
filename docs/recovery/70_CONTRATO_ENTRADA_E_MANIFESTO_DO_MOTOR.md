@@ -1,5 +1,7 @@
 # 70 — Primeiro contrato de entrada e manifesto do motor
 
+**Continuidade:** [72](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md) acrescenta execução sintética separada do diagnóstico deste documento. O diagnóstico continua sem avançar tempo por si; seu indicador agora informa se há execução visível iniciada. O contrato de entrada e seus hashes permanecem preservados.
+
 **Continuidade:** as unidades individuais e snapshots do próximo passo foram entregues em [71](71_IDENTIDADE_CONFIGURACAO_E_SNAPSHOT_UNIDADES.md), sem iniciar consumo ou execução.
 
 ## Escopo — 2026-11-09

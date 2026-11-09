@@ -23,6 +23,7 @@ import source_catalog
 import resource_store
 import engine_input
 import engine_units
+import engine_runtime
 
 
 ROOT = Path(__file__).resolve().parent
@@ -171,6 +172,7 @@ CREATE INDEX IF NOT EXISTS idx_events_exercise ON events(exercise_id,created_at)
 SCHEMA += REFERENCE_SCHEMA
 SCHEMA += TECHNICAL_SCHEMA
 SCHEMA += engine_units.SCHEMA
+SCHEMA += engine_runtime.SCHEMA
 
 
 def connect() -> sqlite3.Connection:
@@ -367,7 +369,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             return
-        if path in ("/app.js", "/source-catalog.js", "/technical-bundle.js", "/engine-units.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
+        if path in ("/app.js", "/source-catalog.js", "/technical-bundle.js", "/engine-units.js", "/engine-runtime.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
             target = STATIC / path.rsplit("/", 1)[1]
             data = target.read_bytes()
             content_type = ("text/javascript; charset=utf-8" if path.endswith(".js") else
@@ -381,6 +383,12 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path == "/api/engine-runtime":
+                current = self.require_user(db)
+                if current:
+                    if urlparse(self.path).query:self.send_json(400, {"error": "A consulta da execução não aceita parâmetros."})
+                    else:self.engine_runtime_action(db,current[1],'read')
+                return
             if path == "/api/engine-units":
                 current = self.require_user(db)
                 if current:
@@ -480,6 +488,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.add_catalog_note(db, user, payload)
             elif path == "/api/engine-units/prepare":
                 self.engine_unit_catalog(db,user,payload)
+            elif path in ("/api/engine-runtime/start", "/api/engine-runtime/advance"):
+                self.engine_runtime_action(db,user,path.rsplit('/',1)[1],payload)
             else:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "Rota não encontrada."})
 
@@ -778,6 +788,23 @@ class Handler(BaseHTTPRequestHandler):
               detail={"note_id": saved["id"], "candidate_id": identifier, "source_sha256": source_hash})
         self.send_json(200, {"ok": True, "review_note": dict(saved)})
 
+    def engine_runtime_action(self, db: sqlite3.Connection, user: sqlite3.Row, action: str, payload=None) -> None:
+        try:
+            engine_units.context(db,user,write=action!='read')
+            if action=='read':
+                if not db.in_transaction:db.execute('BEGIN')
+                result=engine_runtime.read_runtime(db,user)
+            elif action=='start':
+                if payload!={}:raise ValueError('Inicialização aceita somente objeto vazio.')
+                result=engine_runtime.start_run(db,user)
+            elif action=='advance':result=engine_runtime.advance_run(db,user,payload)
+            else:raise ValueError('Ação inválida.')
+            self.send_json(200,result)
+        except PermissionError as exc:self.send_json(403, {"error":str(exc)})
+        except engine_runtime.Conflict as exc:self.send_json(409, {"error":str(exc)})
+        except ValueError as exc:self.send_json(400, {"error":str(exc)})
+        except (sqlite3.Error,OSError):self.send_json(503, {"error":"Não foi possível aplicar ou conferir a execução. Nenhuma alteração parcial do comando foi mantida."})
+
     def engine_unit_catalog(self, db: sqlite3.Connection, user: sqlite3.Row, payload=None) -> None:
         try:
             engine_units.context(db,user,write=payload is not None)
@@ -786,6 +813,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
             result=engine_units.prepare_units(db,user) if payload is not None else {}
             result.update(engine_units.list_units(db,user))
+            result['simulation_started']=engine_runtime.read_runtime(db,user)['initialized']
             self.send_json(200,result)
         except PermissionError as exc:
             self.send_json(403, {"error": str(exc)})
@@ -799,7 +827,10 @@ class Handler(BaseHTTPRequestHandler):
         if user["role"] != "instructor" or not assigned:
             self.send_json(403, {"error": "Verificação restrita ao instrutor atribuído."})
             return
-        self.send_json(200,engine_input.readiness(ENGINE_SOURCE_PATH,COMPILED_DB_PATH,RESOURCE_STORE_PATH))
+        result=engine_input.readiness(ENGINE_SOURCE_PATH,COMPILED_DB_PATH,RESOURCE_STORE_PATH)
+        result['simulation_started']=engine_runtime.read_runtime(db,user)['initialized']
+        result['qualification']='Esta conferência não avança tempo, calcula consumo ou altera estoque. A execução sintética tem painel próprio; dados Command permanecem pendentes.'
+        self.send_json(200,result)
 
     def compiled_catalog(self, db: sqlite3.Connection, user: sqlite3.Row, path: str, query: str) -> None:
         assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()

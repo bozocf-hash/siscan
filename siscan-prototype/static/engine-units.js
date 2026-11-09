@@ -1,6 +1,6 @@
 function renderEngineUnits(parent,instructor) {
   const panel=el("details",{class:"card engine-units-panel","aria-label":"Unidades do motor"});
-  panel.append(el("summary",{text:"Unidades de teste do motor"}),el("p",{class:"muted",text:"Identidade e dados técnicos iniciais preservados por snapshot. A configuração é sintética; ainda não há avanço de tempo ou consumo de estoque."}));
+  panel.append(el("summary",{text:"Unidades de teste do motor"}),el("p",{class:"muted",text:"Identidade e dados iniciais preservados por snapshot. O painel de execução mantém tempo e combustível atuais separados dos dados congelados."}));
   const content=el("div");let loaded=false;
   const load=async()=>{
     content.replaceChildren(el("p",{role:"status",text:"Conferindo unidades e snapshots…"}));
@@ -19,6 +19,7 @@ function renderEngineUnits(parent,instructor) {
         for(const [label,value] of [["Modelo",snapshot.model_id],["Configuração",snapshot.configuration_id],["Versão da configuração",unit.configuration_version_id],["Snapshot",unit.snapshot_id],["Revisão",unit.revision],["Versão do cenário",snapshot.scenario_version],["Hash do snapshot",unit.snapshot_sha256],["Hash do conjunto",snapshot.input_manifest.dataset_sha256]])detail.append(el("p",{},[el("strong",{text:label+": "}),el("span",{text:String(value)})]));
         card.append(detail);content.append(card);
       }
+      if(data.units.length)renderEngineRuntime(content,instructor);
       loaded=true;
     }catch(error){content.replaceChildren(el("p",{class:"notice error",role:"alert",text:error.message}));loaded=false;}
   };

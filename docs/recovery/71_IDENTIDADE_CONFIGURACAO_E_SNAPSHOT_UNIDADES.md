@@ -1,5 +1,7 @@
 # 71 — Identidade, configuração e snapshot das unidades de teste
 
+**Continuidade entregue:** [72](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md) acrescenta estado mutável e consumo sintético sem reescrever os snapshots aqui descritos. As referências abaixo a ausência de consumo e ao próximo passo descrevem o estado da entrega 71.
+
 ## Escopo — 2026-11-09
 
 Implementar o segundo passo da sequência 69/70: uma unidade sintética individual por partido, configuração versionada e snapshot técnico imutável. Preservar os oito meios demonstrativos e suas alocações; criar dois meios de teste identificados separadamente, sem alocação automática.

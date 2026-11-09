@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Atualização após 71 — 2026-11-09:** [72](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md) entrega estado mutável, relógio manual e combustível transacional exclusivamente sintéticos. Essas pendências citadas nos registros anteriores foram atendidas nesse recorte. Permanecem curvas reais validadas, outros recursos, novas ramificações de execução, recuperação operacional e teste de carga. Uma execução por exercício; mudança de cenário/algoritmo bloqueia avanço sem apagar histórico ou impedir edição do cenário.
+
 **Identidade/snapshot sintéticos, 2026-11-09:** [71](71_IDENTIDADE_CONFIGURACAO_E_SNAPSHOT_UNIDADES.md) entrega UUIDs, configuração versionada, snapshots e preparação atômica/idempotente de uma unidade por partido. A leitura do aluno exige alocação ativa ao próprio partido. ED-04 avança no recorte sintético; catálogo real aprovado, novas versões/transferências, estado mutável, relógio/estoques e ativação de execução permanecem pendentes. Não usar os atributos iniciais congelados como saldo operacional atualizado.
 
 **Contrato sintético e manifesto, 2026-11-09:** [70](70_CONTRATO_ENTRADA_E_MANIFESTO_DO_MOTOR.md) entrega o primeiro contrato de entrada e a conferência cruzada efetiva dos arquivos. ED-09 avança no diagnóstico, mas falta impor manifesto/snapshot imutáveis na ativação de uma execução real. O aceite é restrito ao conjunto sintético fixado pelo backend; dados Command continuam sem aprovação para cálculos. Não há consumo, baixa de estoque ou avanço de tempo nesta etapa.

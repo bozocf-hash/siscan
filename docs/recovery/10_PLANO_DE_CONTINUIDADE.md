@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Terceiro passo entregue em 72:** [estado, relógio e consumo transacional](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md), com snapshots preservados, idempotência, controle de revisão e ledger por unidade. A próxima fatia deverá tratar continuidade/versionamento da execução e seus critérios de recuperação antes de novos modelos operacionais. Os passos 70/71 abaixo são histórico da sequência já cumprida no recorte sintético. Validação física/aprovação dos dados Command segue independente.
+
 ## Continuidade atual — 2026-11-09
 
 **Segundo passo entregue em 71:** identidade individual, configuração versionada e snapshot técnico de duas unidades sintéticas, preservando alocações existentes. A próxima fatia é estado mutável, tempo/eventos e recursos transacionais com dados controlados; o snapshot inicial não deve ser reescrito pela execução. Dados reais e transferências exigem seus contratos próprios.

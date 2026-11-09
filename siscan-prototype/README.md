@@ -8,6 +8,8 @@ Para investigar descrições literais dos códigos, na pasta do protótipo execu
 
 A ferramenta também compara ID, nome e todos os códigos do candidato diretamente com o registro original antes de emitir evidências. Divergências interrompem a emissão. A promoção para catálogo utilizável exige aprovação explícita do responsável pelo projeto (documento 53); observações de instrutores não substituem essa aprovação.
 
+Para preparar uma proposta de identificação de referência ao responsável, execute `python -m tools.prepare_approval_packet CAMINHO_AMOSTRA RELATORIO_CONFERIDO NOVO_PACOTE.json`. A ferramenta verifica os hashes e a cobertura da conferência literal, gerando JSON e Markdown com todas as decisões pendentes. Ela não aprova registros, não cria unidades e não permite alocação. Confira com `python check_approval_packet.py`. Os pacotes com dados de origem devem ficar em `data/`, fora do GitHub.
+
 A tela consulta as descrições do arquivo local `data/db3k-domains-01.json`. Os hashes da fonte e da amostra devem corresponder aos do relatório; se houver divergência ou formato inválido, a consulta mantém os códigos originais e informa que as descrições não foram carregadas. Cada candidato oferece “Descrições e evidências dos códigos”, sem aprovação ou promoção automática.
 
 Em “Observações da revisão”, o instrutor atribuído pode acrescentar anotações de até 4000 caracteres. O histórico preserva autor, horário UTC, candidato, hash da fonte e exercício; anotações são adicionadas, não substituídas. Elas ficam no banco do protótipo e não alteram o DB3K, a amostra ou a situação pendente dos candidatos. A troca da amostra exige reabrir a consulta antes de registrar anotações para sua fonte.

@@ -306,6 +306,7 @@ function renderCandidateCatalog(parent) {
           el("p", { text: `Códigos originais: ${row.raw_codes_json}` })
           ]);
           const domains = Object.entries(row.domain_evidence || {});
+          if (row.source_reference) entry.append(el("p", { class: "notice", text: `Identificação de referência cadastrada · ID SISCAN ${row.source_reference.reference_id}. A validação técnica e a criação de unidade alocável continuam pendentes.` }));
           if (domains.length) {
             const details = el("details");
             details.append(el("summary", { text: "Descrições e evidências dos códigos" }));

@@ -17,6 +17,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
+from tools.register_source_references import REFERENCE_SCHEMA
 
 
 ROOT = Path(__file__).resolve().parent
@@ -158,6 +159,7 @@ CREATE TABLE IF NOT EXISTS catalog_review_notes (
 CREATE INDEX IF NOT EXISTS idx_submissions_student ON submissions(student_id,exercise_id,revision);
 CREATE INDEX IF NOT EXISTS idx_events_exercise ON events(exercise_id,created_at);
 """
+SCHEMA += REFERENCE_SCHEMA
 
 
 def connect() -> sqlite3.Connection:
@@ -755,6 +757,13 @@ class Handler(BaseHTTPRequestHandler):
                 if not provenance:
                     raise ValueError("Missing provenance")
                 records = [dict(row) for row in candidates]
+                references = {(row["source_table"], row["external_id"]): dict(row) for row in db.execute(
+                    "SELECT reference_id,source_table,external_id,source_name,registered_at FROM catalog_source_references WHERE source_sha256=?",
+                    (provenance["sha256"],))}
+                for record in records:
+                    reference = references.get((record["source_table"], record["external_id"]))
+                    record["source_reference"] = ({"reference_id": reference["reference_id"], "registered_at": reference["registered_at"]}
+                                                  if reference and reference["source_name"] == record["source_name"] else None)
                 notes_by_candidate = {}
                 for note in db.execute("SELECT n.id,n.candidate_id,n.note,n.created_at,u.display_name AS author FROM catalog_review_notes n JOIN users u ON u.id=n.author_id WHERE n.source_sha256=? AND n.exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1) ORDER BY n.id", (provenance["sha256"],)):
                     notes_by_candidate.setdefault(note["candidate_id"], []).append({key: note[key] for key in ("id", "note", "created_at", "author")})

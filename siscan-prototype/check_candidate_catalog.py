@@ -56,6 +56,12 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
         assert all(row["review_status"] == "needs_review" for row in result["candidates"])
         assert result["source"]["sha256"] == digest(source)
         assert digest(review) == before
+        db.execute("INSERT INTO catalog_reference_approvals(approval_sha256,batch_id,approved_by,decision_record,manifest_json) VALUES('test-hash','test-batch','Responsável','Decisão de teste','{}')")
+        first = result["candidates"][0]
+        db.execute("INSERT INTO catalog_source_references(reference_id,source_sha256,source_file_name,source_table,external_id,source_name,approval_sha256) VALUES(?,?,?,?,?,?,'test-hash')",
+                   ('internal-reference-test', digest(source), 'source.db3', first['source_table'], first['external_id'], first['source_name']))
+        h.candidate_catalog(db, {"uid": 1, "role": "instructor"})
+        assert responses[-1][1]["candidates"][0]["source_reference"]["reference_id"] == 'internal-reference-test'
         original_id = result["candidates"][0]["candidate_id"]
         note = {"candidate_id": original_id, "source_sha256": digest(source), "note": "Conferir categoria <referência>"}
         h.add_catalog_note(db, {"uid": 2, "role": "student"}, note)

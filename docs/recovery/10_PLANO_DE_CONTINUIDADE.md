@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Quinto passo entregue em 74:** [prévia por perfil temporal](74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md), somente com regimes sintéticos e sem alteração de saldos. Próxima fatia: fixar contrato do perfil na execução e aplicar o plano inteiro em transação idempotente, mantendo a recusa integral por insuficiência. Modelos Command continuam dependentes de aprovação física/semântica específica.
+
 **Quarto passo entregue em 73:** [continuidade versionada](73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md) conserva saldo/tempo, cria snapshots e preserva o histórico quando o instrutor cria uma sucessora. O próximo recorte pode ser o contrato de perfil temporal e consumo por regime com dados controlados; taxas e unidades Command ainda exigem comprovação e aprovação. Referências anteriores à continuidade como próxima entrega são históricas.
 
 **Terceiro passo entregue em 72:** [estado, relógio e consumo transacional](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md), com snapshots preservados, idempotência, controle de revisão e ledger por unidade. A próxima fatia deverá tratar continuidade/versionamento da execução e seus critérios de recuperação antes de novos modelos operacionais. Os passos 70/71 abaixo são histórico da sequência já cumprida no recorte sintético. Validação física/aprovação dos dados Command segue independente.

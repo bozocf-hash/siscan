@@ -1,0 +1,13 @@
+{
+  "schema_version": "siscan-consumption-profile-01",
+  "dataset_version": "synthetic-profiles-01",
+  "data_kind": "synthetic_controlled",
+  "mass_unit": "g",
+  "rate_unit": "g/min",
+  "time_unit": "min",
+  "regimes": [
+    {"id": "SYN-ECO", "label": "Econômico de teste", "grams_per_minute": 500},
+    {"id": "SYN-REF", "label": "Referência de teste", "grams_per_minute": 2000},
+    {"id": "SYN-HIGH", "label": "Intensivo de teste", "grams_per_minute": 4000}
+  ]
+}

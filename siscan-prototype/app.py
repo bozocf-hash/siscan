@@ -25,6 +25,7 @@ import engine_input
 import engine_units
 import engine_runtime
 import engine_continuity
+import engine_profiles
 
 
 ROOT = Path(__file__).resolve().parent
@@ -372,7 +373,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             return
-        if path in ("/app.js", "/source-catalog.js", "/technical-bundle.js", "/engine-units.js", "/engine-runtime.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
+        if path in ("/app.js", "/source-catalog.js", "/technical-bundle.js", "/engine-units.js", "/engine-runtime.js", "/engine-profiles.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
             target = STATIC / path.rsplit("/", 1)[1]
             data = target.read_bytes()
             content_type = ("text/javascript; charset=utf-8" if path.endswith(".js") else
@@ -386,6 +387,12 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path == '/api/engine-profile-contract':
+                current=self.require_user(db)
+                if current:
+                    if urlparse(self.path).query:self.send_json(400,{'error':'Contrato não aceita parâmetros.'})
+                    else:self.engine_profile_action(db,current[1])
+                return
             if path in ("/api/engine-runtime", "/api/engine-runtime/history"):
                 current = self.require_user(db)
                 if current:
@@ -497,6 +504,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.engine_unit_catalog(db,user,payload)
             elif path in ("/api/engine-runtime/start", "/api/engine-runtime/advance", "/api/engine-runtime/continue"):
                 self.engine_runtime_action(db,user,path.rsplit('/',1)[1],payload)
+            elif path == '/api/engine-profile-preview':
+                self.engine_profile_action(db,user,payload)
             else:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "Rota não encontrada."})
 
@@ -794,6 +803,18 @@ class Handler(BaseHTTPRequestHandler):
         event(db, user["uid"], "catalog.review_note_added", exercise=assignment[0],
               detail={"note_id": saved["id"], "candidate_id": identifier, "source_sha256": source_hash})
         self.send_json(200, {"ok": True, "review_note": dict(saved)})
+
+    def engine_profile_action(self,db,user,payload=None):
+        try:
+            engine_units.context(db,user)
+            if user['role']!='instructor':raise PermissionError('Previsão restrita ao instrutor atribuído.')
+            if not db.in_transaction:db.execute('BEGIN')
+            result=engine_profiles.contract() if payload is None else engine_profiles.preview(db,user,payload)
+            self.send_json(200,result)
+        except PermissionError as exc:self.send_json(403,{'error':str(exc)})
+        except engine_runtime.Conflict as exc:self.send_json(409,{'error':str(exc)})
+        except ValueError as exc:self.send_json(400,{'error':str(exc)})
+        except (sqlite3.Error,OSError):self.send_json(503,{'error':'Não foi possível conferir o contrato ou o estado da previsão.'})
 
     def engine_runtime_action(self, db: sqlite3.Connection, user: sqlite3.Row, action: str, payload=None) -> None:
         try:

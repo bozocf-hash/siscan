@@ -18,6 +18,7 @@ function renderEngineRuntime(parent,instructor,onContinued) {
       const table=el("table",{class:"technical-matrix"});table.append(el("thead",{},[el("tr",{},['Unidade','Inicial (kg)','Saldo atual (kg)','Consumido (kg)'].map(text=>el('th',{scope:'col',text})))]));
       const body=el('tbody');for(const state of data.states)body.append(el('tr',{},[el('td',{text:state.code}),...[state.fuel_initial_kg,state.fuel_remaining_kg,state.fuel_consumed_kg].map(v=>el('td',{text:format(v)}))]));table.append(body);panel.append(el('div',{class:'technical-table-scroll',tabindex:'0'},[table]));
       if(instructor&&data.is_current){
+        renderEngineProfile(panel,data);
         const form=el('form',{class:'runtime-form'}),input=el('input',{id:'runtime-minutes',type:'number',min:'1',max:'1440',step:'1',value:'30',required:'required'}),button=el('button',{class:'btn',type:'submit',text:pending?'Repetir comando pendente':'Avançar ensaio'}),status=el('p',{role:'status'});
         form.append(el('label',{class:'label',for:'runtime-minutes',text:'Intervalo de teste (minutos)'}),input,el('div',{class:'actions'},[button]),status);
         if(!data.advance_allowed){input.disabled=true;button.disabled=true;status.textContent='Cenário ou versão do motor mudou. O histórico foi preservado; novo avanço está bloqueado.';}

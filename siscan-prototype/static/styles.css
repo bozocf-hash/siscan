@@ -19,6 +19,10 @@
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--canvas); color: var(--ink); line-height: 1.5; }
 button, input, select, textarea { font: inherit; }
+.profile-segment { display:grid; grid-template-columns:minmax(0,1fr) 110px auto; gap:10px; align-items:end; margin:16px 0; }
+.profile-curve { width:100%; height:auto; margin:12px 0; font-size:12px; fill:var(--ink); }
+.profile-manifest { white-space:pre-wrap; overflow-wrap:anywhere; font-size:.75rem; }
+@media(max-width:760px) { .profile-segment { grid-template-columns:minmax(0,1fr); } .profile-curve { font-size:20px; } }
 button { cursor: pointer; }
 .topbar { min-height: 68px; padding: 10px max(20px, calc((100vw - 1120px)/2)); display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--navy); color: white; }
 .brand { display: inline-flex; gap: 11px; align-items: center; color: inherit; text-decoration: none; font-weight: 750; letter-spacing: .04em; }

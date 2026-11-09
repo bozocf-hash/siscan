@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Atualização após 73:** [74](74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md) entrega contrato e prévia de perfil temporal sintético, com taxas explícitas, esgotamento/déficit e base de revisão. Não aplica o plano ao estoque. Permanecem fixação das taxas no snapshot de execução, débito transacional do perfil e validação/calibração de dados reais. A prévia não reserva combustível nem garante saldo futuro.
+
 **Atualização após 72:** [73](73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md) atende continuidade sequencial/versionamento no recorte sintético, com consulta histórica e comandos vinculados à execução. Não há mais limite de uma execução total por exercício: há uma corrente e suas predecessoras preservadas. Permanecem recuperação operacional/carga, perfis reais validados, transferências e ramificações alternativas. Não confundir saldo acumulado com somente os movimentos da sucessora.
 
 **Atualização após 71 — 2026-11-09:** [72](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md) entrega estado mutável, relógio manual e combustível transacional exclusivamente sintéticos. Essas pendências citadas nos registros anteriores foram atendidas nesse recorte. Permanecem curvas reais validadas, outros recursos, novas ramificações de execução, recuperação operacional e teste de carga. Uma execução por exercício; mudança de cenário/algoritmo bloqueia avanço sem apagar histórico ou impedir edição do cenário.

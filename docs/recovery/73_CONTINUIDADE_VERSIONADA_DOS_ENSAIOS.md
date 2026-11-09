@@ -1,5 +1,7 @@
 # 73 — Continuidade versionada dos ensaios sintéticos
 
+**Continuidade entregue:** [74](74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md) acrescenta o contrato de prévia por trechos/regimes hipotéticos. Nenhuma nova execução ou baixa de combustível foi criada por essa prévia; a continuidade e os saldos deste documento foram preservados.
+
 ## Contrato do incremento — 2026-11-09
 
 Dar continuidade explícita ao ensaio de 72 após mudança de cenário ou atualização do algoritmo, preservando saldo e tempo e congelando a execução anterior. Somente instrutor atribuído, exercício aberto, sessão/origem/CSRF válidos. Continua restrito ao conjunto sintético e à mesma regra de consumo constante; não promove dados Command.

@@ -88,3 +88,7 @@ No painel “Unidades sintéticas”, o instrutor pode inicializar uma execuçã
 ## Continuidade e histórico dos ensaios
 
 No painel de execução, o instrutor pode abrir “Continuar em nova versão”, informar motivo e criar uma sucessora. Tempo e combustível são herdados; a execução anterior fica disponível em “Consultar execuções preservadas”. Não há reabastecimento ou reset. Novos comandos identificam a execução e a revisão esperada. `python check_engine_continuity.py` verifica migração, conservação, conflitos e rollback. Veja [contrato e evidências](../docs/recovery/73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md).
+
+## Prévia de perfil temporal
+
+Em “Unidades de teste do motor → Prever perfil de consumo”, o instrutor monta trechos com regimes sintéticos e consulta demanda, saldo projetado, curva e déficit. O cálculo não altera estoque/relógio e não usa taxas Command. Editar o plano remove a previsão anterior; revisão desatualizada exige atualização do estado. Execute `python check_engine_profiles.py`. [Contrato e evidências](../docs/recovery/74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md).

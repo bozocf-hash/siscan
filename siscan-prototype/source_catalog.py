@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sqlite3
 from tools.compile_db3k import MASTERS
+from technical_units import describe_fields, annotate_bundle, VERSION as UNITS_VERSION
 
 CATEGORIES = ('DataAircraft','DataShip','DataSubmarine','DataGroundUnit','DataFacility','DataSatellite')
 
@@ -101,7 +102,9 @@ def technical_bundle(path, table, identifier):
                 for link in db.execute(f'SELECT * FROM links WHERE relation_id=? AND target_rowid IN ({placeholders})',(rule['id'],*ids)):
                     include(rule,link)
         ordered=sorted(nodes.values(),key=lambda n:(n['table'],n['rowid']))
+        consumption_profiles=annotate_bundle(ordered,list(links.values()),key(table,root[0]))
         return {'root':key(table,root[0]),'source':source,'complete':True,'nodes':ordered,
+                'measurement_contract_version':UNITS_VERSION,'consumption_profiles':consumption_profiles,
                 'links':list(links.values()),'node_count':len(nodes),'field_count':sum(len(n['fields']) for n in ordered),
                 'table_counts':dict(Counter(n['table'] for n in ordered)),
                 'unresolved_link_count':sum(l['status']!='matched' for l in links.values()),
@@ -162,6 +165,10 @@ def detail(path, table, identifier):
             direct.append({'field':item['from_column'],'table':item['to_table'],'basis':item['basis'],'status':item['status'],
                            'id':json.loads(item['source_id_json']) if item['source_id_json'] else None,'name':target.get('Name')})
         display_name=fields.get('Name') or next((x['name'] for x in direct if x['name']),f'{table} #{identifier}')
+        for name,items in groups.items():
+            for item in items:
+                item['measurements']=describe_fields(name,item['parameters'],propulsion_type=fields.get('Type') if table=='DataPropulsion' else None)
         return {'table':table,'id':int(identifier),'display_name':display_name,'fields':fields,'domains':domains,'groups':groups,
+                'measurements':describe_fields(table,fields,domains),'measurement_contract_version':UNITS_VERSION,
                 'direct_links':direct,'truncated':False,'source':source,
                 'validation_status':'source_evidence_not_approved_for_calculation'}

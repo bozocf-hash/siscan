@@ -30,11 +30,11 @@ function renderTechnicalCatalog(parent) {
     categoryButtons[key]=button;categoryBar.append(button);
   }
   const valueText=value=>value===null?"NULL na fonte":typeof value==="object"?JSON.stringify(value):String(value);
-  const fieldList=(fields,domains={})=>{
+  const fieldList=(fields,domains={},measurements={})=>{
     const list=el("dl",{class:"technical-grid"});
     for(const [key,value] of fields) {
       const description=domains[key]?.description;
-      list.append(el("div",{class:"technical-field"},[el("dt",{text:labels[key]||key}),el("dd",{text:`${valueText(value)}${description?" · "+description:""}`})]));
+      list.append(el("div",{class:"technical-field",title:measurements[key]?.qualification||""},[el("dt",{text:measurementLabel(labels[key]||key,measurements[key])}),el("dd",{text:`${valueText(value)}${description?" · "+description:""}`})]));
     }return list;
   };
   async function openRecord(recordTable,id,selectedButton) {
@@ -54,9 +54,9 @@ function renderTechnicalCatalog(parent) {
         image.addEventListener("error",()=>figure.replaceChildren(el("p",{class:"photo-empty",text:"Imagem local não disponível."})),{once:true});viewer.append(figure);
       } else viewer.append(el("div",{class:"photo-empty",text:"Sem imagem local para este registro"}));
       const body=el("div",{class:"platform-body"});
-      body.append(el("p",{class:"source-caveat",text:"Valores literais da fonte. Unidades e significado em revisão; sem uso automático em cálculos ou alocação."}));
+      body.append(el("p",{class:"source-caveat",text:"Valores originais. As unidades identificam evidências amostrais ou referências documentais; as pendentes são indicadas em cada campo. Consulte Unidades e evidências desta ficha para os limites."}));
       const primary=Object.entries(fields).filter(([key])=>key in labels);
-      body.append(el("section",{class:"dossier-section"},[el("h3",{text:"Dados gerais"}),fieldList(primary,data.domains)]));
+      body.append(el("section",{class:"dossier-section"},[el("h3",{text:"Dados gerais"}),fieldList(primary,data.domains,data.measurements)]));
       const compiled=el("div",{class:"compiled-bundle-host"});
       compiled.append(el("p",{role:"status",class:"muted",text:"Reunindo sensores, combustível e regimes de consumo…"}));
       body.append(compiled);
@@ -85,14 +85,14 @@ function renderTechnicalCatalog(parent) {
           if(item.target_id!==null && item.target_table?.startsWith("Data"))row.append(el("button",{type:"button",class:"component-link",text:title,onclick:()=>openRecord(item.target_table,item.target_id)}));
           else row.append(el("strong",{text:title}));
           row.append(el("small",{text:item.component_basis==="declared_fk"?"Relação declarada na fonte":item.status==="matched"?"Ligação estrutural com registro correspondente; sem FK declarada":item.status?`Ligação ${item.status} · requer avaliação`:"Características do registro de associação"}));
-          const parameters=el("details",{class:"component-parameters"});parameters.append(el("summary",{text:"Parâmetros originais"}),fieldList(Object.entries(item.parameters)));row.append(parameters);details.append(row);
+          const parameters=el("details",{class:"component-parameters"});parameters.append(el("summary",{text:"Parâmetros originais"}),fieldList(Object.entries(item.parameters),{},item.measurements));row.append(parameters);details.append(row);
         }groups.append(details);groupCount+=items.length;
       }
       if(!groupCount)groups.append(el("p",{class:"muted",text:"Nenhuma associação de componentes encontrada nesta fonte."}));
       if(data.truncated)groups.append(el("p",{class:"source-caveat",text:"Exibidos os primeiros 1.000 registros de associação desta ficha."}));
       body.append(groups);
       const remaining=Object.entries(fields).filter(([key])=>!(key in labels)&&key!=="Name"&&key!=="Comments");
-      const extra=el("details",{class:"equipment-group"});extra.append(el("summary",{text:`Demais atributos da fonte · ${remaining.length}`}),fieldList(remaining,data.domains));body.append(extra);
+      const extra=el("details",{class:"equipment-group"});extra.append(el("summary",{text:`Demais atributos da fonte · ${remaining.length}`}),fieldList(remaining,data.domains,data.measurements));body.append(extra);
       if(fields.Comments)body.append(el("details",{class:"equipment-group"},[el("summary",{text:"Observações da fonte"}),el("p",{class:"review-note-text",text:fields.Comments})]));
       const provenance=el("details",{class:"equipment-group provenance"});provenance.append(el("summary",{text:"Origem e rastreabilidade"}),el("p",{class:"source-hash",text:`${data.source.file_name} · ${recordTable}/${id} · SHA-256 ${data.source.sha256}`}),el("p",{text:data.reference_id?`Referência SISCAN: ${data.reference_id}`:"Registro compilado da fonte; não promovido a referência operacional."}));body.append(provenance);viewer.append(body);
     }catch(error){if(sequence===detailSequence)viewer.replaceChildren(el("p",{class:"notice error",role:"alert",text:error.message}));}

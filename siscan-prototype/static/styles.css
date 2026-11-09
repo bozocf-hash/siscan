@@ -155,6 +155,8 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 3px s
 .technical-matrix { border-collapse:collapse; font-size:.72rem; min-width:100%; }
 .technical-matrix th,.technical-matrix td { padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; white-space:nowrap; }
 .technical-matrix th { background:#edf2f6; color:var(--navy); font-weight:650; }
+.technical-matrix th { white-space:normal; min-width:90px; max-width:180px; }
+.unit-evidence { font-size:.75rem; line-height:1.65; overflow-wrap:anywhere; }
 .technical-matrix tbody tr:nth-child(even) { background:#f8fafc; }
 .table-footnote { color:var(--muted); font-size:.66rem; line-height:1.6; }
 .raw-field-value { white-space:pre-wrap; }

@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Unidades e perfis de consumo:** [66](66_UNIDADES_E_BASE_DOS_PERFIS_DE_CONSUMO.md) registra unidades junto aos campos, distinguindo apresentação amostral, referência documental e unidade SQL pendente. O backend retorna metadados e pontos por propulsor/regime/faixa, com origem e prontidão para cálculo explícitas. Manual oficial PDF 91 inspecionado visualmente; kg/kg/min confirmados no painel aéreo, sem extrapolação automática ao SQL ou a outras famílias.
+
 **Levantamento integral e ficha compilada:** [65](65_LEVANTAMENTO_INTEGRAL_E_DADOS_TECNICOS_COMPILADOS.md) registra a comparação exata de 8.010.533 valores das 167 tabelas, sem divergência. A compilação 06 possui 243 relações e reúne os dados técnicos transitivos abaixo de cada ficha, incluindo sensores, combustível e todas as linhas de regime/consumo. As bibliotecas e a exportação JSON permitem consultar os dados agora. Códigos sem correspondência e unidades não demonstradas permanecem identificados; a coleta não foi adiada para outra fase.
 
 **Compilação e fichas entregues:** [64](64_COMPILACAO_RELACIONAL_E_FICHAS_TECNICAS.md) documenta 167 tabelas/766.989 registros em compilação separada, 240 regras e 1.837.862 vínculos com destino único, com oito ocorrências sem correspondência localizadas. O instrutor navega em seis categorias/14.968 plataformas, abre foto e ficha técnica e consulta componentes relacionados. A gestão didática e as alocações existentes foram preservadas. Relações sem FK e unidades permanecem identificadas como evidência de origem, sem promoção automática.

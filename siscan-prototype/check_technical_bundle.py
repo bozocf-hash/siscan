@@ -55,6 +55,12 @@ with tempfile.TemporaryDirectory(dir=scratch) as directory:
     assert any(n['fields'].get('Description')=='Frequency band' for n in nodes)
     assert len([e for e in result['links'] if e['status']=='missing'])==1
     assert result['field_count']==sum(len(n['fields']) for n in nodes)
+    assert result['measurement_contract_version']=='db3k-498-units-01'
+    profile=result['consumption_profiles'][0]
+    assert profile['direct'] and len(profile['points'])==2
+    assert profile['average_consumption'] is None and not profile['calculation_ready']
+    assert all(point['measurements']['Consumption']['unit'] is None for point in profile['points'])
+    assert profile['points'][0]['values']['Consumption']==2.123456
     assert technical_bundle(target,'DataShip','999') is None
     report=audit_source(source,target,Path(directory)/'audit.json')
     assert report['tables']==12 and report['status']=='all_source_values_matched'

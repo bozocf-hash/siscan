@@ -24,6 +24,7 @@ import resource_store
 import engine_input
 import engine_units
 import engine_runtime
+import engine_continuity
 
 
 ROOT = Path(__file__).resolve().parent
@@ -173,6 +174,7 @@ SCHEMA += REFERENCE_SCHEMA
 SCHEMA += TECHNICAL_SCHEMA
 SCHEMA += engine_units.SCHEMA
 SCHEMA += engine_runtime.SCHEMA
+SCHEMA += engine_continuity.SCHEMA
 
 
 def connect() -> sqlite3.Connection:
@@ -221,6 +223,7 @@ def event(db: sqlite3.Connection, actor: int, event_type: str, *, exercise: int 
 def initialize() -> None:
     DATA_DIR.mkdir(exist_ok=True)
     with connect() as db:
+        engine_continuity.migrate(db)
         db.executescript(SCHEMA)
         existing_exercise = db.execute("SELECT * FROM exercises ORDER BY id LIMIT 1").fetchone()
         if existing_exercise:
@@ -383,11 +386,15 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
-            if path == "/api/engine-runtime":
+            if path in ("/api/engine-runtime", "/api/engine-runtime/history"):
                 current = self.require_user(db)
                 if current:
-                    if urlparse(self.path).query:self.send_json(400, {"error": "A consulta da execução não aceita parâmetros."})
-                    else:self.engine_runtime_action(db,current[1],'read')
+                    query=parse_qs(urlparse(self.path).query,keep_blank_values=True)
+                    if path.endswith('/history'):
+                        if query:self.send_json(400, {"error":"Histórico não aceita parâmetros."})
+                        else:self.engine_runtime_action(db,current[1],'history')
+                    elif query and (set(query)!={'run_id'} or len(query['run_id'])!=1 or not query['run_id'][0]):self.send_json(400, {"error":"Informe somente uma execução válida."})
+                    else:self.engine_runtime_action(db,current[1],'read',query.get('run_id',[None])[0])
                 return
             if path == "/api/engine-units":
                 current = self.require_user(db)
@@ -488,7 +495,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.add_catalog_note(db, user, payload)
             elif path == "/api/engine-units/prepare":
                 self.engine_unit_catalog(db,user,payload)
-            elif path in ("/api/engine-runtime/start", "/api/engine-runtime/advance"):
+            elif path in ("/api/engine-runtime/start", "/api/engine-runtime/advance", "/api/engine-runtime/continue"):
                 self.engine_runtime_action(db,user,path.rsplit('/',1)[1],payload)
             else:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "Rota não encontrada."})
@@ -790,10 +797,12 @@ class Handler(BaseHTTPRequestHandler):
 
     def engine_runtime_action(self, db: sqlite3.Connection, user: sqlite3.Row, action: str, payload=None) -> None:
         try:
-            engine_units.context(db,user,write=action!='read')
+            engine_units.context(db,user,write=action not in ('read','history'))
             if action=='read':
                 if not db.in_transaction:db.execute('BEGIN')
-                result=engine_runtime.read_runtime(db,user)
+                result=engine_runtime.read_runtime(db,user,payload)
+            elif action=='history':result=engine_continuity.history(db,user)
+            elif action=='continue':result=engine_continuity.continue_run(db,user,payload)
             elif action=='start':
                 if payload!={}:raise ValueError('Inicialização aceita somente objeto vazio.')
                 result=engine_runtime.start_run(db,user)

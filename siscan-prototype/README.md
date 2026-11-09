@@ -84,3 +84,7 @@ A regra vigente é alocação por partido, conforme correção expressa do respo
 ## Ensaio sintético de combustível
 
 No painel “Unidades sintéticas”, o instrutor pode inicializar uma execução e avançar um intervalo manual. A taxa controlada é 2 kg/min e cada unidade começa com 600 kg. A tabela separa saldo inicial, saldo atual e consumido, com histórico por comando. Repetições não debitam novamente. Alunos leem apenas unidades alocadas ao próprio partido. Este teste não usa taxas Command. Veja [contrato, evidências e limites](../docs/recovery/72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md). Execute `python check_engine_runtime.py` para verificar transações, conflitos, conservação e concorrência com duas conexões.
+
+## Continuidade e histórico dos ensaios
+
+No painel de execução, o instrutor pode abrir “Continuar em nova versão”, informar motivo e criar uma sucessora. Tempo e combustível são herdados; a execução anterior fica disponível em “Consultar execuções preservadas”. Não há reabastecimento ou reset. Novos comandos identificam a execução e a revisão esperada. `python check_engine_continuity.py` verifica migração, conservação, conflitos e rollback. Veja [contrato e evidências](../docs/recovery/73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md).

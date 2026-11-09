@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Atualização após 72:** [73](73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md) atende continuidade sequencial/versionamento no recorte sintético, com consulta histórica e comandos vinculados à execução. Não há mais limite de uma execução total por exercício: há uma corrente e suas predecessoras preservadas. Permanecem recuperação operacional/carga, perfis reais validados, transferências e ramificações alternativas. Não confundir saldo acumulado com somente os movimentos da sucessora.
+
 **Atualização após 71 — 2026-11-09:** [72](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md) entrega estado mutável, relógio manual e combustível transacional exclusivamente sintéticos. Essas pendências citadas nos registros anteriores foram atendidas nesse recorte. Permanecem curvas reais validadas, outros recursos, novas ramificações de execução, recuperação operacional e teste de carga. Uma execução por exercício; mudança de cenário/algoritmo bloqueia avanço sem apagar histórico ou impedir edição do cenário.
 
 **Identidade/snapshot sintéticos, 2026-11-09:** [71](71_IDENTIDADE_CONFIGURACAO_E_SNAPSHOT_UNIDADES.md) entrega UUIDs, configuração versionada, snapshots e preparação atômica/idempotente de uma unidade por partido. A leitura do aluno exige alocação ativa ao próprio partido. ED-04 avança no recorte sintético; catálogo real aprovado, novas versões/transferências, estado mutável, relógio/estoques e ativação de execução permanecem pendentes. Não usar os atributos iniciais congelados como saldo operacional atualizado.

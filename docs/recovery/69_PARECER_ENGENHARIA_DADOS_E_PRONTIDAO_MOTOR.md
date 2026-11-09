@@ -1,5 +1,7 @@
 # 69 — Parecer de engenharia de dados e prontidão para o motor SISCAN
 
+**Continuidade posterior:** [73](73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md) estende ED-04/ED-09/ED-12 no ensaio sintético: sucessoras sequenciais, migração preservando registros e histórico consultável. Recuperação operacional completa, carga e validade física continuam pendentes.
+
 **Evolução posterior do parecer:** 70 entrega contrato e diagnóstico; 71 entrega identidade/configuração/snapshot; [72](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md) entrega estado, relógio manual e consumo transacional sintéticos. As lacunas e a ausência de motor descritas na inspeção abaixo são o retrato anterior a essas entregas. Nenhuma delas valida o modelo físico Command.
 
 **Segundo avanço posterior:** [71](71_IDENTIDADE_CONFIGURACAO_E_SNAPSHOT_UNIDADES.md) entrega identidade/configuração/snapshots no recorte sintético. O diagnóstico anterior abaixo não descreve a ausência desses novos registros; a validação real, estado transacional e ativação de simulação continuam pendentes.

@@ -10,7 +10,7 @@ from engine_input import input_hash,validate_input,trusted_manifest
 RULES_VERSION='constant-rate-synthetic-01'
 SCHEMA='''
 CREATE TABLE IF NOT EXISTS engine_runs(
- run_id TEXT PRIMARY KEY,exercise_id INTEGER NOT NULL UNIQUE REFERENCES exercises(id),
+ run_id TEXT PRIMARY KEY,exercise_id INTEGER NOT NULL REFERENCES exercises(id),
  scenario_version INTEGER NOT NULL,manifest_json TEXT NOT NULL,manifest_sha256 TEXT NOT NULL,
  elapsed_minutes INTEGER NOT NULL CHECK(elapsed_minutes>=0),revision INTEGER NOT NULL CHECK(revision>=0),
  created_by INTEGER NOT NULL REFERENCES users(id),created_at TEXT NOT NULL,
@@ -111,11 +111,18 @@ def start_run(db,user):
         return read_runtime(db,user)
 
 
-def read_runtime(db,user):
+def current_run(db,exercise_id):
+    return db.execute('SELECT * FROM engine_runs WHERE exercise_id=? ORDER BY rowid DESC LIMIT 1',(exercise_id,)).fetchone()
+
+
+def read_runtime(db,user,run_id=None):
     exercise=engine_units.context(db,user)
+    if run_id is not None and user['role']!='instructor':raise PermissionError('Histórico restrito ao instrutor atribuído.')
     visible=engine_units.list_units(db,user)['units']
     if not visible:return {'initialized':False,'states':[],'ledger':[],'scope':'synthetic_constant_rate_test'}
-    run=db.execute('SELECT * FROM engine_runs WHERE exercise_id=?',(exercise['id'],)).fetchone()
+    latest=current_run(db,exercise['id'])
+    run=latest if run_id is None else db.execute('SELECT * FROM engine_runs WHERE exercise_id=? AND run_id=?',(exercise['id'],run_id)).fetchone()
+    if run_id is not None and run is None:raise ValueError('Execução não encontrada neste exercício.')
     if run is None:return {'initialized':False,'states':[],'ledger':[],'scope':'synthetic_constant_rate_test'}
     manifest=manifest_of(run);ids=[u['unit_id'] for u in visible];placeholders=','.join('?' for _ in ids)
     metadata={u['unit_id']:u for u in visible};states=[]
@@ -131,26 +138,35 @@ def read_runtime(db,user):
        WHERE l.run_id=? AND l.unit_id IN ('''+placeholders+') ORDER BY s.revision DESC,l.unit_id LIMIT 40',(run['run_id'],*ids))]
     return {'initialized':True,'run_id':run['run_id'],'elapsed_minutes':run['elapsed_minutes'],'revision':run['revision'],
             'scenario_version':run['scenario_version'],'current_scenario_version':exercise['scenario_version'],
-            'advance_allowed':exercise['state']=='open' and run['scenario_version']==exercise['scenario_version'] and manifest['rules_version']==RULES_VERSION and manifest['engine_code_sha256']==code_hash(),
+            'advance_allowed':run['run_id']==latest['run_id'] and exercise['state']=='open' and run['scenario_version']==exercise['scenario_version'] and manifest['rules_version']==RULES_VERSION and manifest['engine_code_sha256']==code_hash(),
+            'is_current':run['run_id']==latest['run_id'],
             'manifest_sha256':run['manifest_sha256'],'manifest':manifest if user['role']=='instructor' else None,
             'states':states,'ledger':ledger,'scope':'synthetic_constant_rate_test','official_calculation_ready':False}
 
 
 def advance_run(db,user,payload):
     engine_units.context(db,user,write=True)
-    if not isinstance(payload,dict) or set(payload)!= {'command_id','minutes','expected_revision'}:raise ValueError('Comando deve conter apenas command_id, minutes e expected_revision.')
+    if not isinstance(payload,dict) or set(payload) not in ({'command_id','minutes','expected_revision'},{'command_id','minutes','expected_revision','run_id'}):raise ValueError('Comando deve conter command_id, minutes, expected_revision e, nas novas execuções, run_id.')
     command=payload['command_id'];minutes=payload['minutes'];expected=payload['expected_revision']
     try:valid_id=isinstance(command,str) and str(uuid.UUID(command))==command
     except ValueError:valid_id=False
     if not valid_id or type(minutes) is not int or not 1<=minutes<=1440 or type(expected) is not int or expected<0:raise ValueError('Identificador, intervalo ou revisão inválidos.')
+    if 'run_id' in payload:
+        try:valid_run=isinstance(payload['run_id'],str) and str(uuid.UUID(payload['run_id']))==payload['run_id']
+        except ValueError:valid_run=False
+        if not valid_run:raise ValueError('Identificador de execução inválido.')
     with atomic(db):
         exercise=engine_units.context(db,user,write=True)
-        run=db.execute('SELECT * FROM engine_runs WHERE exercise_id=?',(exercise['id'],)).fetchone()
+        latest=current_run(db,exercise['id'])
+        run=latest if 'run_id' not in payload else db.execute('SELECT * FROM engine_runs WHERE exercise_id=? AND run_id=?',(exercise['id'],payload['run_id'])).fetchone()
         if run is None:raise ValueError('Inicialize primeiro a execução sintética.')
         prior=db.execute('SELECT * FROM engine_runtime_steps WHERE run_id=? AND command_id=?',(run['run_id'],command)).fetchone()
         if prior:
-            if prior['payload_json']!=engine_units.encoded(payload):raise Conflict('Chave já usada para um comando diferente.')
+            stored={**json.loads(prior['payload_json']),'run_id':run['run_id']}
+            if stored!={**payload,'run_id':run['run_id']}:raise Conflict('Chave já usada para um comando diferente.')
             return {**json.loads(prior['result_json']),'replayed':True}
+        if run['run_id']!=latest['run_id']:raise Conflict('Execução histórica: novos avanços foram bloqueados.')
+        if 'run_id' not in payload and db.execute('SELECT count(*) FROM engine_runs WHERE exercise_id=?',(exercise['id'],)).fetchone()[0]>1:raise Conflict('Identifique a execução atual antes de avançar.')
         manifest=manifest_of(run)
         if run['revision']!=expected:raise Conflict('Revisão desatualizada. Atualize o estado antes de criar outro comando.')
         if run['scenario_version']!=exercise['scenario_version'] or manifest['rules_version']!=RULES_VERSION or manifest['engine_code_sha256']!=code_hash():raise Conflict('Versão do cenário ou do motor mudou; avanço recusado sem alterar o histórico.')

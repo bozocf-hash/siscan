@@ -19,7 +19,7 @@ function renderEngineUnits(parent,instructor) {
         for(const [label,value] of [["Modelo",snapshot.model_id],["Configuração",snapshot.configuration_id],["Versão da configuração",unit.configuration_version_id],["Snapshot",unit.snapshot_id],["Revisão",unit.revision],["Versão do cenário",snapshot.scenario_version],["Hash do snapshot",unit.snapshot_sha256],["Hash do conjunto",snapshot.input_manifest.dataset_sha256]])detail.append(el("p",{},[el("strong",{text:label+": "}),el("span",{text:String(value)})]));
         card.append(detail);content.append(card);
       }
-      if(data.units.length)renderEngineRuntime(content,instructor);
+      if(data.units.length)renderEngineRuntime(content,instructor,load);
       loaded=true;
     }catch(error){content.replaceChildren(el("p",{class:"notice error",role:"alert",text:error.message}));loaded=false;}
   };

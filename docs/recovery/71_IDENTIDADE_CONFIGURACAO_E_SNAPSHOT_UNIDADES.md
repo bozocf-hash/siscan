@@ -1,5 +1,7 @@
 # 71 — Identidade, configuração e snapshot das unidades de teste
 
+**Novas revisões explícitas:** [73](73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md) permite snapshots sucessores por continuação, com os mesmos UUIDs/configurações e referência aos snapshots anteriores. Nenhum snapshot antigo é atualizado ou apagado.
+
 **Continuidade entregue:** [72](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md) acrescenta estado mutável e consumo sintético sem reescrever os snapshots aqui descritos. As referências abaixo a ausência de consumo e ao próximo passo descrevem o estado da entrega 71.
 
 ## Escopo — 2026-11-09

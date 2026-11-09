@@ -1,5 +1,7 @@
 # 72 — Estado, relógio e consumo transacional sintéticos
 
+**Limite atualizado em 73:** [continuidade versionada](73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md) permite várias execuções sequenciais por exercício e consulta das anteriores. Saldos/tempo são herdados, sem reset. As referências abaixo à execução única descrevem a entrega 72. Depois de uma sucessora, novos comandos identificam a execução por `run_id` além da revisão.
+
 ## Escopo — 2026-11-09
 
 Implementar um ensaio manual de consumo constante nas duas unidades sintéticas de 71. Separar snapshot inicial imutável, estado atual e movimentos de combustível. O relógio é de teste, por exercício; não implementa marchas automáticas, movimento, combate ou modelos Command.

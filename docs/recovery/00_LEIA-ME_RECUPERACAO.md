@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Continuidade entregue — 2026-11-09:** [73 — Continuidade versionada](73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md) permite sucessora explícita com motivo, herdando saldos/tempo e preservando a anterior para consulta. A execução atual tem 45 min/510 kg por unidade; a anterior conserva 30 min/540 kg. Continua restrito ao ensaio sintético.
+
 **Atualização de execução sintética — 2026-11-09:** [72 — Estado, relógio e consumo transacional](72_ESTADO_RELOGIO_E_CONSUMO_TRANSACIONAL.md) entrega saldo atual separado do snapshot, avanço manual idempotente e ledger atômico. Uma execução controlada de 30 min deixou 540 kg de 600 kg por unidade. Dados Command continuam pendentes para cálculos; afirmações anteriores de ausência de consumo referem-se às entregas anteriores.
 
 ## Atualização posterior às missões documentais

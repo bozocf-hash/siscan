@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+Em 2026-11-09 foi observado o jogo Command v1.05 — Build 1307. O [documento 59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md) registra a leitura pontual das páginas 155–158 do manual digital, a inspeção visual da página 155 e quatro registros SQL preparados para comparação. Nenhuma ficha foi examinada no jogo; os atributos continuam pendentes.
+
 O estado descrito nas seções históricas abaixo corresponde ao encerramento das missões documentais. Posteriormente, o responsável autorizou a programação e a continuidade do protótipo. Para a preparação DB3K, consultar [52 — Preparação e revisão](52_PREPARACAO_CATALOGO_DB3K.md) e os documentos 53–58. A aprovação de 80 referências de origem está registrada em 55 e limita-se à identificação; os 580 valores técnicos inventariados em 56 permanecem pendentes.
 
 As fontes locais adicionais e os limites da tentativa de inspeção do visualizador estão em [58 — CMO instalado e templates](58_FONTES_LOCAIS_CMO_E_TEMPLATES.md). O lançador apresentou versão 1.05.1307; nenhuma ficha foi comparada na interface. A descoberta do manual digital não equivale à sua leitura integral e não altera os limites de inspeção visual dos documentos 12–15.

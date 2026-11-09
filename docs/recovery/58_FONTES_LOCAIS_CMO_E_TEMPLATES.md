@@ -1,5 +1,7 @@
 # 58 — Instalação local do CMO e evidências dos templates
 
+**Complemento posterior:** em 2026-11-09 foi observada a janela do jogo com build 1307. A tentativa anterior abaixo permanece como registro histórico; o resultado posterior, a consulta pontual do manual digital e a amostra SQL preparada estão em [59 — Comparação visual DB3K](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md). Nenhuma ficha foi comparada no jogo.
+
 ## Instalação e identidade da fonte
 
 Foi identificada a instalação em `C:\Program Files (x86)\Matrix Games\Command Modern Operations`. O registro do Windows informa Command: Modern Operations 1.05.1307. Os metadados FileVersion/ProductVersion do executável retornam 1.0.0.0, insuficientes para confirmar o build funcional. A inspeção inicial limitou-se aos arquivos; a tentativa posterior de abertura está registrada abaixo.

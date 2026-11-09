@@ -2,6 +2,8 @@
 
 ## Atualização de evidências locais — 2026-11-08
 
+**Complemento de 2026-11-09:** a janela do jogo confirmou Command v1.05 — Build 1307, mas o visualizador não foi acessado. A seção 6.3.4 do manual digital foi consultada; texto e figura usam versões de banco diferentes (478 e 473). É necessário confirmar o banco ativo antes de comparar com 498. Amostra de quatro registros e 18 valores brutos preparada em [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md); todos seguem sem validação de unidade SQL.
+
 As restrições de fase ao final deste registro descrevem seu encerramento histórico; houve autorização posterior do responsável para desenvolvimento do protótipo. Permanecem válidas as pendências semânticas DB3K.
 
 - **P-03, fonte adicional:** o manual instalado do CMO tem 353 páginas e forneceu texto em três páginas amostradas. Ainda não foi lido integralmente; não confundir essa fonte com o PDF digitalizado anterior.

@@ -781,6 +781,7 @@ class Handler(BaseHTTPRequestHandler):
                             evidence_status = "mismatch"
                         else:
                             by_id = {}
+                            technical_by_id = {}
                             for item in evidence["candidates"]:
                                 if not isinstance(item, dict) or not isinstance(item.get("candidate_id"), str) or not isinstance(item.get("domains"), dict):
                                     raise ValueError("Invalid candidate evidence")
@@ -788,8 +789,16 @@ class Handler(BaseHTTPRequestHandler):
                                     if not isinstance(domain, dict) or any(domain.get(key) is not None and not isinstance(domain.get(key), str) for key in ("description", "enum_table", "status", "relation_status")):
                                         raise ValueError("Invalid domain evidence")
                                 by_id[item["candidate_id"]] = item["domains"]
+                                technical = item.get("technical_fields", {})
+                                if not isinstance(technical, dict):
+                                    raise ValueError("Invalid technical fields")
+                                for field in technical.values():
+                                    if not isinstance(field, dict) or field.get("unit") is not None or field.get("validation_status") != "pending_unit_and_semantics" or not isinstance(field.get("sqlite_type"), str) or (field.get("value") is not None and type(field["value"]) not in (str, int, float)):
+                                        raise ValueError("Technical evidence must remain unvalidated")
+                                technical_by_id[item["candidate_id"]] = technical
                             for record in records:
                                 record["domain_evidence"] = by_id.get(record["candidate_id"], {})
+                                record["technical_evidence"] = technical_by_id.get(record["candidate_id"], {})
                             evidence_status = "available"
                     except (OSError, ValueError, TypeError):
                         evidence_status = "invalid"

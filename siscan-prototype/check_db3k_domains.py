@@ -11,8 +11,8 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
     source, review = Path(folder)/"source.db3", Path(folder)/"review.sqlite3"
     with closing(sqlite3.connect(source)) as db, db:
         for table in TABLES:
-            db.execute(f'CREATE TABLE "{table}" (ID INTEGER PRIMARY KEY, Name TEXT, Category INTEGER, OperatorCountry INTEGER)')
-            db.execute(f'INSERT INTO "{table}" VALUES(1,?,2001,9999)', ("Sample",))
+            db.execute(f'CREATE TABLE "{table}" (ID INTEGER PRIMARY KEY, Name TEXT, Category INTEGER, OperatorCountry INTEGER, Length REAL, MaxDepth INTEGER)')
+            db.execute(f'INSERT INTO "{table}" VALUES(1,?,2001,9999,15.5,0)', ("Sample",))
         db.execute("CREATE TABLE EnumShipCategory(ID INTEGER PRIMARY KEY, Description TEXT)")
         db.execute("INSERT INTO EnumShipCategory VALUES(2001,'Literal category')")
         db.execute("CREATE TABLE EnumOperatorCountry(ID INTEGER PRIMARY KEY, Description TEXT)")
@@ -25,6 +25,11 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
     assert ship["domains"]["Category"]["description"] == "Literal category"
     assert ship["domains"]["Category"]["relation_status"] == "nominal_match_without_fk"
     assert ship["domains"]["OperatorCountry"]["status"] == "code_not_found"
+    assert ship["technical_fields"]["Length"]["value"] == 15.5
+    assert ship["technical_fields"]["Length"]["sqlite_type"] == "REAL"
+    assert ship["technical_fields"]["Length"]["unit"] is None
+    assert ship["technical_fields"]["MaxDepth"]["value"] == 0
+    assert all(field["validation_status"] == "pending_unit_and_semantics" for field in ship["technical_fields"].values())
     aircraft = next(row for row in report["candidates"] if row["source_table"] == "DataAircraft")
     assert aircraft["domains"]["Category"]["status"] == "domain_missing"
     assert hashes == (digest(source), digest(review))

@@ -14,6 +14,9 @@ DOMAINS = {
     "DataSubmarine": {"Category": "EnumSubmarineCategory", "Type": "EnumSubmarineType"},
     "DataGroundUnit": {"Category": "EnumGroundUnitCategory"},
 }
+TECHNICAL_FIELDS = ("Length", "Beam", "Draft", "Height", "Span", "WeightEmpty", "WeightMax",
+                    "DisplacementEmpty", "DisplacementStandard", "DisplacementFull", "MaxDepth",
+                    "Area", "Width", "MastHeight", "Mass", "Crew")
 
 
 def inspect_domains(source, review):
@@ -33,9 +36,10 @@ def inspect_domains(source, review):
             table = candidate["source_table"]
             if table not in TABLES:
                 raise ValueError("Tabela de origem não permitida.")
-            columns = {row[1] for row in db.execute(f'PRAGMA table_info("{table}")')}
-            code_fields = [field for field in RAW_CODES if field in columns]
-            fields = ",".join(f'"{field}"' for field in ["ID", "Name", *code_fields])
+            source_columns = {row[1]: row[2] for row in db.execute(f'PRAGMA table_info("{table}")')}
+            code_fields = [field for field in RAW_CODES if field in source_columns]
+            technical_names = [field for field in TECHNICAL_FIELDS if field in source_columns]
+            fields = ",".join(f'"{field}"' for field in ["ID", "Name", *code_fields, *technical_names])
             original = db.execute(f'SELECT {fields} FROM "{table}" WHERE ID=?', (candidate["external_id"],)).fetchone()
             raw_codes = json.loads(candidate["raw_codes_json"])
             if not original or str(original["ID"]) != candidate["external_id"] or original["Name"] != candidate["source_name"]:
@@ -69,7 +73,9 @@ def inspect_domains(source, review):
                 counts[record["status"]] += 1
                 domains[field] = record
             result.append({"candidate_id": candidate["candidate_id"], "source_table": table,
-                           "external_id": candidate["external_id"], "literal_source_check": "matched", "domains": domains})
+                           "external_id": candidate["external_id"], "literal_source_check": "matched", "domains": domains,
+                           "technical_fields": {field: {"value": original[field], "sqlite_type": source_columns[field], "unit": None,
+                                                        "validation_status": "pending_unit_and_semantics"} for field in technical_names}})
     if before != (digest(source), digest(review)):
         raise RuntimeError("Uma fonte mudou durante a inspeção; descarte o resultado.")
     return {"source": dict(provenance), "review_sha256": before[1],

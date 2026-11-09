@@ -315,6 +315,14 @@ function renderCandidateCatalog(parent) {
             entry.append(details);
           }
           const notes = el("details");
+          const technical = Object.entries(row.technical_evidence || {});
+          if (technical.length) {
+            const fields = el("details");
+            fields.append(el("summary", { text: "Valores técnicos originais — unidades pendentes" }));
+            fields.append(el("p", { class: "notice warning", text: "Valores literais do DB3K. Nomes de campos e tipos SQLite não confirmam unidade ou significado. Zero e NULL são preservados sem interpretação. Estes valores não estão aprovados para cálculo ou alocação." }));
+            for (const [name, field] of technical) fields.append(el("p", { text: `${name}: ${field.value === null ? "NULL" : String(field.value)} · Tipo SQLite: ${field.sqlite_type || "não declarado"} · Unidade e semântica pendentes` }));
+            entry.append(fields);
+          }
           notes.append(el("summary", { text: "Observações da revisão" }));
           notes.append(el("p", { class: "muted", text: "Anote dúvidas, divergências ou referências. A observação não aprova o meio nem o libera para alocação." }));
           const history = el("div");

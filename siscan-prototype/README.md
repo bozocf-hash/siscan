@@ -14,6 +14,8 @@ Após decisão explícita do responsável, um operador local pode registrar as r
 
 A tela consulta as descrições do arquivo local `data/db3k-domains-01.json`. Os hashes da fonte e da amostra devem corresponder aos do relatório; se houver divergência ou formato inválido, a consulta mantém os códigos originais e informa que as descrições não foram carregadas. Cada candidato oferece “Descrições e evidências dos códigos”, sem aprovação ou promoção automática.
 
+A inspeção inclui os campos técnicos selecionados que existirem na tabela original, com valor literal, tipo SQLite e unidade nula. Na tela, “Valores técnicos originais — unidades pendentes” permite examiná-los. Zero e NULL não são interpretados como indisponibilidade ou capacidade real. O endpoint só aceita essa evidência com estado `pending_unit_and_semantics`; o módulo não converte valores, não atribui unidades e não os usa em cálculos ou meios alocáveis.
+
 Em “Observações da revisão”, o instrutor atribuído pode acrescentar anotações de até 4000 caracteres. O histórico preserva autor, horário UTC, candidato, hash da fonte e exercício; anotações são adicionadas, não substituídas. Elas ficam no banco do protótipo e não alteram o DB3K, a amostra ou a situação pendente dos candidatos. A troca da amostra exige reabrir a consulta antes de registrar anotações para sua fonte.
 
 Primeiro incremento local do fluxo aprovado: cenário fictício, consulta aos meios sintéticos da equipe, composição de grupamento, documento/justificativa, revisão humana e liberação pelo instrutor. Esta pasta é independente; não integra nem altera ATLANTICADOR ou DB3K.

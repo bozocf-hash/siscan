@@ -41,10 +41,20 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
         evidence = {"status": "evidence_only_not_approved", "source": {"sha256": digest(source)}, "review_sha256": digest(review),
                     "candidates": [{"candidate_id": candidate_id, "domains": {"Category": {"raw_code": 1, "description": "Descrição literal <teste>", "enum_table": "EnumAircraftCategory", "status": "literal_code_match", "relation_status": "nominal_match_without_fk"}}}]}
         app.DOMAIN_REPORT_PATH.write_text(json.dumps(evidence), encoding="utf-8")
+        evidence["candidates"][0]["technical_fields"] = {"Length": {"value": 15.5, "sqlite_type": "REAL", "unit": None, "validation_status": "pending_unit_and_semantics"}, "MaxDepth": {"value": 0, "sqlite_type": "INTEGER", "unit": None, "validation_status": "pending_unit_and_semantics"}}
+        app.DOMAIN_REPORT_PATH.write_text(json.dumps(evidence), encoding="utf-8")
         h.candidate_catalog(db, {"uid": 1, "role": "instructor"})
         status, enriched = responses[-1]
         assert status == 200 and enriched["domain_evidence_status"] == "available"
         assert enriched["candidates"][0]["domain_evidence"]["Category"]["description"] == "Descrição literal <teste>"
+        assert enriched["candidates"][0]["technical_evidence"]["Length"]["value"] == 15.5
+        assert enriched["candidates"][0]["technical_evidence"]["MaxDepth"]["value"] == 0
+        evidence["candidates"][0]["technical_fields"]["Length"]["unit"] = "m"
+        app.DOMAIN_REPORT_PATH.write_text(json.dumps(evidence), encoding="utf-8")
+        h.candidate_catalog(db, {"uid": 1, "role": "instructor"})
+        assert responses[-1][1]["domain_evidence_status"] == "invalid"
+        assert not responses[-1][1]["candidates"][0].get("technical_evidence")
+        evidence["candidates"][0]["technical_fields"]["Length"]["unit"] = None
         evidence["review_sha256"] = "mismatch"
         app.DOMAIN_REPORT_PATH.write_text(json.dumps(evidence), encoding="utf-8")
         h.candidate_catalog(db, {"uid": 1, "role": "instructor"})

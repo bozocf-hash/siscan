@@ -19,6 +19,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 from tools.register_source_references import REFERENCE_SCHEMA
 from tools.import_technical_values import TECHNICAL_SCHEMA
+import source_catalog
 
 
 ROOT = Path(__file__).resolve().parent
@@ -27,6 +28,8 @@ DATA_DIR = ROOT / "data"
 DB_PATH = DATA_DIR / "siscan-demo.sqlite3"
 REVIEW_DB_PATH = DATA_DIR / "db3k-review-01.sqlite3"
 DOMAIN_REPORT_PATH = DATA_DIR / "db3k-domains-01.json"
+COMPILED_DB_PATH = DATA_DIR / "db3k-compiled-05.sqlite3"
+CMO_IMAGE_DIR = Path(r"C:\Program Files (x86)\Matrix Games\Command Modern Operations\DB\Images\DB3000")
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("SISCAN_PORT", "8787"))
 SESSION_SECONDS = 8 * 60 * 60
@@ -358,7 +361,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             return
-        if path in ("/app.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
+        if path in ("/app.js", "/source-catalog.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
             target = STATIC / path.rsplit("/", 1)[1]
             data = target.read_bytes()
             content_type = ("text/javascript; charset=utf-8" if path.endswith(".js") else
@@ -372,6 +375,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path in ("/api/source-platforms", "/api/source-platform", "/api/source-photo"):
+                current = self.require_user(db)
+                if current:
+                    self.compiled_catalog(db, current[1], path, urlparse(self.path).query)
+                return
             if path == "/api/catalog-references":
                 current = self.require_user(db)
                 if current:
@@ -745,6 +753,51 @@ class Handler(BaseHTTPRequestHandler):
         event(db, user["uid"], "catalog.review_note_added", exercise=assignment[0],
               detail={"note_id": saved["id"], "candidate_id": identifier, "source_sha256": source_hash})
         self.send_json(200, {"ok": True, "review_note": dict(saved)})
+
+    def compiled_catalog(self, db: sqlite3.Connection, user: sqlite3.Row, path: str, query: str) -> None:
+        assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()
+        if user["role"] != "instructor" or not assigned:
+            self.send_json(403, {"error": "Consulta restrita ao instrutor atribuído."})
+            return
+        try:
+            params = parse_qs(query, keep_blank_values=True, max_num_fields=3)
+            allowed = ("table", "q", "page") if path == "/api/source-platforms" else ("table", "id")
+            if any(k not in allowed or len(v)!=1 for k,v in params.items()):
+                raise ValueError("Parâmetros inválidos.")
+            table = params.get("table", ["DataAircraft"])[0]
+            identifier = params.get("id", [""])[0]
+            if path == "/api/source-platforms":
+                result = source_catalog.browse(COMPILED_DB_PATH, table, params.get("q", [""])[0].strip(), int(params.get("page", ["1"])[0]))
+            else:
+                result = source_catalog.detail(COMPILED_DB_PATH, table, identifier)
+                if result is None:
+                    self.send_json(404, {"error": "Registro não encontrado."})
+                    return
+                image_path = CMO_IMAGE_DIR / f"{table[4:]}_{int(identifier)}.jpg"
+                if path == "/api/source-photo":
+                    if not image_path.is_file():
+                        self.send_json(404, {"error": "Imagem local não disponível."})
+                        return
+                    data = image_path.read_bytes()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "image/jpeg")
+                    self.send_header("Cache-Control", "no-store")
+                    self.send_header("Content-Length", str(len(data)))
+                    self.send_header("X-Content-Type-Options", "nosniff")
+                    self.end_headers()
+                    self.wfile.write(data)
+                    return
+                result["photo_url"] = f"/api/source-photo?table={table}&id={int(identifier)}" if image_path.is_file() else None
+                reference = db.execute("SELECT reference_id FROM catalog_source_references WHERE source_sha256=? AND source_table=? AND external_id=?",
+                                       (result["source"]["sha256"],table,str(int(identifier)))).fetchone()
+                result["reference_id"] = reference[0] if reference else None
+            self.send_json(200, result)
+        except ValueError:
+            self.send_json(400, {"error": "Categoria, página ou identificação de fonte inválida."})
+        except FileNotFoundError:
+            self.send_json(404, {"error": "Compilação de origem não disponível nesta instalação."})
+        except (sqlite3.Error, OSError):
+            self.send_json(503, {"error": "Não foi possível consultar a compilação de origem."})
 
     def reference_catalog(self, db: sqlite3.Connection, user: sqlite3.Row, query: str) -> None:
         assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()

@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Compilação e fichas entregues:** [64](64_COMPILACAO_RELACIONAL_E_FICHAS_TECNICAS.md) documenta 167 tabelas/766.989 registros em compilação separada, 240 regras e 1.837.862 vínculos com destino único, com oito ocorrências sem correspondência localizadas. O instrutor navega em seis categorias/14.968 plataformas, abre foto e ficha técnica e consulta componentes relacionados. A gestão didática e as alocações existentes foram preservadas. Relações sem FK e unidades permanecem identificadas como evidência de origem, sem promoção automática.
+
 **Consulta ampliada entregue:** o instrutor já pode pesquisar as 11.197 referências e consultar os 77.349 valores pendentes em páginas de 50, com origem e evidência visíveis. O painel dos 80 candidatos e suas observações foi preservado. [63 — Consulta do catálogo ampliado](63_CONSULTA_CATALOGO_AMPLIADO_E_VALORES.md) registra API, testes e entrega na prévia local. As pendências de interface descritas nos estágios abaixo foram resolvidas para consulta; validação técnica e promoção continuam pendentes.
 
 **Valores técnicos brutos incorporados:** após autorização expressa, 77.349 valores foram gravados no banco SISCAN como evidências pendentes, com unidade nula e origem preservada. As 11.197 referências e os dados do exercício foram preservados. [62 — Incorporação bruta](62_INCORPORACAO_ATRIBUTOS_TECNICOS_BRUTOS.md) descreve esquema, testes, backup e limites. Nenhum atributo foi aprovado para cálculo ou alocação; a interface de consulta ampliada permanece pendente. As menções anteriores a valores apenas em arquivos separados são históricas.

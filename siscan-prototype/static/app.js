@@ -3,6 +3,7 @@ const userbar = document.querySelector("#userbar");
 let currentUser = null;
 let csrfToken = "";
 let dashboardData = null;
+let instructorWorkspace = "catalog";
 
 const roleName = { instructor: "Instrutor", evaluator: "Avaliador", student: "Aluno" };
 const statusName = {
@@ -50,6 +51,7 @@ function showMessage(parent, text, kind = "notice") {
 }
 
 function renderLogin(message = "") {
+  instructorWorkspace = "catalog";
   currentUser = null;
   userbar.hidden = true;
   app.replaceChildren();
@@ -270,7 +272,19 @@ function renderReviewer() {
   for (const item of items) list.append(renderSubmission(item));
   box.append(list);
   if (currentUser.role === "instructor") renderEventLog(box);
-  app.append(box);
+  if (currentUser.role === "instructor") {
+    box.classList.add("exercise-workspace");box.hidden=true;
+    const context=Array.from(app.children);
+    const catalog=el("div",{class:"catalog-workspace"});
+    const tabs=el("nav",{class:"workspace-switch","aria-label":"Área de trabalho"});
+    const technical=el("button",{type:"button",text:"Catálogo técnico","aria-pressed":"true"});
+    const exercise=el("button",{type:"button",text:"Exercício e revisão","aria-pressed":"false"});
+    const showWorkspace=mode=>{instructorWorkspace=mode;const showCatalog=mode==="catalog";box.hidden=showCatalog;catalog.hidden=!showCatalog;for(const node of context)node.hidden=showCatalog;technical.setAttribute("aria-pressed",String(showCatalog));exercise.setAttribute("aria-pressed",String(!showCatalog));};
+    technical.addEventListener("click",()=>showWorkspace("catalog"));
+    exercise.addEventListener("click",()=>showWorkspace("exercise"));
+    tabs.append(technical,exercise);app.append(tabs,catalog,box);renderTechnicalCatalog(catalog);
+    showWorkspace(instructorWorkspace);
+  } else app.append(box);
 }
 
 function renderReferenceCatalog(parent) {

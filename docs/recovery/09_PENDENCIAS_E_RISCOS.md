@@ -1,6 +1,6 @@
 # 09 — Pendências e riscos
 
-**Observação assistida posterior, 2026-11-09:** o visualizador DB3K_498a foi acessado; cinco valores de GENERAL DATA coincidem com a amostra Aircraft/3 em 498 e 498a. Faltou observar o cabeçalho com ID/nome, e a descrição textual apresenta medidas diferentes. Registrar como correspondência numérica parcial, sem validar os atributos. Fonte, hashes e divergências em [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md). Isso complementa os estados históricos abaixo.
+**Resultado atual da observação assistida, 2026-11-09:** o visualizador DB3K_498a foi acessado e o cabeçalho #3 — SH-60B Seahawk (United States - 1991) foi confirmado junto às dimensões. Cinco valores de GENERAL DATA lidos ao longo das capturas coincidem com Aircraft/3 em 498 e 498a. A identificação visual desta ficha deixa de ser pendência; permanecem a ampliação da amostra, a comparação direta no visualizador 498, a divergência com a descrição textual e a validação semântica dos atributos. Fonte, hashes e limites em [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md). Isso complementa os estados históricos abaixo.
 
 ## Atualização de evidências locais — 2026-11-08
 

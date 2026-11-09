@@ -2,7 +2,7 @@
 
 ## Escopo e resultado — 2026-11-09
 
-**Atualização posterior com auxílio do responsável:** o visualizador foi acessado e a seção GENERAL DATA foi examinada. O resultado inicial abaixo descreve a tentativa anterior; os achados posteriores e suas limitações estão no final deste documento.
+**Resultado atual com auxílio do responsável:** o visualizador foi acessado, GENERAL DATA foi examinado e o cabeçalho #3 — SH-60B Seahawk (United States - 1991) foi confirmado em DB3K_498a. Uma ficha tem identificação visual e cinco correspondências numéricas amostrais, sem aprovação de atributos. O resultado inicial abaixo descreve a tentativa anterior; os achados posteriores e suas limitações estão no final deste documento.
 
 Foi observada a janela do jogo **Command v1.05 — Build 1307**, além do painel inicial com o mesmo build. Isso complementa a confirmação anterior, restrita ao lançador (58). Nenhuma ficha de plataforma foi aberta no jogo; nenhuma unidade SQL foi validada e nenhum dos 580 valores técnicos foi promovido.
 
@@ -66,7 +66,7 @@ O arquivo instalado `DB\DB3K_498a.db3` tem SHA-256 `866f4cded2e03ad350bab5ed67fe
 | WeightEmpty | 6190 | 6190 | Empty Weight: 6190 kg |
 | WeightMax | 9927 | 9927 | Max Weight: 9927 kg |
 
-**Classificação:** cinco correspondências numéricas observadas, com rótulos m/kg na apresentação, ainda sem vínculo visual completo ao ID. O cabeçalho da ficha com nome e DBID ficou fora da região visível; a lista superior exibia variantes A/F-117X e o filtro SubType estava em Attack. A descrição inferior trata da família Seahawk. A orientação dada e a resposta do responsável não substituem a inspeção do cabeçalho. Portanto, ainda não se registra uma ficha plenamente identificada nem validação definitiva do mapeamento SQL/apresentação.
+**Classificação na primeira leitura:** cinco correspondências numéricas observadas, com rótulos m/kg na apresentação, então sem vínculo visual completo ao ID. O cabeçalho ficou fora da região visível; a lista superior exibia variantes A/F-117X e o filtro SubType estava em Attack. Essa lacuna de identificação foi resolvida pela captura posterior descrita a seguir; a primeira leitura, isoladamente, não permitia identificar a ficha.
 
 A captura pertence à observação da janela via computer-use nesta conversa; não foi exportada como arquivo no repositório. A leitura dos números foi visual, sem OCR nem texto de acessibilidade dos campos. Não houve alteração de código, bancos ou status dos candidatos. Os 580 valores permanecem pendentes no lote.
 
@@ -74,4 +74,10 @@ A captura pertence à observação da janela via computer-use nesta conversa; n�
 
 Na mesma tela, a seção textual SPECIFICATIONS informa comprimento de 19.75 m e diâmetro do rotor de 16.35 m; GENERAL DATA informa Length 15,2 m e Wingspan 2,2 m. São valores e rótulos de seções diferentes. Diâmetro do rotor não deve ser equiparado automaticamente a Wingspan, e não foi determinada a causa da diferença de comprimento. A descrição textual inclui referência externa, que não foi consultada nesta etapa. A concordância com valores SQL não comprova exatidão física nem adequação do atributo ao SISCAN.
 
-Próximo passo: observar o cabeçalho #3 / SH-60B Seahawk na mesma ficha e confirmar a continuidade com GENERAL DATA. Depois, ampliar a comparação para outras plataformas e para a versão 498 quando disponível no visualizador. Não substituir valores, unidades ou interpretação técnica com base nesta única observação.
+### Confirmação posterior do cabeçalho
+
+Após ajuste do zoom pelo responsável, foi observado diretamente **#3 - SH-60B Seahawk (United States - 1991)**, na mesma tela que o título Database Viewer (DB3K_498a), Type Aircraft e GENERAL DATA. Nessa captura são legíveis Length 15,2 m, Wingspan 2,2 m e Height 5,2 m; a captura secundária também mostra Empty Weight 6190 kg. Max Weight 9927 kg foi lido na captura anterior; não se afirma que os cinco valores estejam todos visíveis nesta última imagem. O vínculo entre cabeçalho e dimensões agora é direto, com continuidade da ficha nas observações assistidas.
+
+**Resultado consolidado:** uma ficha identificada no visualizador 498a, cinco correspondências numéricas com os registros SQL Aircraft/3 em 498 e 498a, três outras fichas da amostra ainda não examinadas. Isso constitui evidência amostral da apresentação, sem comprovar o mecanismo de conversão, todos os registros do banco ou a exatidão física dos valores. O filtro/lista superior permanece diferente da ficha exibida; não utilizá-lo como substituto do cabeçalho para identificar uma plataforma.
+
+Próximo passo: ampliar a comparação para outras plataformas e para a versão 498 quando disponível no visualizador. Para a amostra naval, selecionar Ship / ID 3 e conferir D 10 Almirante Brown [Meko 360H2] antes de ler dimensões. Não substituir valores, unidades ou interpretação técnica com base nesta única observação. Os 580 valores técnicos permanecem pendentes de aprovação para uso no SISCAN.

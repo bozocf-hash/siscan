@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Massa de armamento e payload:** [68](68_MASSA_ARMAMENTO_E_PAYLOAD.md) associa cada item à massa cadastrada e às quantidades de sua configuração/instalação, mantendo alternativas, opcionais e reservas separados. A ficha mostra soma/diferença nominais quando os dados permitem, sem declarar carga operacional disponível. Auditoria percorreu 31.258 loadouts, 86.981 linhas e 77.852 vínculos aéreos; faltas de massa e 643 excessos nominais requerem avaliação, sem correção automática.
+
 **Persistência técnica de combustível e propulsão:** [67](67_BASE_PERSISTIDA_COMBUSTIVEL_E_PROPULSAO.md) registra a base SQL derivada com 1.940 combustíveis, 3.467 propulsores, 20.544 pontos e 28.757 instalações, todos comparados com a compilação. O endpoint técnico retorna os recursos persistidos com origem/unidades, sem promoção operacional ou consumo calculado. As demais famílias continuam na compilação integral.
 
 **Unidades e perfis de consumo:** [66](66_UNIDADES_E_BASE_DOS_PERFIS_DE_CONSUMO.md) registra unidades junto aos campos, distinguindo apresentação amostral, referência documental e unidade SQL pendente. O backend retorna metadados e pontos por propulsor/regime/faixa, com origem e prontidão para cálculo explícitas. Manual oficial PDF 91 inspecionado visualmente; kg/kg/min confirmados no painel aéreo, sem extrapolação automática ao SQL ou a outras famílias.

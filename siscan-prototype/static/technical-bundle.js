@@ -104,6 +104,7 @@ function renderTechnicalBundle(parent, bundle) {
     }));
     section.append(group);
   };
+  if(bundle.armament_payload)section.append(renderArmamentPayload(bundle.armament_payload));
   drawFamily("DataSensor","Sensores, frequências e capacidades");
   drawFamily("DataFuel","Combustível e armazenamento");
   drawFamily("DataPropulsion","Propulsão, regimes e consumo");
@@ -132,4 +133,41 @@ function renderTechnicalBundle(parent, bundle) {
     const link=el("a",{href:url,download:`${root.table}_${root.id}_dados_compilados.json`});link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
   section.append(el("div",{class:"actions"},[download]));parent.replaceChildren(section);
+}
+
+function renderArmamentPayload(data) {
+  const section=el("section",{class:"compiled-family payload-family","aria-label":"Armamento e payload"});
+  const format=value=>value===null||value===undefined?"Não informado":typeof value==="number"?new Intl.NumberFormat("pt-BR",{maximumFractionDigits:6}).format(value):String(value);
+  section.append(el("h4",{text:"Armamento e payload"}),el("p",{class:"source-caveat",text:data.qualification}));
+  section.append(el("p",{class:"payload-limit",text:data.payload_field?`Payload declarado: ${format(data.declared_payload)} kg · referência documental. A carga efetivamente disponível ainda não foi calculada.`:"A fonte desta categoria não forneceu um campo equivalente a WeightPayload de aeronave. Não há comparação automática com deslocamento ou capacidade de carga."}));
+  if(!data.groups.length){section.append(el("p",{class:"muted",text:"Não foram encontradas configurações, suportes ou paióis diretamente associados para esta comparação."}));return section;}
+  const kinds={loadout:"Configuração",mount:"Armamento no suporte",mount_reserve:"Reserva do suporte",magazine:"Paiol"};
+  const issues={weapon_record_unresolved:"Registro de armamento sem correspondência",weapon_unresolved:"Arma sem correspondência",quantity_invalid:"Quantidade inválida ou ausente",default_exceeds_max:"Carga padrão superior à máxima",multiple_unresolved:"Multiple requer interpretação",weight_unresolved:"Massa ausente ou zero sem validação",optional_unresolved:"Condição opcional não esclarecida"};
+  const select=el("select",{id:"armament-payload-choice"});
+  data.groups.forEach((group,i)=>select.append(el("option",{value:String(i),text:`${kinds[group.kind]} ${i+1} — ${group.name||group.container_table}`})));
+  const detail=el("div",{class:"payload-detail"});
+  section.append(el("label",{class:"label",for:"armament-payload-choice",text:"Configuração ou instalação a conferir"}),select,detail);
+  const render=()=>{
+    const group=data.groups[Number(select.value)];detail.replaceChildren();
+    detail.append(el("p",{text:group.nominal_default_mass===null?`Massa padrão incompleta. Parcela conhecida: ${format(group.known_default_subtotal)} kg sob hipótese documental.`:`Massa nominal da carga padrão: ${format(group.nominal_default_mass)} kg sob hipótese documental.`}));
+    if(group.reference_balance!==null)detail.append(el("p",{class:group.comparison==="reference_exceeds"?"notice error":"compiled-coverage",text:group.reference_balance<0?`Comparação nominal: excede o payload declarado em ${format(-group.reference_balance)} kg. Requer avaliação; não é decisão operacional.`:`Margem nominal sobre o payload declarado: ${format(group.reference_balance)} kg. Isso não representa a carga operacional disponível nem aprova a configuração.`}));
+    if(!group.items.length)detail.append(el("p",{class:"muted",text:group.container_key?"Esta configuração não contém registros de armamento. Isso não comprova disponibilidade do meio.":"O componente desta instalação não foi localizado. Não foi atribuído peso zero."}));
+    else {
+      const wrapper=el("div",{class:"technical-table-scroll",tabindex:"0"});
+      const table=el("table",{class:"technical-matrix payload-matrix"});
+      table.append(el("thead",{},[el("tr",{},["Armamento / item","Massa cadastrada (kg · hipótese)","Carga padrão","Máxima","Multiple","Massa nominal (kg · hipótese)","Condição / pendências"].map(text=>el("th",{scope:"col",text})))]));
+      const body=el("tbody");
+      for(const item of group.items) {
+        const condition=[item.optional===true?"Opcional; fora do total padrão":item.optional===false?"Carga padrão":"Opção não esclarecida",item.internal===1?"Interno":item.internal===0?"Externo":"Posição não informada",...item.issues.map(issue=>issues[issue]||issue)].join(" · ");
+        body.append(el("tr",{},[el("td",{},[el("strong",{text:item.name}),el("small",{class:"component-context",text:`Arma #${format(item.weapon_id)} · registro #${format(item.weapon_record_id)}`})]),
+          ...[item.unit_weight,item.default_load,item.max_load,item.multiple,item.nominal_mass].map(value=>el("td",{text:format(value)})),el("td",{text:condition})]));
+      }
+      table.append(body);wrapper.append(table);detail.append(wrapper);
+    }
+    detail.append(el("p",{class:"table-footnote",text:"Quantidade padrão × massa cadastrada; Multiple diferente de 1 bloqueia a linha. Opcionais não entram automaticamente no total. Configurações alternativas, suportes fixos e reservas não são somados ao payload. Massa do lançador completo, combustível e adaptadores precisam de dados próprios."}),el("small",{class:"muted",text:`Origem: ${group.placement_key} → ${group.container_key||"sem correspondência"}`}));
+  };
+  const initial=data.groups.findIndex(group=>group.kind==="loadout"&&group.items.length&&group.nominal_default_mass>0);
+  select.value=String(initial<0?0:initial);select.addEventListener("change",render);render();
+  section.append(el("p",{class:"table-footnote"},[el("a",{href:data.weight_evidence.evidence,target:"_blank",rel:"noopener noreferrer",text:"Fonte da referência de massa em kg"}),el("span",{text:" · A correspondência SQL e a unidade de contabilização permanecem em avaliação."})]));
+  return section;
 }

@@ -6,6 +6,7 @@ from pathlib import Path
 import sqlite3
 from tools.compile_db3k import MASTERS
 from technical_units import describe_fields, annotate_bundle, VERSION as UNITS_VERSION
+from armament_payload import assess_payload
 
 CATEGORIES = ('DataAircraft','DataShip','DataSubmarine','DataGroundUnit','DataFacility','DataSatellite')
 
@@ -105,6 +106,7 @@ def technical_bundle(path, table, identifier):
         consumption_profiles=annotate_bundle(ordered,list(links.values()),key(table,root[0]))
         return {'root':key(table,root[0]),'source':source,'complete':True,'nodes':ordered,
                 'measurement_contract_version':UNITS_VERSION,'consumption_profiles':consumption_profiles,
+                'armament_payload':assess_payload(ordered,list(links.values()),key(table,root[0])),
                 'links':list(links.values()),'node_count':len(nodes),'field_count':sum(len(n['fields']) for n in ordered),
                 'table_counts':dict(Counter(n['table'] for n in ordered)),
                 'unresolved_link_count':sum(l['status']!='matched' for l in links.values()),

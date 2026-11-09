@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Avanço submarino:** Submarine/3 PLARB-667A Yankee I [Navaga] identificado em DB3K_498a; os cinco valores preparados coincidem com SQL 498/498a, incluindo MaxDepth=-320 apresentado como -320 m. São três fichas e 14 de 18 valores comparados; GroundUnit/3 ainda pendente. Observações amostrais não aprovam os 580 atributos para uso. Ver resultado consolidado no final de [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md); as contagens anteriores abaixo são históricas.
+
 **Avanço naval:** Ship/3 D 10 Almirante Brown identificado em DB3K_498a; quatro dimensões coincidem com o SQL. A amostra alcança duas fichas e nove dos 18 valores preparados, com observações adicionais de deslocamento/tripulação. Height=0 aparece como 0 m e DisplacementEmpty=0 como traço; Full Displacement requer leitura ampliada. Registro e limites no final de [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md); nenhuma aprovação de atributos foi realizada.
 
 **Resultado atual da observação assistida:** cabeçalho **#3 — SH-60B Seahawk (United States - 1991)** confirmado no visualizador DB3K_498a, com dimensões visíveis na mesma tela. Cinco valores de GENERAL DATA, lidos ao longo das capturas, coincidem com DataAircraft/3 dos arquivos 498 e 498a. É uma comparação amostral identificada; não valida globalmente unidades SQL nem exatidão física. Há divergência entre descrição textual e dados gerais. Detalhes no final do [documento 59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md); os 580 valores continuam pendentes de aprovação para uso. As menções abaixo à ausência de acesso ao visualizador descrevem o estágio anterior.

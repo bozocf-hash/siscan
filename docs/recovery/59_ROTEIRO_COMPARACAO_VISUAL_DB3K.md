@@ -2,7 +2,7 @@
 
 ## Escopo e resultado — 2026-11-09
 
-**Resultado atual com auxílio do responsável:** duas fichas identificadas e examinadas em DB3K_498a: Aircraft/3 SH-60B Seahawk e Ship/3 D 10 Almirante Brown. Há nove correspondências numéricas entre os 18 valores inicialmente preparados, além de observações complementares da ficha naval. Não houve aprovação de atributos. O resultado inicial abaixo descreve a tentativa anterior; os achados posteriores e suas limitações estão no final deste documento.
+**Resultado atual com auxílio do responsável:** três fichas identificadas e examinadas em DB3K_498a: Aircraft/3 SH-60B Seahawk, Ship/3 D 10 Almirante Brown e Submarine/3 PLARB-667A Yankee I [Navaga]. Há 14 correspondências numéricas entre os 18 valores inicialmente preparados, além de observações complementares. GroundUnit/3 ainda pendente. Não houve aprovação de atributos. O resultado inicial abaixo descreve a tentativa anterior; os achados posteriores e suas limitações estão no final deste documento.
 
 Foi observada a janela do jogo **Command v1.05 — Build 1307**, além do painel inicial com o mesmo build. Isso complementa a confirmação anterior, restrita ao lançador (58). Nenhuma ficha de plataforma foi aberta no jogo; nenhuma unidade SQL foi validada e nenhum dos 580 valores técnicos foi promovido.
 
@@ -102,3 +102,23 @@ Os quatro campos dimensionais completam a comparação naval da amostra inicial:
 O tratamento diferente de Height=0 e DisplacementEmpty=0 mostra que não existe base nesta amostra para uma regra universal de zero. O rótulo tons não autoriza converter automaticamente para tonelada métrica, tonelada longa ou outra unidade. Os 580 valores técnicos continuam pendentes de aprovação, inclusive os que receberam evidência visual amostral.
 
 Próxima ficha preparada: Submarine / ID 3, PLARB-667A Yankee I [Navaga]. Comparar Length, Beam, Draft, Height e MaxDepth, preservando o sinal de MaxDepth=-320 e registrando o que a interface efetivamente apresenta.
+
+## Observação assistida do submarino — 2026-11-09
+
+O responsável abriu a ficha seguinte. Foram observados Database Viewer (DB3K_498a), Type Submarine e o cabeçalho **#3 - PLARB-667A Yankee I [Navaga] (Russia [1992-] - 1992)**, junto a GENERAL DATA. Os dados SQL abaixo foram consultados novamente nos arquivos 498 original e 498a instalado, por conexão SQLite somente leitura. A leitura da tela foi visual, sem OCR; as capturas permanecem na conversa, sem exportação para o repositório.
+
+| Campo DataSubmarine/3 | SQL 498 | SQL 498a | Apresentação observada | Resultado |
+|---|---|---|---|---|
+| Length | 128.0 | 128.0 | Length: 128 m | Correspondência numérica, sem casa decimal exibida |
+| Beam | 11.7 | 11.7 | Beam: 11,7 m | Correspondência numérica amostral |
+| Draft | 7.9 | 7.9 | Draft: 7,9 m | Correspondência numérica amostral |
+| Height | 0.0 | 0.0 | Height: 0 m | Zero exibido; significado técnico não determinado |
+| MaxDepth | -320 | -320 | Max Depth: -320 m | Sinal negativo preservado na apresentação |
+| DisplacementEmpty | 0 | 0 | Empty Displacement: - | Traço na apresentação, sem concluir significado do zero |
+| DisplacementStandard | 7770 | 7770 | Standard Displacement: 7770 tons | Correspondência numérica; tipo de tonelada não confirmado |
+| DisplacementFull | 10020 | 10020 | Full Displacement: 10020 tons | Correspondência numérica; tipo de tonelada não confirmado |
+| Crew | 120 | 120 | Crew: 120 | Correspondência numérica; composição por função não determinada |
+
+**Resultado consolidado:** três fichas identificadas, **14 de 18 valores inicialmente preparados** com correspondência numérica observada no visualizador 498a: Aircraft 5, Ship 4 e Submarine 5. As observações adicionais de deslocamento/tripulação não entram nesse denominador. Não foi determinada uma regra universal de sinal, unidade SQL, zero ou NULL. Em particular, não se aplica valor absoluto a MaxDepth nem se usa o número como profundidade de operação autorizada; observou-se apenas o campo e sua apresentação.
+
+Os 580 valores técnicos continuam pendentes de aprovação para uso. Não houve alteração de código, bancos ou status dos candidatos. GroundUnit/3 AAVP-7A1 é a última ficha da amostra inicial; comparar Length, Width, MastHeight e Area, com atenção ao rótulo dimensional de Area. A leitura ampliada de Full Displacement do navio permanece pendente.

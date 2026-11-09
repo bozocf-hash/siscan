@@ -22,6 +22,7 @@ from tools.import_technical_values import TECHNICAL_SCHEMA
 import source_catalog
 import resource_store
 import engine_input
+import engine_units
 
 
 ROOT = Path(__file__).resolve().parent
@@ -169,6 +170,7 @@ CREATE INDEX IF NOT EXISTS idx_events_exercise ON events(exercise_id,created_at)
 """
 SCHEMA += REFERENCE_SCHEMA
 SCHEMA += TECHNICAL_SCHEMA
+SCHEMA += engine_units.SCHEMA
 
 
 def connect() -> sqlite3.Connection:
@@ -365,7 +367,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             return
-        if path in ("/app.js", "/source-catalog.js", "/technical-bundle.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
+        if path in ("/app.js", "/source-catalog.js", "/technical-bundle.js", "/engine-units.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
             target = STATIC / path.rsplit("/", 1)[1]
             data = target.read_bytes()
             content_type = ("text/javascript; charset=utf-8" if path.endswith(".js") else
@@ -379,6 +381,14 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path == "/api/engine-units":
+                current = self.require_user(db)
+                if current:
+                    if urlparse(self.path).query:
+                        self.send_json(400, {"error": "A consulta de unidades não aceita parâmetros."})
+                    else:
+                        self.engine_unit_catalog(db,current[1])
+                return
             if path == "/api/engine-readiness":
                 current = self.require_user(db)
                 if current:
@@ -468,6 +478,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.allocate_assets(db, user, payload)
             elif path == "/api/catalog-review-note":
                 self.add_catalog_note(db, user, payload)
+            elif path == "/api/engine-units/prepare":
+                self.engine_unit_catalog(db,user,payload)
             else:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "Rota não encontrada."})
 
@@ -765,6 +777,22 @@ class Handler(BaseHTTPRequestHandler):
         event(db, user["uid"], "catalog.review_note_added", exercise=assignment[0],
               detail={"note_id": saved["id"], "candidate_id": identifier, "source_sha256": source_hash})
         self.send_json(200, {"ok": True, "review_note": dict(saved)})
+
+    def engine_unit_catalog(self, db: sqlite3.Connection, user: sqlite3.Row, payload=None) -> None:
+        try:
+            engine_units.context(db,user,write=payload is not None)
+            if payload is not None and payload:
+                self.send_json(400, {"error": "A preparação usa apenas o conjunto sintético controlado; não aceita atributos do cliente."})
+                return
+            result=engine_units.prepare_units(db,user) if payload is not None else {}
+            result.update(engine_units.list_units(db,user))
+            self.send_json(200,result)
+        except PermissionError as exc:
+            self.send_json(403, {"error": str(exc)})
+        except ValueError as exc:
+            self.send_json(400, {"error": str(exc)})
+        except (sqlite3.Error,OSError):
+            self.send_json(503, {"error": "Não foi possível preparar ou conferir os snapshots das unidades. Nenhuma criação parcial foi mantida."})
 
     def engine_readiness(self, db: sqlite3.Connection, user: sqlite3.Row) -> None:
         assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()

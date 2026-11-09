@@ -123,7 +123,7 @@ function renderDashboard() {
     app.append(el("div", { class: "card empty", text: dashboardData.error }));
     return;
   }
-  if (currentUser.role === "student") renderStudent();
+  if (currentUser.role === "student") { renderStudent(); renderEngineUnits(app,false); }
   else renderReviewer();
 }
 

@@ -1,5 +1,7 @@
 # 70 — Primeiro contrato de entrada e manifesto do motor
 
+**Continuidade:** as unidades individuais e snapshots do próximo passo foram entregues em [71](71_IDENTIDADE_CONFIGURACAO_E_SNAPSHOT_UNIDADES.md), sem iniciar consumo ou execução.
+
 ## Escopo — 2026-11-09
 
 Implementar a primeira entrega da sequência 69: validar um conjunto sintético controlado de entradas e identificar suas versões/hashes. Não implementar avanço de tempo, consumo, estoque, movimentação ou promoção de dados Command nesta etapa.

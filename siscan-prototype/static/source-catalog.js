@@ -44,7 +44,8 @@ function renderTechnicalCatalog(parent) {
     finally{engineButton.disabled=false;}
   };
   engineButton.addEventListener("click",()=>{enginePanel.hidden=!enginePanel.hidden;engineButton.setAttribute("aria-expanded",String(!enginePanel.hidden));if(!enginePanel.hidden&&!engineLoaded)checkEngine();});
-  frame.append(heading,el("div",{class:"actions engine-controls"},[engineButton]),enginePanel,el("div",{class:"catalog-layout"},[rail,viewer]));parent.append(frame);
+  frame.append(heading,el("div",{class:"actions engine-controls"},[engineButton]),enginePanel);renderEngineUnits(frame,true);
+  frame.append(el("div",{class:"catalog-layout"},[rail,viewer]));parent.append(frame);
   let table="DataAircraft",page=1,term="",listSequence=0,detailSequence=0;
   const categoryButtons={};
   for(const [key,title] of Object.entries(categories)) {

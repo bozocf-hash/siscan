@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Unidades e snapshots entregues:** [71](71_IDENTIDADE_CONFIGURACAO_E_SNAPSHOT_UNIDADES.md) registra duas unidades sintéticas, uma por partido, com UUIDs individuais, configuração versionada e snapshots imutáveis. Oito meios anteriores e alocações foram preservados; o instrutor continua responsável pela disponibilização. Quinze verificadores passaram, incluindo idempotência, rollback e acesso compartilhado por partido. Ainda não há execução/consumo.
+
 **Primeira entrada do motor entregue:** [70](70_CONTRATO_ENTRADA_E_MANIFESTO_DO_MOTOR.md) documenta o contrato sintético validado, manifesto fixado pelo backend, recusa de campos/unidades/versões/conteúdo divergentes e diagnóstico cruzado de fonte/compilação/recursos. O botão Preparação do motor mostra a conferência ao instrutor atribuído. Não há simulação ou promoção de dados Command; 14 verificadores passaram.
 
 **Parecer de engenharia de dados e motor:** [69](69_PARECER_ENGENHARIA_DADOS_E_PRONTIDAO_MOTOR.md) conclui que podemos programar o núcleo e testá-lo com dados controlados, mas o catálogo inteiro ainda não é entrada física validada. Registra 16 frentes de trabalho com critérios de aceite, separa bloqueios por capacidade e recomenda catálogo validado, snapshot técnico, estado transacional e manifesto compatível. Não exige banco universalmente perfeito para avançar nem promove atributos pendentes.

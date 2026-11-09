@@ -30,7 +30,7 @@ with closing(sqlite3.connect(':memory:')) as db:
  try:continuity.continue_run(db,teacher,{**payload,'reason':'Outro conteúdo'})
  except runtime.Conflict:pass
  else:raise AssertionError('Continuation key reused for another intention')
- archived=runtime.read_runtime(db,teacher,old['run_id']);assert archived['states']==old['states'] and not archived['advance_allowed']
+ archived=runtime.read_runtime(db,teacher,old['run_id']);historical=[{**s,'minimum_alert':None} for s in old['states']];assert archived['states']==historical and not archived['advance_allowed']
  legacy_step=db.execute('SELECT payload_json FROM engine_runtime_steps WHERE run_id=?',(old['run_id'],)).fetchone()[0]
  assert runtime.advance_run(db,teacher,{**json.loads(legacy_step),'run_id':old['run_id']})['replayed']
  for row in snapshots:assert db.execute('SELECT 1 FROM engine_unit_snapshots WHERE snapshot_id=? AND snapshot_json=?',(row[0],row[7])).fetchone()
@@ -48,7 +48,7 @@ with closing(sqlite3.connect(':memory:')) as db:
   else:raise AssertionError('Unscoped or archived advance accepted')
  runtime.advance_run(db,teacher,command(run_id=new['run_id'],minutes=15,expected_revision=0))
  current=runtime.read_runtime(db,teacher);assert current['elapsed_minutes']==45 and all(s['fuel_remaining_kg']==510 for s in current['states'])
- assert runtime.read_runtime(db,teacher,old['run_id'])['states']==old['states']
+ assert runtime.read_runtime(db,teacher,old['run_id'])['states']==historical
  asset=next(u['asset_id'] for u in list_units(db,teacher)['units'] if u['team']=='AZUL')
  db.execute("INSERT INTO party_allocations VALUES(1,'AZUL',?,1,1,'2026-11-09')",(asset,))
  visible=runtime.read_runtime(db,blue);assert len(visible['states'])==1 and visible['run_id']==new['run_id'] and 'VERMELHO' not in json.dumps(visible)

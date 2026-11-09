@@ -2,6 +2,7 @@
 import hashlib,json,sqlite3,uuid
 from pathlib import Path
 import engine_runtime,engine_units
+import fuel_limits
 from engine_input import input_hash,validate_input,trusted_manifest
 
 DATA_PATH=Path(__file__).resolve().parent/'fixtures/engine/synthetic-profiles-01.json'
@@ -52,10 +53,16 @@ def preview(db,user,payload):
         required+=spent;elapsed+=segment['minutes'];available=max(0,initial-required)
         rows.append({**segment,'label':regime['label'],'rate_grams_per_minute':rate,'fuel_required_grams':spent,'cumulative_required_grams':required,'end_offset_minutes':elapsed,'available_grams':available,'shortfall_grams':max(0,required-initial)})
         curve.append({'minute_offset':elapsed,'available_grams':available})
-    manifest={**trusted['manifest'],'run_id':current['run_id'],'run_manifest_sha256':current['manifest_sha256'],
+    limit=fuel_limits.status(db,payload['unit_id'],initial);minimum=limit['minimum_grams'];reached=0 if minimum is not None and initial<=minimum else None
+    offset=0;used=0
+    for row in rows:
+        if minimum is not None and reached is None and initial-used-row['fuel_required_grams']<=minimum:reached=offset+(initial-used-minimum)/row['rate_grams_per_minute']
+        offset+=row['minutes'];used+=row['fuel_required_grams']
+    manifest={**trusted['manifest'],'fuel_limit_version':limit['version'],'minimum_grams':minimum,'run_id':current['run_id'],'run_manifest_sha256':current['manifest_sha256'],
               'scenario_version':current['scenario_version'],'revision':current['revision'],'unit_id':payload['unit_id'],
               'snapshot_sha256':pinned['snapshot_sha256'],'fuel_basis_grams':initial,'plan_sha256':input_hash(payload)}
     return {'scope':'synthetic_profile_preview','official_calculation_ready':False,'debit_applied':False,'duration_minutes':duration,
             'basis_elapsed_minutes':current['elapsed_minutes'],'fuel_basis_grams':initial,'fuel_required_grams':required,
             'fuel_remaining_grams':max(0,initial-required),'shortfall_grams':max(0,required-initial),'feasible':required<=initial,
+            'minimum_alert':limit,'minimum_reached_at_offset_minutes':reached,
             'exhaustion_at_offset_minutes':exhaustion,'segments':rows,'curve':curve,'manifest':manifest,'manifest_sha256':input_hash(manifest)}

@@ -1,5 +1,7 @@
 # 74 — Previsão de consumo por perfil temporal
 
+**Complemento em 75:** [75](75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md) acrescenta à prévia o mínimo definido pelo operador, sua versão no manifesto, linha tracejada e instante de cruzamento. A previsão permanece sem débito; os resultados e hashes registrados abaixo referem-se à entrega 74 anterior a esse complemento.
+
 ## Contrato do incremento — 2026-11-09
 
 Prévia exclusiva do instrutor atribuído, baseada em uma unidade da execução corrente e sua revisão. Sequência de até 24 trechos, cada um com regime sintético e duração inteira positiva, total máximo de 1440 min. IDs, unidades e taxas vêm de fixture fixada pelo backend; cliente não envia taxas. Unidades de massa em gramas no cálculo e kg na apresentação; tempo em minutos.

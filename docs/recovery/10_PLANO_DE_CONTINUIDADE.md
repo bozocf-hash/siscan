@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Pré-requisito adicional entregue em 75:** por determinação do responsável, [alerta mínimo definido pelo operador](75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md) foi incluído antes do débito por perfil. Operador do partido e instrutor podem configurar. Próximo incremento mantém a aplicação transacional dos perfis, incluindo política/versionamento do limite e eventos de cruzamento.
+
 **Quinto passo entregue em 74:** [prévia por perfil temporal](74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md), somente com regimes sintéticos e sem alteração de saldos. Próxima fatia: fixar contrato do perfil na execução e aplicar o plano inteiro em transação idempotente, mantendo a recusa integral por insuficiência. Modelos Command continuam dependentes de aprovação física/semântica específica.
 
 **Quarto passo entregue em 73:** [continuidade versionada](73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md) conserva saldo/tempo, cria snapshots e preserva o histórico quando o instrutor cria uma sucessora. O próximo recorte pode ser o contrato de perfil temporal e consumo por regime com dados controlados; taxas e unidades Command ainda exigem comprovação e aprovação. Referências anteriores à continuidade como próxima entrega são históricas.

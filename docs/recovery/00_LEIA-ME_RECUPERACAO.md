@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Alerta de combustível — decisão e entrega 75:** [75](75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md) permite ao operador do próprio partido e ao instrutor definir mínimo por meio, com auditoria e alerta em saldo <= mínimo. Incluído na execução e na prévia antes do débito por perfil. Nenhum mínimo padrão foi imposto; saldos locais continuam 510 kg.
+
 **Perfil temporal entregue — 2026-11-09:** [74 — Previsão de consumo](74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md) permite montar trechos com regimes hipotéticos, ver curva/demanda/déficit e conferir manifesto sem debitar o estoque. A execução continua em 45 min/510 kg por unidade. Taxas sintéticas não representam dados Command aprovados.
 
 **Continuidade entregue — 2026-11-09:** [73 — Continuidade versionada](73_CONTINUIDADE_VERSIONADA_DOS_ENSAIOS.md) permite sucessora explícita com motivo, herdando saldos/tempo e preservando a anterior para consulta. A execução atual tem 45 min/510 kg por unidade; a anterior conserva 30 min/540 kg. Continua restrito ao ensaio sintético.

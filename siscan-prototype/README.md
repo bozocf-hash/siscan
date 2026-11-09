@@ -92,3 +92,7 @@ No painel de execução, o instrutor pode abrir “Continuar em nova versão”,
 ## Prévia de perfil temporal
 
 Em “Unidades de teste do motor → Prever perfil de consumo”, o instrutor monta trechos com regimes sintéticos e consulta demanda, saldo projetado, curva e déficit. O cálculo não altera estoque/relógio e não usa taxas Command. Editar o plano remove a previsão anterior; revisão desatualizada exige atualização do estado. Execute `python check_engine_profiles.py`. [Contrato e evidências](../docs/recovery/74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md).
+
+## Alerta mínimo de combustível
+
+Em “Unidades de teste do motor”, operador do próprio partido e instrutor podem definir o mínimo por meio, em kg. Alerta em saldo menor ou igual ao limite; zero é válido e desativação é explícita. Não há mínimo padrão imposto nem bloqueio automático da reserva. Os avisos são conferidos a cada 10 s com painel/aba visíveis. A prévia mostra a linha e o instante de cruzamento. Execute `python check_fuel_limits.py`. [Regras e evidências](../docs/recovery/75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md).

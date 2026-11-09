@@ -26,6 +26,7 @@ import engine_units
 import engine_runtime
 import engine_continuity
 import engine_profiles
+import fuel_limits
 
 
 ROOT = Path(__file__).resolve().parent
@@ -176,6 +177,7 @@ SCHEMA += TECHNICAL_SCHEMA
 SCHEMA += engine_units.SCHEMA
 SCHEMA += engine_runtime.SCHEMA
 SCHEMA += engine_continuity.SCHEMA
+SCHEMA += fuel_limits.SCHEMA
 
 
 def connect() -> sqlite3.Connection:
@@ -373,7 +375,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             return
-        if path in ("/app.js", "/source-catalog.js", "/technical-bundle.js", "/engine-units.js", "/engine-runtime.js", "/engine-profiles.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
+        if path in ("/app.js", "/source-catalog.js", "/technical-bundle.js", "/engine-units.js", "/engine-runtime.js", "/engine-profiles.js", "/fuel-limits.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
             target = STATIC / path.rsplit("/", 1)[1]
             data = target.read_bytes()
             content_type = ("text/javascript; charset=utf-8" if path.endswith(".js") else
@@ -506,6 +508,12 @@ class Handler(BaseHTTPRequestHandler):
                 self.engine_runtime_action(db,user,path.rsplit('/',1)[1],payload)
             elif path == '/api/engine-profile-preview':
                 self.engine_profile_action(db,user,payload)
+            elif path == '/api/engine-fuel-limit':
+                try:self.send_json(200,fuel_limits.set_limit(db,user,payload))
+                except PermissionError as exc:self.send_json(403,{'error':str(exc)})
+                except engine_runtime.Conflict as exc:self.send_json(409,{'error':str(exc)})
+                except ValueError as exc:self.send_json(400,{'error':str(exc)})
+                except sqlite3.Error:self.send_json(503,{'error':'Não foi possível registrar o limite. Nenhuma alteração parcial foi mantida.'})
             else:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "Rota não encontrada."})
 

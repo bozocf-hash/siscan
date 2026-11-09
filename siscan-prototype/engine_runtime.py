@@ -5,6 +5,7 @@ from decimal import Decimal
 import hashlib,json,sqlite3,uuid
 from pathlib import Path
 import engine_units
+import fuel_limits
 from engine_input import input_hash,validate_input,trusted_manifest
 
 RULES_VERSION='constant-rate-synthetic-01'
@@ -130,7 +131,8 @@ def read_runtime(db,user,run_id=None):
         unit=metadata[row['unit_id']]
         states.append({'unit_id':row['unit_id'],'team':unit['team'],'code':unit['code'],'snapshot_id':row['snapshot_id'],
                        'fuel_initial_kg':row['initial_grams']/1000,'fuel_remaining_kg':row['remaining_grams']/1000,
-                       'fuel_consumed_kg':row['consumed_grams']/1000,'rate_kg_per_minute':row['rate_grams_per_minute']/1000})
+                       'fuel_consumed_kg':row['consumed_grams']/1000,'rate_kg_per_minute':row['rate_grams_per_minute']/1000,
+                       'minimum_alert':fuel_limits.status(db,row['unit_id'],row['remaining_grams']) if run['run_id']==latest['run_id'] else None})
     expected=set(ids)&{s['unit_id'] for s in manifest['units']}
     if {s['unit_id'] for s in states}!=expected:raise sqlite3.DatabaseError('Visible state coverage mismatch')
     ledger=[dict(r) for r in db.execute('''SELECT l.unit_id,l.command_id,l.before_grams,l.consumed_grams,l.after_grams,s.revision,s.after_minutes,s.duration_minutes,s.created_at
@@ -188,6 +190,7 @@ def advance_run(db,user,payload):
             db.execute('UPDATE engine_resource_states SET remaining_grams=?,consumed_grams=consumed_grams+? WHERE run_id=? AND unit_id=?',(remaining,spent,run['run_id'],row['unit_id']))
         current=read_runtime(db,user)
         result={k:current[k] for k in ('run_id','elapsed_minutes','revision','states','manifest_sha256')}
+        result['fuel_alert_events']=fuel_limits.crossings(db,exercise['id'],run['run_id'],user,movements,command)
         result.update(command_id=command,replayed=False,movements=[{'unit_id':row['unit_id'],'before_grams':row['remaining_grams'],'consumed_grams':spent,'after_grams':remaining,'snapshot_sha256':sha} for row,spent,remaining,sha in movements])
         now=datetime.now(timezone.utc).isoformat()
         db.execute('INSERT INTO engine_runtime_steps VALUES(?,?,?,?,?,?,?,?,?,?)',(run['run_id'],command,engine_units.encoded(payload),expected+1,run['elapsed_minutes'],run['elapsed_minutes']+minutes,minutes,user['uid'],engine_units.encoded(result),now))

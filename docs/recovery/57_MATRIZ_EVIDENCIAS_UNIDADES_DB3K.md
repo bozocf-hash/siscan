@@ -4,6 +4,8 @@
 
 Consulta documental em 08/11/2026. Foram encontradas unidades explícitas nos formulários públicos de entrada de dados da equipe do banco Command. Esses formulários são evidência primária do processo de solicitação, mas não são um dicionário das colunas SQLite da versão 498. As correspondências abaixo são propostas, não validações SQL ou aprovações de atributos.
 
+Uma inspeção posterior encontrou a instalação local do CMO e templates de apresentação junto de um DB3K_498 com o mesmo hash da fonte analisada. As evidências adicionais e a discrepância do rótulo Area estão em [58](58_FONTES_LOCAIS_CMO_E_TEMPLATES.md). Elas não alteram automaticamente o estado pendente dos campos.
+
 O [repositório público da equipe do banco](https://github.com/PygmalionOfCyprus/cmo-db-requests) descreve seu papel como rastreador de solicitações e problemas do CMO. A existência de um formulário não comprova que uma solicitação tenha sido aceita nem que seus valores tenham entrado no banco fornecido.
 
 ## Matriz de correspondências propostas

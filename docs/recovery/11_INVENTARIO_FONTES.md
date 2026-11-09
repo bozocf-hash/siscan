@@ -42,6 +42,8 @@ Documentos 42–48 organizam propostas e a pauta APR-01 a APR-20; o resultado ex
 
 ## Especificação funcional e fluxograma decisório
 
+Fonte local adicional identificada posteriormente: instalação `C:\Program Files (x86)\Matrix Games\Command Modern Operations`, contendo DB3K_498 binariamente idêntico ao arquivo de trabalho, templates HTML de fichas e manual EBOOK digital de 353 páginas. Detalhes, hashes, rótulos encontrados e limites de inspeção estão em 58. A instalação não foi executada nesta inspeção e o novo manual teve apenas extração amostral de três páginas.
+
 O DOCX `C:\Users\bozoc\Documents\siscan\Especificacao_Funcional_Fluxo_Decisorio_SISCAN.docx` foi lido em modo somente leitura. Contém texto e tabelas de requisitos para fluxo documental, responsabilidades, estados, prazos, ocorrências, relatórios e auditoria; declara que não reconstrói o diagrama ou seus conectores e não autoriza implementação.
 
 O arquivo sem extensão `C:\Users\bozoc\Documents\siscan\fluxograma` foi identificado como JPEG, 1124 × 1540 px, uma página, visualmente examinado. Mostra o ciclo Missão → Exame da Situação → EPO → Controle da Operação Planejada, decisões Sim/Não e conectores 1/2/3. A análise e seus limites constam em 50. O responsável confirmou em 08/11/2026 que esta é a versão parametrizada e definitiva aplicável. A imagem não contém legenda externa dos conectores nem valores explícitos de parâmetros; lacunas não foram inferidas. Os originais DOCX e JPEG foram preservados.

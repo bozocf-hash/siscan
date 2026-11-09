@@ -28,7 +28,7 @@ DATA_DIR = ROOT / "data"
 DB_PATH = DATA_DIR / "siscan-demo.sqlite3"
 REVIEW_DB_PATH = DATA_DIR / "db3k-review-01.sqlite3"
 DOMAIN_REPORT_PATH = DATA_DIR / "db3k-domains-01.json"
-COMPILED_DB_PATH = DATA_DIR / "db3k-compiled-05.sqlite3"
+COMPILED_DB_PATH = DATA_DIR / "db3k-compiled-06.sqlite3"
 CMO_IMAGE_DIR = Path(r"C:\Program Files (x86)\Matrix Games\Command Modern Operations\DB\Images\DB3000")
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("SISCAN_PORT", "8787"))
@@ -361,7 +361,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             return
-        if path in ("/app.js", "/source-catalog.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
+        if path in ("/app.js", "/source-catalog.js", "/technical-bundle.js", "/report.js", "/styles.css", "/fluxograma.jpg"):
             target = STATIC / path.rsplit("/", 1)[1]
             data = target.read_bytes()
             content_type = ("text/javascript; charset=utf-8" if path.endswith(".js") else
@@ -375,7 +375,7 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
-            if path in ("/api/source-platforms", "/api/source-platform", "/api/source-photo"):
+            if path in ("/api/source-platforms", "/api/source-platform", "/api/source-photo", "/api/source-technical"):
                 current = self.require_user(db)
                 if current:
                     self.compiled_catalog(db, current[1], path, urlparse(self.path).query)
@@ -768,6 +768,11 @@ class Handler(BaseHTTPRequestHandler):
             identifier = params.get("id", [""])[0]
             if path == "/api/source-platforms":
                 result = source_catalog.browse(COMPILED_DB_PATH, table, params.get("q", [""])[0].strip(), int(params.get("page", ["1"])[0]))
+            elif path == "/api/source-technical":
+                result = source_catalog.technical_bundle(COMPILED_DB_PATH, table, identifier)
+                if result is None:
+                    self.send_json(404, {"error": "Registro não encontrado."})
+                    return
             else:
                 result = source_catalog.detail(COMPILED_DB_PATH, table, identifier)
                 if result is None:

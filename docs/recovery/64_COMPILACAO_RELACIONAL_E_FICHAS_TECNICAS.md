@@ -1,5 +1,7 @@
 # 64 — Compilação relacional completa da fonte e fichas técnicas
 
+**Complemento posterior:** a compilação 06 acrescentou três regras, e a auditoria integral conferiu os 8.010.533 valores da fonte. As fichas agora reúnem sensores, combustível e consumo recursivamente, sem o limite anterior de associações; ver [65](65_LEVANTAMENTO_INTEGRAL_E_DADOS_TECNICOS_COMPILADOS.md). Os números/limites descritos abaixo correspondem à entrega anterior.
+
 ## Objetivo e entrega — 2026-11-09
 
 O responsável solicitou retomar a associação automática dos dados Command, sem montagem manual de cada vínculo no chat, e apresentar os meios por categoria em fichas com foto, dados técnicos e componentes, usando a navegação do CMO como referência.

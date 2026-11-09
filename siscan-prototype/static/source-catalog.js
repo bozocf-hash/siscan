@@ -7,6 +7,11 @@ function renderTechnicalCatalog(parent) {
   const rail=el("aside",{class:"catalog-rail","aria-label":"Seleção de meios"});
   const categoryBar=el("div",{class:"catalog-categories","aria-label":"Categorias"});
   const form=el("form",{class:"catalog-search"});
+  const componentTypes={DataSensor:"Sensores",DataFuel:"Combustível",DataPropulsion:"Propulsão",DataMount:"Suportes",DataMagazine:"Paióis",DataLoadout:"Configurações de carga",DataWeaponRecord:"Registros de arma",DataWeapon:"Armas",DataWarhead:"Ogivas",DataComm:"Comunicações",DataAircraftFacility:"Instalações aeronáuticas",DataDockingFacility:"Atracação",DataContainer:"Contêineres"};
+  const componentFilter=el("select",{id:"technical-component-type"});
+  componentFilter.append(el("option",{value:"",text:"Selecionar biblioteca de componentes"}));
+  for(const [value,text] of Object.entries(componentTypes))componentFilter.append(el("option",{value,text}));
+  componentFilter.addEventListener("change",()=>{if(componentFilter.value){table=componentFilter.value;term="";search.value="";page=1;loadList();}});
   const search=el("input",{id:"technical-search",type:"search",maxlength:"120",placeholder:"Nome ou ID externo"});
   form.append(el("label",{for:"technical-search",class:"label",text:"Localizar meio"}),search,el("button",{type:"submit",class:"btn",text:"Pesquisar"}));
   const status=el("p",{class:"catalog-result-count",role:"status"});
@@ -14,14 +19,14 @@ function renderTechnicalCatalog(parent) {
   const prev=el("button",{type:"button",class:"btn btn-secondary",text:"Anterior"});
   const next=el("button",{type:"button",class:"btn btn-secondary",text:"Próxima"});
   const pagination=el("div",{class:"catalog-pagination"},[prev,next]);
-  rail.append(categoryBar,form,status,results,pagination);
+  rail.append(categoryBar,el("div",{class:"component-library"},[el("label",{class:"label",for:"technical-component-type",text:"Bibliotecas técnicas"}),componentFilter]),form,status,results,pagination);
   const viewer=el("article",{class:"platform-viewer","aria-label":"Ficha do meio","aria-busy":"false"});
   frame.append(heading,el("div",{class:"catalog-layout"},[rail,viewer]));parent.append(frame);
   let table="DataAircraft",page=1,term="",listSequence=0,detailSequence=0;
   const categoryButtons={};
   for(const [key,title] of Object.entries(categories)) {
     const button=el("button",{type:"button",class:"category-choice",text:title,"aria-pressed":key===table?"true":"false"});
-    button.addEventListener("click",()=>{table=key;term="";search.value="";page=1;loadList();});
+    button.addEventListener("click",()=>{table=key;componentFilter.value="";term="";search.value="";page=1;loadList();});
     categoryButtons[key]=button;categoryBar.append(button);
   }
   const valueText=value=>value===null?"NULL na fonte":typeof value==="object"?JSON.stringify(value):String(value);
@@ -52,6 +57,19 @@ function renderTechnicalCatalog(parent) {
       body.append(el("p",{class:"source-caveat",text:"Valores literais da fonte. Unidades e significado em revisão; sem uso automático em cálculos ou alocação."}));
       const primary=Object.entries(fields).filter(([key])=>key in labels);
       body.append(el("section",{class:"dossier-section"},[el("h3",{text:"Dados gerais"}),fieldList(primary,data.domains)]));
+      const compiled=el("div",{class:"compiled-bundle-host"});
+      compiled.append(el("p",{role:"status",class:"muted",text:"Reunindo sensores, combustível e regimes de consumo…"}));
+      body.append(compiled);
+      const loadCompiled=async()=>{
+        try {
+          const bundle=await api(`/api/source-technical?${new URLSearchParams({table:recordTable,id:String(id)})}`);
+          if(sequence===detailSequence)renderTechnicalBundle(compiled,bundle);
+        }catch(error){
+          if(sequence!==detailSequence)return;
+          compiled.replaceChildren(el("p",{class:"notice error",role:"alert",text:error.message}),el("button",{type:"button",class:"btn btn-secondary",text:"Tentar reunir dados novamente",onclick:loadCompiled}));
+        }
+      };
+      loadCompiled();
       for(const link of data.direct_links) {
         if(link.id!==null)body.append(el("button",{type:"button",class:"component-link",text:`Abrir ${link.name||link.table} · ID ${link.id}`,onclick:()=>openRecord(link.table,link.id)}));
       }

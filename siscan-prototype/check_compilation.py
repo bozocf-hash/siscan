@@ -75,9 +75,13 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
         for user in ({'uid':1,'role':'student'},{'uid':1,'role':'evaluator'},{'uid':2,'role':'instructor'}):
             handler.compiled_catalog(db,user,'/api/source-platform','table=DataShip&id=1')
             assert responses[-1][0]==403
+            handler.compiled_catalog(db,user,'/api/source-technical','table=DataShip&id=1')
+            assert responses[-1][0]==403
         teacher={'uid':1,'role':'instructor'}
         handler.compiled_catalog(db,teacher,'/api/source-platform','table=DataShip&id=1')
         assert responses[-1][0]==200 and responses[-1][1]['photo_url'] is None
+        handler.compiled_catalog(db,teacher,'/api/source-technical','table=DataShip&id=1')
+        assert responses[-1][0]==200 and responses[-1][1]['complete'] is True
         handler.compiled_catalog(db,teacher,'/api/source-platform','table=DataShip&id=999')
         assert responses[-1][0]==404
         for query in ('table=DataShip&id=../1','table=Unknown&id=1','id=1&id=2'):

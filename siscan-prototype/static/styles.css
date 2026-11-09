@@ -141,6 +141,23 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 3px s
 .component-parameters summary { cursor:pointer; }
 .provenance { font-size:.75rem; color:var(--muted); }
 .viewer-empty { padding:80px 25px; text-align:center; color:var(--muted); }
+.component-library { padding:0 14px 14px; border-bottom:1px solid var(--line); }
+.component-library select { font-size:.78rem; }
+.compiled-technical { margin-top:26px; }
+.compiled-coverage { font-size:.76rem; color:var(--navy); padding:10px 12px; background:#edf3f8; border-radius:4px; }
+.compiled-family { margin-top:25px; }
+.compiled-family h4 { margin:0 0 12px; font-size:1rem; color:var(--navy); }
+.compiled-component { padding:17px; margin:12px 0; border:1px solid var(--line); border-radius:6px; }
+.compiled-component header strong { display:block; font-size:.9rem; }
+.component-context { display:block; margin-top:5px; font-size:.68rem; color:var(--muted); }
+.compiled-component h5 { margin:19px 0 10px; font-size:.8rem; }
+.technical-table-scroll { max-width:100%; overflow-x:auto; margin:12px 0; }
+.technical-matrix { border-collapse:collapse; font-size:.72rem; min-width:100%; }
+.technical-matrix th,.technical-matrix td { padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; white-space:nowrap; }
+.technical-matrix th { background:#edf2f6; color:var(--navy); font-weight:650; }
+.technical-matrix tbody tr:nth-child(even) { background:#f8fafc; }
+.table-footnote { color:var(--muted); font-size:.66rem; line-height:1.6; }
+.raw-field-value { white-space:pre-wrap; }
 @media (max-width: 760px) {
   .span-8, .span-7, .span-6, .span-5, .span-4 { grid-column: span 12; }
   .asset-list { grid-template-columns: 1fr; }

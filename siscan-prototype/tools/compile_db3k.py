@@ -68,6 +68,8 @@ def compile_source(source, output):
                     add(table,'ComponentID',target)
             if table=='DataWeaponRecord':
                 add(table,'ComponentID','DataWeapon')
+            if table=='DataSensor':
+                add(table,'MasqueradeAs','DataSensor')
             if table==root:
                 for field in ('Category','Type','Generation','CSGen'):
                     add(table,field,'Enum'+root[4:]+field,basis='named_domain')
@@ -93,7 +95,8 @@ def compile_source(source, output):
                 'DataSubmarine':{'PhysicalSizeCode':'EnumSubmarinePhysicalSize'},
                 'DataAircraftFacility':{'PhysicalSize':'EnumAircraftPhysicalSize','RunwayLength':'EnumRunwayLength'},
                 'DataDockingFacility':{'PhysicalSize':'EnumDockingFacilityPhysicalSize'},
-                'DataLoadout':{'LoadoutRole':'EnumLoadoutRole','TimeofDay':'EnumLoadoutTimeOfDay','Weather':'EnumLoadoutWeather','WinchesterShotgun':'EnumLoadoutWinchesterShotgun','MissionProfile':'EnumLoadoutMissionProfile'},
+                'DataLoadout':{'LoadoutRole':'EnumLoadoutRole','TimeofDay':'EnumLoadoutTimeOfDay','QuickTurnaround_TimeofDay':'EnumLoadoutTimeOfDay','Weather':'EnumLoadoutWeather','WinchesterShotgun':'EnumLoadoutWinchesterShotgun','MissionProfile':'EnumLoadoutMissionProfile'},
+                'DataSatelliteOrbits':{'Plane':'EnumSatelliteOrbitPlane'},
                 'DataSensor':{'Role':'EnumSensorRole'},
                 'DataWeaponTargets':{'CodeID':'EnumWeaponTarget'},
                 'DataWeaponWRA':{'CodeID':'EnumWeaponWRA','WeaponQty':'EnumWeaponWRAWeaponQty','ShooterQty':'EnumWeaponWRAShooterQty','SelfDefenceRange':'EnumWeaponWRASelfDefenceRange'}

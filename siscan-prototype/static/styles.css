@@ -157,6 +157,12 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 3px s
 .technical-matrix th { background:#edf2f6; color:var(--navy); font-weight:650; }
 .technical-matrix th { white-space:normal; min-width:90px; max-width:180px; }
 .unit-evidence { font-size:.75rem; line-height:1.65; overflow-wrap:anywhere; }
+.engine-controls { margin-bottom:16px; }
+.engine-readiness-panel { background:#fff; border:1px solid var(--line); padding:22px; margin-bottom:24px; }
+.engine-readiness-panel[hidden] { display:none; }
+.engine-readiness-panel h2 { margin-top:0; }
+.engine-readiness-panel li { margin:8px 0; font-size:.82rem; }
+.engine-manifest { overflow-wrap:anywhere; font-size:.75rem; }
 .payload-family select { width:100%; max-width:100%; margin-bottom:12px; }
 .payload-matrix td:first-child,.payload-matrix td:last-child { white-space:normal; min-width:170px; max-width:230px; }
 .technical-matrix tbody tr:nth-child(even) { background:#f8fafc; }

@@ -1,5 +1,7 @@
 # 69 — Parecer de engenharia de dados e prontidão para o motor SISCAN
 
+**Avanço posterior:** [70](70_CONTRATO_ENTRADA_E_MANIFESTO_DO_MOTOR.md) entrega o primeiro contrato sintético e a conferência cruzada de arquivos no diagnóstico. A avaliação abaixo descreve a linha de base anterior; ativação de execução com manifesto/snapshot, validação física e demais entregas continuam pendentes.
+
 ## Parecer executivo — 2026-11-09
 
 **Podemos continuar a programação e desenvolver o núcleo do motor. Ainda não podemos tratar todo o catálogo Command como entrada física validada para uma simulação oficial.** A base atual é suficiente para preservação, consulta, investigação e associações técnicas. O passo necessário é transformar um recorte desses dados em entradas operacionais versionadas, com unidades, significado e condições de uso comprovados.

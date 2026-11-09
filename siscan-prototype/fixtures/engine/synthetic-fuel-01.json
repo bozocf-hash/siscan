@@ -1,0 +1,13 @@
+{
+  "schema_version": "siscan-engine-input-01",
+  "data_kind": "synthetic_controlled",
+  "dataset_id": "synthetic-fuel-01",
+  "entity_id": "SYN-AIR-001",
+  "configuration_id": "SYN-CONFIG-001",
+  "measurements": {
+    "fuel_capacity": {"value": 1000, "unit": "kg"},
+    "fuel_initial": {"value": 600, "unit": "kg"},
+    "consumption_rate": {"value": 2, "unit": "kg/min"},
+    "duration": {"value": 30, "unit": "min"}
+  }
+}

@@ -21,6 +21,7 @@ from tools.register_source_references import REFERENCE_SCHEMA
 from tools.import_technical_values import TECHNICAL_SCHEMA
 import source_catalog
 import resource_store
+import engine_input
 
 
 ROOT = Path(__file__).resolve().parent
@@ -31,6 +32,7 @@ REVIEW_DB_PATH = DATA_DIR / "db3k-review-01.sqlite3"
 DOMAIN_REPORT_PATH = DATA_DIR / "db3k-domains-01.json"
 COMPILED_DB_PATH = DATA_DIR / "db3k-compiled-06.sqlite3"
 RESOURCE_STORE_PATH = DATA_DIR / "db3k-resources-09.sqlite3"
+ENGINE_SOURCE_PATH = ROOT.parent / "DB3K_498.db3"
 CMO_IMAGE_DIR = Path(r"C:\Program Files (x86)\Matrix Games\Command Modern Operations\DB\Images\DB3000")
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("SISCAN_PORT", "8787"))
@@ -377,6 +379,14 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path == "/api/engine-readiness":
+                current = self.require_user(db)
+                if current:
+                    if urlparse(self.path).query:
+                        self.send_json(400, {"error": "A verificação não aceita parâmetros ou manifestos do cliente."})
+                    else:
+                        self.engine_readiness(db,current[1])
+                return
             if path in ("/api/source-platforms", "/api/source-platform", "/api/source-photo", "/api/source-technical"):
                 current = self.require_user(db)
                 if current:
@@ -755,6 +765,13 @@ class Handler(BaseHTTPRequestHandler):
         event(db, user["uid"], "catalog.review_note_added", exercise=assignment[0],
               detail={"note_id": saved["id"], "candidate_id": identifier, "source_sha256": source_hash})
         self.send_json(200, {"ok": True, "review_note": dict(saved)})
+
+    def engine_readiness(self, db: sqlite3.Connection, user: sqlite3.Row) -> None:
+        assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()
+        if user["role"] != "instructor" or not assigned:
+            self.send_json(403, {"error": "Verificação restrita ao instrutor atribuído."})
+            return
+        self.send_json(200,engine_input.readiness(ENGINE_SOURCE_PATH,COMPILED_DB_PATH,RESOURCE_STORE_PATH))
 
     def compiled_catalog(self, db: sqlite3.Connection, user: sqlite3.Row, path: str, query: str) -> None:
         assigned = db.execute("SELECT 1 FROM assignments WHERE user_id=? AND exercise_id=(SELECT id FROM exercises ORDER BY id LIMIT 1)", (user["uid"],)).fetchone()

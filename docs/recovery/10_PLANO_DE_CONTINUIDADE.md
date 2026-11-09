@@ -2,6 +2,8 @@
 
 ## Continuidade atual — 2026-11-09
 
+**Primeiro passo entregue em 70:** contrato de entrada sintético, manifesto confiável e conferência estrutural das bases, sem iniciar simulação. Prosseguir pela identidade/configuração e snapshot técnico de uma unidade por partido; depois estado/tempo/eventos e recursos transacionais, conforme a sequência de 69. A validação de dados reais continua independente do aceite do caso sintético.
+
 A programação foi autorizada posteriormente pelo responsável na conversa e o protótipo técnico/didático já foi implementado e entregue até 68. As restrições de autorização no registro histórico abaixo pertencem às antigas missões documentais; não cancelam as autorizações posteriores. As decisões APR e a autoridade de promoção de dados de 53 continuam válidas.
 
 O [parecer atual de engenharia de dados — 69](69_PARECER_ENGENHARIA_DADOS_E_PRONTIDAO_MOTOR.md) recomenda continuar o núcleo do motor com dados sintéticos/controlados enquanto se valida o recorte técnico correspondente. A coleta integral não precisa ser repetida. Antes de usar dados Command em resultados oficiais, aplicar os critérios de unidade/semântica, aprovação, snapshot, compatibilidade de versões e calibração da função.

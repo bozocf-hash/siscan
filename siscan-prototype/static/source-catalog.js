@@ -21,7 +21,30 @@ function renderTechnicalCatalog(parent) {
   const pagination=el("div",{class:"catalog-pagination"},[prev,next]);
   rail.append(categoryBar,el("div",{class:"component-library"},[el("label",{class:"label",for:"technical-component-type",text:"Bibliotecas técnicas"}),componentFilter]),form,status,results,pagination);
   const viewer=el("article",{class:"platform-viewer","aria-label":"Ficha do meio","aria-busy":"false"});
-  frame.append(heading,el("div",{class:"catalog-layout"},[rail,viewer]));parent.append(frame);
+  const engineButton=el("button",{type:"button",class:"btn btn-secondary","aria-expanded":"false","aria-controls":"engine-readiness-panel",text:"Preparação do motor"});
+  const enginePanel=el("section",{id:"engine-readiness-panel",class:"engine-readiness-panel dossier-section",hidden:true,"aria-label":"Diagnóstico de entrada do motor","aria-live":"polite"});
+  let engineLoaded=false;
+  const checkEngine=async()=>{
+    engineButton.disabled=true;enginePanel.replaceChildren(el("p",{role:"status",text:"Conferindo contrato e versões das bases…"}));
+    try{
+      const report=await api('/api/engine-readiness');
+      const validation=report.validation,catalog=report.catalog;
+      enginePanel.replaceChildren(el("h2",{text:"Entrada do motor"}),el("p",{class:validation.accepted?"compiled-coverage":"notice error",text:validation.accepted?"Contrato sintético: aceito para teste controlado.":"Contrato sintético: recusado. Confira as pendências abaixo."}),el("p",{class:"muted",text:report.qualification}));
+      const fields=el("dl",{class:"technical-grid"}),labels={fuel_capacity:"Capacidade de combustível",fuel_initial:"Combustível inicial",consumption_rate:"Taxa de consumo",duration:"Duração de referência"};
+      for(const [name,item] of Object.entries(report.synthetic_input?.measurements||{}))fields.append(el("div",{class:"technical-field"},[el("dt",{text:labels[name]||name}),el("dd",{text:`${item.value} ${item.unit}`} )]));
+      enginePanel.append(el("h3",{text:"Conjunto sintético de referência"}),fields);
+      for(const error of validation.errors)enginePanel.append(el("p",{class:"notice error",text:`${error.field}: ${error.message}`}));
+      enginePanel.append(el("h3",{text:"Compatibilidade das bases Command"}),el("p",{class:catalog.structurally_compatible?"compiled-coverage":"source-caveat",text:catalog.structurally_compatible?"Arquivos e versões conferidos. A validação física dos dados permanece pendente.":"Há arquivos ausentes ou versões incompatíveis. Isso não impede o teste sintético independente."}));
+      const checks=el("ul");for(const check of catalog.checks)checks.append(el("li",{text:`${check.ok?"Conferido":"Requer revisão"}: ${check.message}`}));enginePanel.append(checks,el("p",{class:"source-caveat",text:catalog.qualification}));
+      const manifest=el("details",{class:"equipment-group engine-manifest"},[el("summary",{text:"Manifesto e rastreabilidade"})]);
+      for(const [key,value] of Object.entries(validation.manifest))manifest.append(el("p",{},[el("strong",{text:key+": "}),el("span",{text:String(value)})]));
+      for(const artifact of Object.values(catalog.artifacts))manifest.append(el("p",{text:`${artifact.file_name}: ${artifact.sha256}`}));
+      enginePanel.append(manifest,el("button",{type:"button",class:"btn btn-secondary",text:"Atualizar verificação",onclick:checkEngine}));engineLoaded=true;
+    }catch(error){enginePanel.replaceChildren(el("p",{class:"notice error",role:"alert",text:error.message}));engineLoaded=false;}
+    finally{engineButton.disabled=false;}
+  };
+  engineButton.addEventListener("click",()=>{enginePanel.hidden=!enginePanel.hidden;engineButton.setAttribute("aria-expanded",String(!enginePanel.hidden));if(!enginePanel.hidden&&!engineLoaded)checkEngine();});
+  frame.append(heading,el("div",{class:"actions engine-controls"},[engineButton]),enginePanel,el("div",{class:"catalog-layout"},[rail,viewer]));parent.append(frame);
   let table="DataAircraft",page=1,term="",listSequence=0,detailSequence=0;
   const categoryButtons={};
   for(const [key,title] of Object.entries(categories)) {

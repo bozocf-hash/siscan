@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Ampliação preparada:** [60 — Referências e perfil técnico DB3K](60_EXPANSAO_REFERENCIAS_E_PERFIL_TECNICO_DB3K.md) documenta 11.197 candidatos das quatro tabelas de plataformas, 11.117 novos em relação às 80 referências cadastradas e 77.349 valores técnicos brutos. A proposta aguarda aprovação restrita à identificação; o banco ativo e o lote de 80 na interface foram preservados. Nenhum atributo técnico foi aprovado.
+
 **Fechamento atual da amostra visual:** quatro fichas identificadas em DB3K_498a e 18 valores examinados: 17 correspondências numéricas e uma diferença em MastHeight (SQL 3.26; interface 3 m). Area aparece como 25,96 m e permanece sem unidade dimensional confirmada. O [documento 59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md) consolida os resultados e as pendências. Os 580 atributos seguem sem aprovação para uso; os parágrafos de avanço abaixo registram a sequência histórica.
 
 **Avanço submarino:** Submarine/3 PLARB-667A Yankee I [Navaga] identificado em DB3K_498a; os cinco valores preparados coincidem com SQL 498/498a, incluindo MaxDepth=-320 apresentado como -320 m. São três fichas e 14 de 18 valores comparados; GroundUnit/3 ainda pendente. Observações amostrais não aprovam os 580 atributos para uso. Ver resultado consolidado no final de [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md); as contagens anteriores abaixo são históricas.

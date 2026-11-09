@@ -62,6 +62,7 @@ with tempfile.TemporaryDirectory(dir=scratch) as folder:
     assert weapon_record['direct_links'][0]['id']==3
     assert source_catalog.detail(target,'DataShip','999') is None
     app.COMPILED_DB_PATH=target
+    app.RESOURCE_STORE_PATH=Path(folder)/'not-configured.sqlite3'
     app.CMO_IMAGE_DIR=Path(folder)/'no-images'
     with closing(sqlite3.connect(':memory:')) as db:
         db.row_factory=sqlite3.Row

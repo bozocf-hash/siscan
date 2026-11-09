@@ -20,6 +20,7 @@ from urllib.parse import parse_qs, urlparse
 from tools.register_source_references import REFERENCE_SCHEMA
 from tools.import_technical_values import TECHNICAL_SCHEMA
 import source_catalog
+import resource_store
 
 
 ROOT = Path(__file__).resolve().parent
@@ -29,6 +30,7 @@ DB_PATH = DATA_DIR / "siscan-demo.sqlite3"
 REVIEW_DB_PATH = DATA_DIR / "db3k-review-01.sqlite3"
 DOMAIN_REPORT_PATH = DATA_DIR / "db3k-domains-01.json"
 COMPILED_DB_PATH = DATA_DIR / "db3k-compiled-06.sqlite3"
+RESOURCE_STORE_PATH = DATA_DIR / "db3k-resources-09.sqlite3"
 CMO_IMAGE_DIR = Path(r"C:\Program Files (x86)\Matrix Games\Command Modern Operations\DB\Images\DB3000")
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("SISCAN_PORT", "8787"))
@@ -773,6 +775,7 @@ class Handler(BaseHTTPRequestHandler):
                 if result is None:
                     self.send_json(404, {"error": "Registro não encontrado."})
                     return
+                result['resource_store'] = resource_store.resources(RESOURCE_STORE_PATH,table,identifier,result['source']['sha256']) if RESOURCE_STORE_PATH.is_file() else {'status':'unavailable','calculation_ready':False}
             else:
                 result = source_catalog.detail(COMPILED_DB_PATH, table, identifier)
                 if result is None:

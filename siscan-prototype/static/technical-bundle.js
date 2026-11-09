@@ -65,6 +65,8 @@ function renderTechnicalBundle(parent, bundle) {
   const section=el("section",{class:"dossier-section compiled-technical","aria-label":"Dados técnicos compilados"});
   section.append(el("h3",{text:"Dados técnicos compilados"}),el("p",{class:"compiled-coverage",role:"status",text:`${bundle.node_count} registros associados · ${bundle.field_count} campos preservados · cadeia reunida integralmente pelas relações mapeadas`}),el("p",{class:"muted",text:"Os dados do meio e dos componentes estão reunidos abaixo. Registros diretamente associados são separados dos existentes em equipamentos e armamentos. Valores e sinais são mantidos como na fonte."}));
   section.append(el("p",{class:"source-caveat",text:"Unidades junto aos campos: amostra = apresentação observada; referência = unidade documental proposta para o campo SQL. Unidade a confirmar = evidência insuficiente. Valores brutos preservados; referências ainda não liberam cálculos."}));
+  if(bundle.resource_store?.status==="available")section.append(el("p",{class:"resource-persistence compiled-coverage",role:"status",text:`Combustível e propulsão persistidos · ${bundle.resource_store.installations.length} registros de instalação · ${bundle.resource_store.performance.length} pontos de desempenho diretamente associados. Pendências de unidade preservadas.`}));
+  else section.append(el("p",{class:"muted resource-persistence",text:"Base específica de combustível e propulsão não disponível nesta instalação; a compilação original continua consultável."}));
   const drawFamily=(table,title)=>{
     const all=bundle.nodes.filter(node=>node.table===table);
     const group=el("section",{class:"compiled-family"});

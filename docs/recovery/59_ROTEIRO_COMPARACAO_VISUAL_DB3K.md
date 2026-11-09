@@ -2,7 +2,7 @@
 
 ## Escopo e resultado — 2026-11-09
 
-**Resultado atual com auxílio do responsável:** o visualizador foi acessado, GENERAL DATA foi examinado e o cabeçalho #3 — SH-60B Seahawk (United States - 1991) foi confirmado em DB3K_498a. Uma ficha tem identificação visual e cinco correspondências numéricas amostrais, sem aprovação de atributos. O resultado inicial abaixo descreve a tentativa anterior; os achados posteriores e suas limitações estão no final deste documento.
+**Resultado atual com auxílio do responsável:** duas fichas identificadas e examinadas em DB3K_498a: Aircraft/3 SH-60B Seahawk e Ship/3 D 10 Almirante Brown. Há nove correspondências numéricas entre os 18 valores inicialmente preparados, além de observações complementares da ficha naval. Não houve aprovação de atributos. O resultado inicial abaixo descreve a tentativa anterior; os achados posteriores e suas limitações estão no final deste documento.
 
 Foi observada a janela do jogo **Command v1.05 — Build 1307**, além do painel inicial com o mesmo build. Isso complementa a confirmação anterior, restrita ao lançador (58). Nenhuma ficha de plataforma foi aberta no jogo; nenhuma unidade SQL foi validada e nenhum dos 580 valores técnicos foi promovido.
 
@@ -80,4 +80,25 @@ Após ajuste do zoom pelo responsável, foi observado diretamente **#3 - SH-60B 
 
 **Resultado consolidado:** uma ficha identificada no visualizador 498a, cinco correspondências numéricas com os registros SQL Aircraft/3 em 498 e 498a, três outras fichas da amostra ainda não examinadas. Isso constitui evidência amostral da apresentação, sem comprovar o mecanismo de conversão, todos os registros do banco ou a exatidão física dos valores. O filtro/lista superior permanece diferente da ficha exibida; não utilizá-lo como substituto do cabeçalho para identificar uma plataforma.
 
-Próximo passo: ampliar a comparação para outras plataformas e para a versão 498 quando disponível no visualizador. Para a amostra naval, selecionar Ship / ID 3 e conferir D 10 Almirante Brown [Meko 360H2] antes de ler dimensões. Não substituir valores, unidades ou interpretação técnica com base nesta única observação. Os 580 valores técnicos permanecem pendentes de aprovação para uso no SISCAN.
+Naquele estágio, a próxima ficha era Ship/3; o exame realizado em seguida está registrado abaixo. Continua necessária a ampliação para outras plataformas e para a versão 498 quando disponível no visualizador. Os 580 valores técnicos permanecem pendentes de aprovação para uso no SISCAN.
+
+## Observação assistida naval — 2026-11-09
+
+Foi observado o título Database Viewer (DB3K_498a), Type Ship e o cabeçalho **#3 - D 10 Almirante Brown [Meko 360H2] (Argentina - 1984)** junto a GENERAL DATA. A leitura foi visual, sem OCR; a imagem permaneceu na conversa, sem exportação para o repositório. Os valores SQL foram consultados novamente em modo somente leitura nos arquivos 498 original e 498a instalado.
+
+| Campo DataShip/3 | SQL 498 | SQL 498a | Apresentação observada | Resultado |
+|---|---|---|---|---|
+| Length | 125.9 | 125.9 | Length: 125,9 m | Correspondência numérica amostral |
+| Beam | 15.0 | 15.0 | Beam: 15 m | Correspondência, sem casa decimal exibida |
+| Draft | 4.3 | 4.3 | Draft: 4,3 m | Correspondência numérica amostral |
+| Height | 0.0 | 0.0 | Height: 0 m | Zero exibido; significado técnico não determinado |
+| DisplacementEmpty | 0 | 0 | Empty Displacement: - | Zero SQL coincide com omissão por traço nesta ficha; não generalizar a regra |
+| DisplacementStandard | 2900 | 2900 | Standard Displacement: 2900 tons | Correspondência numérica; tons é rótulo literal, sem confirmar tipo de tonelada |
+| DisplacementFull | 3360 | 3360 | Full Displacement com rótulo tons; algarismos sem leitura segura nesta escala | Pendente de leitura ampliada; não registrar igualdade ou divergência numérica |
+| Crew | 200 | 200 | Crew: 200 | Correspondência numérica; não determina composição por função |
+
+Os quatro campos dimensionais completam a comparação naval da amostra inicial: Aircraft 5 + Ship 4 = **9 de 18 valores com correspondência numérica observada**, em duas fichas identificadas no visualizador 498a. DisplacementEmpty, DisplacementStandard e Crew são observações adicionais, fora dos 18 valores inicialmente selecionados; DisplacementFull permanece sem leitura visual segura. O banco 498a não substitui o 498 como fonte e não houve execução do visualizador com a versão 498 confirmada no título.
+
+O tratamento diferente de Height=0 e DisplacementEmpty=0 mostra que não existe base nesta amostra para uma regra universal de zero. O rótulo tons não autoriza converter automaticamente para tonelada métrica, tonelada longa ou outra unidade. Os 580 valores técnicos continuam pendentes de aprovação, inclusive os que receberam evidência visual amostral.
+
+Próxima ficha preparada: Submarine / ID 3, PLARB-667A Yankee I [Navaga]. Comparar Length, Beam, Draft, Height e MaxDepth, preservando o sinal de MaxDepth=-320 e registrando o que a interface efetivamente apresenta.

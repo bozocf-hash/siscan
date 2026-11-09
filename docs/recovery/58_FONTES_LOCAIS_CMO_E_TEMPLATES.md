@@ -2,7 +2,7 @@
 
 ## Instalação e identidade da fonte
 
-Foi identificada a instalação em `C:\Program Files (x86)\Matrix Games\Command Modern Operations`. O registro do Windows informa Command: Modern Operations 1.05.1307. Os metadados FileVersion/ProductVersion do executável retornam 1.0.0.0, insuficientes para confirmar o build funcional. O programa não foi iniciado nem suas configurações alteradas nesta inspeção.
+Foi identificada a instalação em `C:\Program Files (x86)\Matrix Games\Command Modern Operations`. O registro do Windows informa Command: Modern Operations 1.05.1307. Os metadados FileVersion/ProductVersion do executável retornam 1.0.0.0, insuficientes para confirmar o build funcional. A inspeção inicial limitou-se aos arquivos; a tentativa posterior de abertura está registrada abaixo.
 
 O arquivo instalado `DB\DB3K_498.db3` e o arquivo de trabalho `C:\Users\bozoc\Documents\siscan\DB3K_498.db3` apresentaram o mesmo SHA-256: `1b31fc60d799bfb8b7e6be02a24bc4431fa0d1b1ed519a058245ea57d0e4846d`. Isso confirma identidade binária dos dois arquivos examinados, sem equivaler a validação dos atributos.
 
@@ -39,3 +39,21 @@ Não houve leitura integral ou inspeção visual das 353 páginas deste novo arq
 ## Próxima verificação necessária
 
 A identidade binária do banco permite comparar o mesmo DBID com o visualizador desta instalação, registrando campo, unidade exibida e eventual conversão. Ainda é necessário demonstrar a relação entre a coluna SQL e o valor apresentado, especialmente nas massas, deslocamentos e Area. Templates são evidências de apresentação; nenhuma grandeza deve ser promovida automaticamente com base somente neles.
+
+## Tentativa de comparação na interface — 2026-11-08
+
+A abertura direta de `Command.exe` pela ferramenta de interação retornou timeout, sem janela do jogo identificada na consulta posterior. Isso não demonstra falha do executável nem permite atribuir uma causa. A abertura de `Launcher.exe` apresentou o lançador instalado.
+
+A versão **1.05.1307** foi observada na imagem do lançador e no texto de acessibilidade. É confirmação da versão apresentada pelo lançador; o build do jogo em execução e o banco selecionado no visualizador continuam não verificados.
+
+Duas tentativas de acionar Play/Jogar foram interrompidas pela ferramenta com `user input was detected in this window; call get_window_state before continuing`. Houve recuperação e nova observação da janela entre as tentativas. A interação foi encerrada após a repetição, sem assumir que o acionamento ocorreu. Não foram automatizadas autenticação, configurações, edição de cenário ou alterações de banco.
+
+| Controle | Resultado desta tentativa |
+|---|---|
+| Lançador inspecionado visualmente | Sim; versão 1.05.1307 |
+| Janela do jogo/visualizador examinada | Nenhuma |
+| Fichas comparadas por tabela e DBID | 0 |
+| Unidades SQL confirmadas por comparação com fichas | 0 |
+| Valores técnicos promovidos ou aprovados | 0; os 580 valores permanecem pendentes |
+
+Para retomar: obter uma janela estável do jogo, registrar a versão do banco selecionado, comparar registros identificados por tabela/DBID/nome com a fonte de hash já documentado e anotar valor bruto, valor exibido e rótulo. Concordância em uma amostra deve ser registrada como evidência amostral, sem generalizar para todos os campos, zeros ou NULL. A execução de software pode produzir arquivos operacionais próprios; não foi feita auditoria desses efeitos.

@@ -1,5 +1,12 @@
 # 09 — Pendências e riscos
 
+## Atualização de evidências locais — 2026-11-08
+
+As restrições de fase ao final deste registro descrevem seu encerramento histórico; houve autorização posterior do responsável para desenvolvimento do protótipo. Permanecem válidas as pendências semânticas DB3K.
+
+- **P-03, fonte adicional:** o manual instalado do CMO tem 353 páginas e forneceu texto em três páginas amostradas. Ainda não foi lido integralmente; não confundir essa fonte com o PDF digitalizado anterior.
+- **P-04, comparação pendente:** o banco instalado DB3K_498 é binariamente idêntico à fonte de trabalho. Templates fornecem rótulos de apresentação, mas não comprovam conversões SQL. O lançador foi observado com versão 1.05.1307; nenhuma ficha foi examinada, devido às interrupções da interação. Os 580 valores técnicos permanecem pendentes. Evidências e procedimento de retomada em [58](58_FONTES_LOCAIS_CMO_E_TEMPLATES.md).
+
 ## Evidência e semântica ainda pendentes
 
 | ID | Pendência | Efeito |

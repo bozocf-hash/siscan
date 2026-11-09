@@ -1,5 +1,11 @@
 # Recuperação documental do SISCAN
 
+## Atualização posterior às missões documentais
+
+O estado descrito nas seções históricas abaixo corresponde ao encerramento das missões documentais. Posteriormente, o responsável autorizou a programação e a continuidade do protótipo. Para a preparação DB3K, consultar [52 — Preparação e revisão](52_PREPARACAO_CATALOGO_DB3K.md) e os documentos 53–58. A aprovação de 80 referências de origem está registrada em 55 e limita-se à identificação; os 580 valores técnicos inventariados em 56 permanecem pendentes.
+
+As fontes locais adicionais e os limites da tentativa de inspeção do visualizador estão em [58 — CMO instalado e templates](58_FONTES_LOCAIS_CMO_E_TEMPLATES.md). O lançador apresentou versão 1.05.1307; nenhuma ficha foi comparada na interface. A descoberta do manual digital não equivale à sua leitura integral e não altera os limites de inspeção visual dos documentos 12–15.
+
 **Estado:** Missões 01, 01-B e 01-C consolidaram a recuperação; Missões 02-A, 02-B e 02-C documentaram auditorias estáticas ATLANTICADOR (16–34); Missão 03 consolidou decisões/requisitos/modelos/arquitetura preliminar (35–41); Missão 04 produziu propostas e pauta (42–48). O responsável forneceu o registro consolidado das APR-01 a APR-20, incorporado em 49 e refletido nos documentos de controle. As decisões são conceituais, com aprovações parciais e ressalvas; não autorizam implementação. A pauta 48 está encerrada e supersedida como formulário de aprovação pelo resultado em 49.
 
 ## Sequência recomendada de leitura

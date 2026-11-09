@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Fechamento atual da amostra visual:** quatro fichas identificadas em DB3K_498a e 18 valores examinados: 17 correspondências numéricas e uma diferença em MastHeight (SQL 3.26; interface 3 m). Area aparece como 25,96 m e permanece sem unidade dimensional confirmada. O [documento 59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md) consolida os resultados e as pendências. Os 580 atributos seguem sem aprovação para uso; os parágrafos de avanço abaixo registram a sequência histórica.
+
 **Avanço submarino:** Submarine/3 PLARB-667A Yankee I [Navaga] identificado em DB3K_498a; os cinco valores preparados coincidem com SQL 498/498a, incluindo MaxDepth=-320 apresentado como -320 m. São três fichas e 14 de 18 valores comparados; GroundUnit/3 ainda pendente. Observações amostrais não aprovam os 580 atributos para uso. Ver resultado consolidado no final de [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md); as contagens anteriores abaixo são históricas.
 
 **Avanço naval:** Ship/3 D 10 Almirante Brown identificado em DB3K_498a; quatro dimensões coincidem com o SQL. A amostra alcança duas fichas e nove dos 18 valores preparados, com observações adicionais de deslocamento/tripulação. Height=0 aparece como 0 m e DisplacementEmpty=0 como traço; Full Displacement requer leitura ampliada. Registro e limites no final de [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md); nenhuma aprovação de atributos foi realizada.

@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Valores técnicos brutos incorporados:** após autorização expressa, 77.349 valores foram gravados no banco SISCAN como evidências pendentes, com unidade nula e origem preservada. As 11.197 referências e os dados do exercício foram preservados. [62 — Incorporação bruta](62_INCORPORACAO_ATRIBUTOS_TECNICOS_BRUTOS.md) descreve esquema, testes, backup e limites. Nenhum atributo foi aprovado para cálculo ou alocação; a interface de consulta ampliada permanece pendente. As menções anteriores a valores apenas em arquivos separados são históricas.
+
 **Referências ampliadas cadastradas:** após aprovação expressa do responsável, 11.117 referências foram adicionadas às 80 existentes, totalizando **11.197**, com IDs anteriores preservados. [61 — Registro da ampliação](61_REGISTRO_REFERENCIAS_AMPLIADAS_DB3K.md) documenta decisão, backup e verificações. Os 77.349 valores técnicos continuam pendentes; a interface permanece no lote inicial de 80 candidatos. Os estados de preparação abaixo são históricos.
 
 **Ampliação preparada:** [60 — Referências e perfil técnico DB3K](60_EXPANSAO_REFERENCIAS_E_PERFIL_TECNICO_DB3K.md) documenta 11.197 candidatos das quatro tabelas de plataformas, 11.117 novos em relação às 80 referências cadastradas e 77.349 valores técnicos brutos. A proposta aguarda aprovação restrita à identificação; o banco ativo e o lote de 80 na interface foram preservados. Nenhum atributo técnico foi aprovado.

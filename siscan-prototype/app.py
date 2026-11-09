@@ -18,6 +18,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 from tools.register_source_references import REFERENCE_SCHEMA
+from tools.import_technical_values import TECHNICAL_SCHEMA
 
 
 ROOT = Path(__file__).resolve().parent
@@ -160,6 +161,7 @@ CREATE INDEX IF NOT EXISTS idx_submissions_student ON submissions(student_id,exe
 CREATE INDEX IF NOT EXISTS idx_events_exercise ON events(exercise_id,created_at);
 """
 SCHEMA += REFERENCE_SCHEMA
+SCHEMA += TECHNICAL_SCHEMA
 
 
 def connect() -> sqlite3.Connection:

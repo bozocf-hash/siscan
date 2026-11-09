@@ -1,5 +1,7 @@
 # 60 — Ampliação das referências e perfil técnico DB3K
 
+**Resultado posterior:** o responsável aprovou o cadastro das 11.117 novas referências no escopo restrito de identificação, e o registro foi executado, totalizando 11.197 referências. A preparação e a proposta pendente descritas abaixo são históricas; decisão, hashes, backup e verificações estão em [61](61_REGISTRO_REFERENCIAS_AMPLIADAS_DB3K.md). Os atributos técnicos continuam pendentes.
+
 ## Solicitação e limites — 2026-11-09
 
 O responsável selecionou as prioridades 2 e 3: ampliar referências DB3K e investigar campos técnicos; confirmou depois a prioridade 2. Foram usadas as ferramentas existentes, sem alteração de código. O DB3K original foi aberto somente para leitura. A ampliação foi preparada em banco separado, sem substituir o lote de 80 candidatos exibido na aplicação e sem registrar novas referências no banco SISCAN.

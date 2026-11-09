@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Mapa — entrega 78:** lateral, reposicionamento, representações e hover conferidos. Prosseguir com bases/vínculos de 76/77 e contratos de dados operacionais; não inferir prontidão a partir de adjudicação ou silhueta. Débito por perfil permanece pendente.
+
 **Mapa — próxima fatia:** após [77](77_PRIMEIRA_INTEGRACAO_MAPA_ATLANTICADOR.md), implementar apoios e vínculos planejados no mapa reutilizado conforme 76. Débito por perfil continua autorizado e pendente, com relógio comum e taxas constantes para os demais meios, decisão já confirmada pelo responsável.
 
 **Pré-requisito adicional entregue em 75:** por determinação do responsável, [alerta mínimo definido pelo operador](75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md) foi incluído antes do débito por perfil. Operador do partido e instrutor podem configurar. Próximo incremento mantém a aplicação transacional dos perfis, incluindo política/versionamento do limite e eventos de cruzamento.

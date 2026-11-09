@@ -11,9 +11,14 @@ def context(db,user,team):
  return exercise
 def listing(db,user,team):
  exercise=context(db,user,team)
- rows=[dict(r) for r in db.execute('''SELECT a.id,a.code,a.name,a.category,p.latitude,p.longitude,coalesce(p.revision,0) AS position_revision FROM assets a
+ rows=[dict(r) for r in db.execute('''SELECT a.id,a.code,a.name,a.category,a.source_label,a.fiche,p.latitude,p.longitude,coalesce(p.revision,0) AS position_revision FROM assets a
  JOIN party_allocations q ON q.asset_id=a.id AND q.exercise_id=a.exercise_id AND q.team=a.team AND q.active=1
  LEFT JOIN map_unit_positions p ON p.asset_id=a.id WHERE a.exercise_id=? AND a.team=? ORDER BY a.code''',(exercise['id'],team))]
+ for unit in rows:
+  unit['combat_capability']=None;unit['operational_availability']=None;unit['fuel']=None
+  fuel=db.execute('''SELECT s.* FROM engine_units u JOIN engine_resource_states s ON s.unit_id=u.unit_id
+    JOIN engine_runs r ON r.run_id=s.run_id WHERE u.asset_id=? AND r.exercise_id=? ORDER BY r.rowid DESC LIMIT 1''',(unit['id'],exercise['id'])).fetchone()
+  if fuel:unit['fuel']={'remaining_kg':fuel['remaining_grams']/1000,'capacity_kg':fuel['capacity_grams']/1000,'source':'synthetic_controlled'}
  return {'units':rows,'team':team,'scope':'planning_positions','geographic_validation':'terrain_and_support_compatibility_pending'}
 def plot(db,user,body):
  if not isinstance(body,dict) or set(body)!={'command_id','team','latitude','longitude','units'}:raise ValueError('Informe comando, partido, coordenadas e unidades.')

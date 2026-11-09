@@ -100,3 +100,7 @@ Em “Unidades de teste do motor”, operador do próprio partido e instrutor po
 ## Mapa ATLANTICADOR integrado
 
 Após login, abra “Mapa ATLANTICADOR · inserir meios adjudicados”. Clique no mapa ou digite coordenadas, selecione meios e confirme plotagem. Seleção por retângulo usa “Selecionar área”. `python check_map_units.py` verifica isolamento e transações. Prepare o editor local com `python tools/prepare_atlantic_map.py <ZIP-original> data/atlanticador`. O ZIP e o frontend extraído não são publicados. [Escopo e limitações](../docs/recovery/77_PRIMEIRA_INTEGRACAO_MAPA_ATLANTICADOR.md).
+
+## Representação e reposicionamento no mapa
+
+Use as abas “Camadas” e “Meios adjudicados” na lateral. Botão direito no símbolo → “Reposicionar” → clique no destino; Esc cancela. Há alternativa por coordenadas. Selecione silhuetas ou o motor Calunga e consulte o catálogo visual. Hover abre a ficha com dados cadastrados; desconhecidos são explicitados. `node check_map_visuals.mjs` verifica as silhuetas. [Escopo e evidências](../docs/recovery/78_MAPA_PAINEL_REPOSICIONAMENTO_E_REPRESENTACOES.md).

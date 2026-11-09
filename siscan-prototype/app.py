@@ -368,12 +368,13 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         path = urlparse(self.path).path
-        if path.startswith('/atlanticador/') or path=='/atlantic-bridge.mjs':
+        if path.startswith('/atlanticador/') or path in ('/atlantic-bridge.mjs','/unit-silhouettes.mjs'):
             with connect() as db:
                 if not self.require_user(db):return
             root=(DATA_DIR/'atlanticador').resolve()
-            target=STATIC/'atlantic-bridge.mjs' if path=='/atlantic-bridge.mjs' else (root/path[len('/atlanticador/'):]).resolve()
-            if (path!='/atlantic-bridge.mjs' and not target.is_relative_to(root)) or not target.is_file():self.send_json(404,{'error':'Mapa não preparado nesta instalação.'});return
+            adapter=path in ('/atlantic-bridge.mjs','/unit-silhouettes.mjs')
+            target=STATIC/path.lstrip('/') if adapter else (root/path[len('/atlanticador/'):]).resolve()
+            if (not adapter and not target.is_relative_to(root)) or not target.is_file():self.send_json(404,{'error':'Mapa não preparado nesta instalação.'});return
             content=target.read_bytes();self.send_response(200);self.send_header('Content-Type','text/javascript; charset=utf-8' if target.suffix in ('.js','.mjs') else mimetypes.guess_type(str(target))[0] or 'application/octet-stream');self.send_header('Content-Length',str(len(content)));self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(content);return
         if path == "/":
             data = (STATIC / "index.html").read_bytes()

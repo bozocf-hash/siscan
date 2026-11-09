@@ -27,5 +27,13 @@ with closing(sqlite3.connect(':memory:')) as db:
  except sqlite3.IntegrityError:pass
  else:raise AssertionError('Failed audit did not abort')
  assert [tuple(r) for r in db.execute('SELECT * FROM map_unit_positions')]==before
+ listed=map_units.listing(db,blue,'AZUL')['units'][0]
+ assert listed['name']=='Test' and listed['combat_capability'] is None and listed['operational_availability'] is None and listed['fuel'] is None
+ db.execute("INSERT INTO scenario_versions(exercise_id,version,title,objective,changed_at) VALUES(1,1,'X','X','2026-11-09')")
+ app.engine_units.prepare_units(db,teacher);app.engine_runtime.start_run(db,teacher)
+ synthetic=db.execute("SELECT * FROM engine_units WHERE team='AZUL'").fetchone()
+ db.execute("INSERT INTO party_allocations VALUES(1,'AZUL',?,1,1,'2026-11-09')",(synthetic['asset_id'],))
+ item=next(u for u in map_units.listing(db,blue,'AZUL')['units'] if u['id']==synthetic['asset_id'])
+ assert item['fuel']=={'remaining_kg':600,'capacity_kg':1000,'source':'synthetic_controlled'}
  assert not db.execute('PRAGMA foreign_key_check').fetchall()
 print('PASS: adjudicated party scope, batch plot, UUID identity, idempotency, stale revisions and full rollback')

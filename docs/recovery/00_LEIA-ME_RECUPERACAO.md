@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Ajustes do mapa:** [78](78_MAPA_PAINEL_REPOSICIONAMENTO_E_REPRESENTACOES.md) entrega lateral com abas, reposicionamento por botão direito, silhuetas, integração do motor Calunga e ficha automática, preservando identificação cadastral e indicando dados ainda desconhecidos.
+
 **Mapa integrado:** [77](77_PRIMEIRA_INTEGRACAO_MAPA_ATLANTICADOR.md) entrega plotagem de meios adjudicados e seleção por área no editor original. Apoios e transferências efetivas seguem pendentes em [76](76_REQUISITOS_MAPA_E_MEIOS_DE_APOIO.md).
 
 **Alerta de combustível — decisão e entrega 75:** [75](75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md) permite ao operador do próprio partido e ao instrutor definir mínimo por meio, com auditoria e alerta em saldo <= mínimo. Incluído na execução e na prévia antes do débito por perfil. Nenhum mínimo padrão foi imposto; saldos locais continuam 510 kg.

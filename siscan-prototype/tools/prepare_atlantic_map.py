@@ -13,6 +13,8 @@ def prepare(source,destination):
  app=destination/'src/app.mjs'
  # Editor examples are not SISCAN adjudicated units and must not appear as forces.
  (destination/'src/demo.mjs').write_text('export const DEMO_FEATURES=[];\n',encoding='utf-8')
+ generator=destination/'src/calunga-generator.mjs'
+ generator.write_text(generator.read_text(encoding='utf-8').replace("'/vendor/","'/atlanticador/vendor/"),encoding='utf-8')
  app.write_text(app.read_text(encoding='utf-8')+"\nawait (await import('/atlantic-bridge.mjs')).install(map);\n",encoding='utf-8')
  (destination/'siscan-origin.json').write_text(json.dumps({'source_sha256':hashlib.file_digest(source.open('rb'),'sha256').hexdigest(),'adaptation':'original editor + SISCAN planning overlay; original archive preserved'}),encoding='utf-8')
 if __name__=='__main__':prepare(sys.argv[1],sys.argv[2])

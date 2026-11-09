@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Mapa — 78:** painel e reposicionamento corrigidos; vetores ilustrativos e motor Calunga disponíveis. Capacidade de combate/disponibilidade operacional sem campo validado continuam “não informado”. Combustível do ensaio é identificado como sintético; preferência visual não altera configuração física.
+
 **Mapa — 77:** primeira plotagem persistida por partido e seleção por retângulo entregues. Cadastro/referência de base fixa, hospedagem, compatibilidade e máscara geográfica permanecem pendentes. Rascunho local do editor não equivale ao estado oficial SISCAN.
 
 **Atualização após 74:** [75](75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md) atende alerta de combustível mínimo escolhido pelo operador, compartilhado no partido, com escopo, versões e eventos atômicos. Não bloqueia consumo da reserva. Débito por perfil ainda pendente e deverá fixar/conferir versão do limite. Conferência periódica ocorre somente com painel/aba visíveis; monitoramento externo não está implementado.

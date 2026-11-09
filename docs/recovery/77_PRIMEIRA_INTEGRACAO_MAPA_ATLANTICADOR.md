@@ -1,5 +1,7 @@
 # 77 — Primeira integração do mapa ATLANTICADOR
 
+**Complemento:** [78](78_MAPA_PAINEL_REPOSICIONAMENTO_E_REPRESENTACOES.md) substitui a janela adicional por abas na lateral original, melhora o reposicionamento e acrescenta silhuetas/calungas e ficha automática. Os registros abaixo descrevem a primeira entrega.
+
 Entrega de 2026-11-09: reutiliza o editor original do ZIP local, com mapa Leaflet, navegação, fundos e ferramentas existentes. O adaptador SISCAN adiciona o painel “Inserir meios adjudicados”. Não foi criado mapa alternativo. O ZIP original é preservado; a cópia derivada fica em `prototype/data/atlanticador`, fora do GitHub. Exemplos de forças do editor foram removidos da cópia derivada para não confundi-los com meios adjudicados. Licenças e atribuições do frontend original permanecem na cópia.
 
 ## Fluxo entregue

@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Parecer de engenharia de dados e motor:** [69](69_PARECER_ENGENHARIA_DADOS_E_PRONTIDAO_MOTOR.md) conclui que podemos programar o núcleo e testá-lo com dados controlados, mas o catálogo inteiro ainda não é entrada física validada. Registra 16 frentes de trabalho com critérios de aceite, separa bloqueios por capacidade e recomenda catálogo validado, snapshot técnico, estado transacional e manifesto compatível. Não exige banco universalmente perfeito para avançar nem promove atributos pendentes.
+
 **Massa de armamento e payload:** [68](68_MASSA_ARMAMENTO_E_PAYLOAD.md) associa cada item à massa cadastrada e às quantidades de sua configuração/instalação, mantendo alternativas, opcionais e reservas separados. A ficha mostra soma/diferença nominais quando os dados permitem, sem declarar carga operacional disponível. Auditoria percorreu 31.258 loadouts, 86.981 linhas e 77.852 vínculos aéreos; faltas de massa e 643 excessos nominais requerem avaliação, sem correção automática.
 
 **Persistência técnica de combustível e propulsão:** [67](67_BASE_PERSISTIDA_COMBUSTIVEL_E_PROPULSAO.md) registra a base SQL derivada com 1.940 combustíveis, 3.467 propulsores, 20.544 pontos e 28.757 instalações, todos comparados com a compilação. O endpoint técnico retorna os recursos persistidos com origem/unidades, sem promoção operacional ou consumo calculado. As demais famílias continuam na compilação integral.

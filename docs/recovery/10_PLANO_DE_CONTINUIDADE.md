@@ -1,6 +1,16 @@
 # 10 — Plano de continuidade
 
-Este plano registra o estado da recuperação e uma sequência **PROPOSTA** para trabalho futuro. As APR-01–APR-20 foram concluídas e incorporadas em 49. A consolidação é documental e não autoriza auditoria técnica adicional, arquitetura definitiva, programação, integração ou testes.
+## Continuidade atual — 2026-11-09
+
+A programação foi autorizada posteriormente pelo responsável na conversa e o protótipo técnico/didático já foi implementado e entregue até 68. As restrições de autorização no registro histórico abaixo pertencem às antigas missões documentais; não cancelam as autorizações posteriores. As decisões APR e a autoridade de promoção de dados de 53 continuam válidas.
+
+O [parecer atual de engenharia de dados — 69](69_PARECER_ENGENHARIA_DADOS_E_PRONTIDAO_MOTOR.md) recomenda continuar o núcleo do motor com dados sintéticos/controlados enquanto se valida o recorte técnico correspondente. A coleta integral não precisa ser repetida. Antes de usar dados Command em resultados oficiais, aplicar os critérios de unidade/semântica, aprovação, snapshot, compatibilidade de versões e calibração da função.
+
+Sequência atual proposta: contrato de entrada/manifesto; identidade e snapshot de uma unidade por partido; estado/tempo/eventos e recursos transacionais; um caso sintético de consumo; validação e aprovação de um recorte real; ampliação por capacidade. Pendências que não participam do cálculo não bloqueiam toda a programação. Este trabalho é o descritivo solicitado e não inicia a implementação do motor.
+
+## Registro histórico da recuperação e autorização documental
+
+O texto a seguir registra o estado e as restrições na conclusão das missões documentais. As APR-01–APR-20 foram concluídas e incorporadas em 49. Naquele momento, a consolidação documental não autorizava auditoria técnica adicional, arquitetura definitiva, programação, integração ou testes.
 
 ## Estado consolidado das Missões 01, 01-B e 01-C
 
@@ -11,13 +21,13 @@ Este plano registra o estado da recuperação e uma sequência **PROPOSTA** para
 - O responsável forneceu o registro consolidado das APR-01 a APR-20; 49 é a referência atual de decisões, aprovações parciais, limites e pendências. DEC-021/022 foram aprovadas conceitualmente; implantação inicial centralizada e orientação híbrida futura também foram acordadas. Isso não autoriza implementação.
 - O arquivo `C:\Users\bozoc\Documents\siscan\fluxograma` foi recebido, inspecionado visualmente e confirmado pelo responsável como a versão parametrizada e definitiva aplicável. A análise está em 50. Nenhuma implementação está autorizada.
 
-## Sequência futura proposta — requer autorização para avançar
+## Sequência histórica proposta — anterior à autorização de programação
 
 1. **Aguardar autorização expressa para a próxima fase.** As APR-01–APR-20 já foram respondidas; não reabrir itens aprovados sem nova decisão.
 2. **Gate documental do fluxograma satisfeito:** usar a imagem confirmada pelo responsável e sua análise em 50 como referência. Não presumir passos ou critérios além da imagem e da especificação aprovada. A confirmação não autoriza programação por si só.
 3. **Em etapa documental futura autorizada, detalhar lacunas de 49:** permissões, aceite, parâmetros geo/sensores/raios, versionamento, dados DB3K, MPNL quantitativo, grau de confiança e relatórios.
 4. **Qualquer desenho técnico ou implementação** dependerá de autorização própria posterior, deverá respeitar 49 e não importar automaticamente estruturas CMO/DB3K/ATLANTICADOR.
 
-## Condição de encerramento documental
+## Condição histórica de encerramento documental
 
 Os documentos 00–49 registram a concepção disponível e explicitam limites. A pauta de aprovação está encerrada, mas nenhuma etapa técnica futura é iniciada por este plano. A continuidade além da consolidação documental depende de autorização expressa do responsável; o gate do fluxograma antecede eventual programação do primeiro protótipo.

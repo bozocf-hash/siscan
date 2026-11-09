@@ -123,6 +123,7 @@ function renderDashboard() {
     app.append(el("div", { class: "card empty", text: dashboardData.error }));
     return;
   }
+  if (['student','instructor'].includes(currentUser.role))app.append(el('a',{class:'btn',href:'/atlanticador/editor.html',text:'Mapa ATLANTICADOR · inserir meios adjudicados'}));
   if (currentUser.role === "student") { renderStudent(); renderEngineUnits(app,false); }
   else renderReviewer();
 }

@@ -27,6 +27,8 @@ import engine_runtime
 import engine_continuity
 import engine_profiles
 import fuel_limits
+import map_units
+import mimetypes
 
 
 ROOT = Path(__file__).resolve().parent
@@ -178,6 +180,7 @@ SCHEMA += engine_units.SCHEMA
 SCHEMA += engine_runtime.SCHEMA
 SCHEMA += engine_continuity.SCHEMA
 SCHEMA += fuel_limits.SCHEMA
+SCHEMA += map_units.SCHEMA
 
 
 def connect() -> sqlite3.Connection:
@@ -365,6 +368,13 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         path = urlparse(self.path).path
+        if path.startswith('/atlanticador/') or path=='/atlantic-bridge.mjs':
+            with connect() as db:
+                if not self.require_user(db):return
+            root=(DATA_DIR/'atlanticador').resolve()
+            target=STATIC/'atlantic-bridge.mjs' if path=='/atlantic-bridge.mjs' else (root/path[len('/atlanticador/'):]).resolve()
+            if (path!='/atlantic-bridge.mjs' and not target.is_relative_to(root)) or not target.is_file():self.send_json(404,{'error':'Mapa não preparado nesta instalação.'});return
+            content=target.read_bytes();self.send_response(200);self.send_header('Content-Type','text/javascript; charset=utf-8' if target.suffix in ('.js','.mjs') else mimetypes.guess_type(str(target))[0] or 'application/octet-stream');self.send_header('Content-Length',str(len(content)));self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(content);return
         if path == "/":
             data = (STATIC / "index.html").read_bytes()
             self.send_response(HTTPStatus.OK)
@@ -389,6 +399,16 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path=='/api/map-units':
+                current=self.require_user(db)
+                if current:
+                    try:
+                        query=parse_qs(urlparse(self.path).query)
+                        if set(query)!={'team'} or len(query['team'])!=1:raise ValueError('Informe um partido.')
+                        self.send_json(200,map_units.listing(db,current[1],query['team'][0]))
+                    except PermissionError as exc:self.send_json(403,{'error':str(exc)})
+                    except ValueError as exc:self.send_json(400,{'error':str(exc)})
+                return
             if path == '/api/engine-profile-contract':
                 current=self.require_user(db)
                 if current:
@@ -508,6 +528,12 @@ class Handler(BaseHTTPRequestHandler):
                 self.engine_runtime_action(db,user,path.rsplit('/',1)[1],payload)
             elif path == '/api/engine-profile-preview':
                 self.engine_profile_action(db,user,payload)
+            elif path=='/api/map-units':
+                try:self.send_json(200,map_units.plot(db,user,payload))
+                except PermissionError as exc:self.send_json(403,{'error':str(exc)})
+                except engine_runtime.Conflict as exc:self.send_json(409,{'error':str(exc)})
+                except ValueError as exc:self.send_json(400,{'error':str(exc)})
+                except sqlite3.Error:self.send_json(503,{'error':'Falha na plotagem; alterações parciais revertidas.'})
             elif path == '/api/engine-fuel-limit':
                 try:self.send_json(200,fuel_limits.set_limit(db,user,payload))
                 except PermissionError as exc:self.send_json(403,{'error':str(exc)})

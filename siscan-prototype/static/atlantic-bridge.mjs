@@ -1,0 +1,33 @@
+export async function install(map){
+ const element=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
+ const me=await(await fetch('/api/me')).json();if(!me.user)throw Error('Entre no SISCAN para plotar meios.');
+ const perspective=document.querySelector('#perspective');if(perspective&&me.user.role==='student'){perspective.value=me.user.team.toLowerCase();perspective.dispatchEvent(new Event('change'));perspective.disabled=true;}
+ const panel=element('section');panel.setAttribute('aria-label','Inserir meios adjudicados');Object.assign(panel.style,{position:'fixed',right:'12px',top:'100px',width:'min(340px,calc(100vw - 24px))',maxHeight:'70vh',overflow:'auto',zIndex:2000,background:'#102338',color:'white',padding:'16px',border:'1px solid #8eb0c9',borderRadius:'8px'});
+ const title=element('h2','Inserir meios adjudicados'),toggle=element('button','Ocultar painel');toggle.type='button';const body=element('div');toggle.onclick=()=>{body.hidden=!body.hidden;toggle.textContent=body.hidden?'Mostrar painel':'Ocultar painel';};panel.append(title,toggle,body);document.body.append(panel);
+ const style=element('style');style.textContent='section[aria-label="Inserir meios adjudicados"] label{display:block;margin:10px 0} section[aria-label="Inserir meios adjudicados"] input[type=number],section[aria-label="Inserir meios adjudicados"] select{display:block;width:100%;padding:8px;margin:5px 0;background:#18354d;color:white;border:1px solid #7995aa;border-radius:4px}section[aria-label="Inserir meios adjudicados"] button{padding:9px;margin:5px 4px 5px 0;border:1px solid #7995aa;border-radius:4px;background:#244761;color:white}';document.head.append(style);
+ const team=element('select');team.setAttribute('aria-label','Partido SISCAN');for(const name of ['AZUL','VERMELHO']){const o=element('option',name);o.value=name;team.append(o);}team.value=me.user.team||'AZUL';team.disabled=me.user.role!=='instructor';
+ const hint=element('p','Planejamento: clique no mapa ou digite coordenadas decimais. Rascunhos locais do editor são separados dos meios adjudicados. Validação terra/água e compatibilidade de apoio pendentes.');
+ const lat=element('input'),lon=element('input');for(const [input,label,min,max] of [[lat,'Latitude (graus decimais)',-90,90],[lon,'Longitude (graus decimais)',-180,180]]){input.type='number';input.step='any';input.min=min;input.max=max;input.required=true;input.setAttribute('aria-label',label);const l=element('label',label);l.append(input);body.append(l);}
+ lat.value=map.getCenter().lat.toFixed(6);lon.value=map.getCenter().lng.toFixed(6);
+ const list=element('div'),message=element('p'),form=element('form'),save=element('button','Inserir / reposicionar selecionados'),refresh=element('button','Atualizar meios'),area=element('button','Selecionar área'),reference=element('select');reference.setAttribute('aria-label','Referência de posição');refresh.type=area.type='button';save.type='submit';
+ body.prepend(team,hint);form.append(list,save);body.append(reference,area,refresh,form,message);
+ let units=[],selected=new Set(),pending=null,selecting=false,start=null,box=null;const markers=L.layerGroup().addTo(map);
+ const itemLabel=u=>`${u.code} · ${u.name}${u.position_revision?' · plotado':' · disponível'}`;
+ function draw(){list.replaceChildren();markers.clearLayers();reference.replaceChildren(element('option','Referência: meio já plotado'));
+  for(const u of units){const check=element('input');check.type='checkbox';check.value=u.id;check.checked=selected.has(u.id);check.onchange=()=>{if(check.checked)selected.add(u.id);else selected.delete(u.id);pending=null;};const label=element('label');label.style.display='block';label.append(check,document.createTextNode(itemLabel(u)));list.append(label);
+   if(u.latitude!==null){const option=element('option',u.code+' · '+u.name);option.value=u.id;reference.append(option);const marker=L.circleMarker([u.latitude,u.longitude],{radius:selected.has(u.id)?11:7,color:team.value==='AZUL'?'#4ab6ff':'#ff7777',weight:3}).addTo(markers);const popup=element('div',itemLabel(u));marker.bindTooltip(u.code);marker.bindPopup(popup);marker.on('click',()=>{lat.value=u.latitude;lon.value=u.longitude;selected.add(u.id);draw();});}
+  }message.textContent=`${units.length} meios adjudicados · ${selected.size} selecionados.`;
+ }
+ async function load(){const response=await fetch('/api/map-units?team='+team.value);const data=await response.json();if(!response.ok)throw Error(data.error);units=data.units;selected=new Set([...selected].filter(id=>units.some(u=>u.id===id)));draw();}
+ refresh.onclick=()=>load().catch(e=>message.textContent=e.message);team.onchange=()=>{selected.clear();pending=null;load().catch(e=>message.textContent=e.message);};reference.onchange=()=>{const unit=units.find(u=>String(u.id)===reference.value);if(unit){lat.value=unit.latitude;lon.value=unit.longitude;map.panTo([unit.latitude,unit.longitude]);pending=null;}};
+ map.on('click',e=>{if(selecting)return;lat.value=e.latlng.lat.toFixed(6);lon.value=e.latlng.lng.toFixed(6);pending=null;});
+ area.onclick=()=>{selecting=!selecting;area.textContent=selecting?'Concluir seleção de área':'Selecionar área';if(selecting)map.dragging.disable();else map.dragging.enable();};
+ map.on('mousedown',e=>{if(selecting)start=e.latlng;});map.on('mousemove',e=>{if(selecting&&start){if(box)map.removeLayer(box);box=L.rectangle(L.latLngBounds(start,e.latlng),{color:'#f5c76a',weight:2}).addTo(map);}});map.on('mouseup',e=>{if(selecting&&start){const bounds=L.latLngBounds(start,e.latlng);selected=new Set(units.filter(u=>u.latitude!==null&&bounds.contains([u.latitude,u.longitude])).map(u=>u.id));start=null;draw();}});
+ form.onsubmit=async e=>{e.preventDefault();if(!selected.size){message.textContent='Selecione pelo menos um meio.';return;}save.disabled=true;
+  if(!lat.value||!lon.value||!lat.checkValidity()||!lon.checkValidity()){message.textContent='Informe latitude e longitude válidas.';save.disabled=false;return;}
+  if(!pending)pending={command_id:crypto.randomUUID(),team:team.value,latitude:Number(lat.value),longitude:Number(lon.value),units:units.filter(u=>selected.has(u.id)).map(u=>({id:u.id,expected_revision:u.position_revision}))};
+  try{const response=await fetch('/api/map-units',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':me.csrf},body:JSON.stringify(pending)});const result=await response.json();if(!response.ok)throw Error(result.error);pending=null;await load();message.textContent=result.plotted+' meios plotados e registrados no SISCAN.';}
+  catch(error){message.textContent=error.message;}finally{save.disabled=false;}
+ };
+ await load();
+}

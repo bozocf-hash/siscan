@@ -96,3 +96,7 @@ Em “Unidades de teste do motor → Prever perfil de consumo”, o instrutor mo
 ## Alerta mínimo de combustível
 
 Em “Unidades de teste do motor”, operador do próprio partido e instrutor podem definir o mínimo por meio, em kg. Alerta em saldo menor ou igual ao limite; zero é válido e desativação é explícita. Não há mínimo padrão imposto nem bloqueio automático da reserva. Os avisos são conferidos a cada 10 s com painel/aba visíveis. A prévia mostra a linha e o instante de cruzamento. Execute `python check_fuel_limits.py`. [Regras e evidências](../docs/recovery/75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md).
+
+## Mapa ATLANTICADOR integrado
+
+Após login, abra “Mapa ATLANTICADOR · inserir meios adjudicados”. Clique no mapa ou digite coordenadas, selecione meios e confirme plotagem. Seleção por retângulo usa “Selecionar área”. `python check_map_units.py` verifica isolamento e transações. Prepare o editor local com `python tools/prepare_atlantic_map.py <ZIP-original> data/atlanticador`. O ZIP e o frontend extraído não são publicados. [Escopo e limitações](../docs/recovery/77_PRIMEIRA_INTEGRACAO_MAPA_ATLANTICADOR.md).

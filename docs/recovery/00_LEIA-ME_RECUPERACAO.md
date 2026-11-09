@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Mapa integrado:** [77](77_PRIMEIRA_INTEGRACAO_MAPA_ATLANTICADOR.md) entrega plotagem de meios adjudicados e seleção por área no editor original. Apoios e transferências efetivas seguem pendentes em [76](76_REQUISITOS_MAPA_E_MEIOS_DE_APOIO.md).
+
 **Alerta de combustível — decisão e entrega 75:** [75](75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md) permite ao operador do próprio partido e ao instrutor definir mínimo por meio, com auditoria e alerta em saldo <= mínimo. Incluído na execução e na prévia antes do débito por perfil. Nenhum mínimo padrão foi imposto; saldos locais continuam 510 kg.
 
 **Perfil temporal entregue — 2026-11-09:** [74 — Previsão de consumo](74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md) permite montar trechos com regimes hipotéticos, ver curva/demanda/déficit e conferir manifesto sem debitar o estoque. A execução continua em 45 min/510 kg por unidade. Taxas sintéticas não representam dados Command aprovados.

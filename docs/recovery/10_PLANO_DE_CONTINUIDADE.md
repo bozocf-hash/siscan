@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Mapa — próxima fatia:** após [77](77_PRIMEIRA_INTEGRACAO_MAPA_ATLANTICADOR.md), implementar apoios e vínculos planejados no mapa reutilizado conforme 76. Débito por perfil continua autorizado e pendente, com relógio comum e taxas constantes para os demais meios, decisão já confirmada pelo responsável.
+
 **Pré-requisito adicional entregue em 75:** por determinação do responsável, [alerta mínimo definido pelo operador](75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md) foi incluído antes do débito por perfil. Operador do partido e instrutor podem configurar. Próximo incremento mantém a aplicação transacional dos perfis, incluindo política/versionamento do limite e eventos de cruzamento.
 
 **Quinto passo entregue em 74:** [prévia por perfil temporal](74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md), somente com regimes sintéticos e sem alteração de saldos. Próxima fatia: fixar contrato do perfil na execução e aplicar o plano inteiro em transação idempotente, mantendo a recusa integral por insuficiência. Modelos Command continuam dependentes de aprovação física/semântica específica.

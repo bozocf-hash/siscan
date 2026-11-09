@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Mapa — 77:** primeira plotagem persistida por partido e seleção por retângulo entregues. Cadastro/referência de base fixa, hospedagem, compatibilidade e máscara geográfica permanecem pendentes. Rascunho local do editor não equivale ao estado oficial SISCAN.
+
 **Atualização após 74:** [75](75_ALERTAS_NIVEL_MINIMO_COMBUSTIVEL.md) atende alerta de combustível mínimo escolhido pelo operador, compartilhado no partido, com escopo, versões e eventos atômicos. Não bloqueia consumo da reserva. Débito por perfil ainda pendente e deverá fixar/conferir versão do limite. Conferência periódica ocorre somente com painel/aba visíveis; monitoramento externo não está implementado.
 
 **Atualização após 73:** [74](74_PREVISAO_PERFIL_TEMPORAL_CONSUMO.md) entrega contrato e prévia de perfil temporal sintético, com taxas explícitas, esgotamento/déficit e base de revisão. Não aplica o plano ao estoque. Permanecem fixação das taxas no snapshot de execução, débito transacional do perfil e validação/calibração de dados reais. A prévia não reserva combustível nem garante saldo futuro.

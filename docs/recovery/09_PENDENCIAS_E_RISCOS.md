@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Observação assistida posterior, 2026-11-09:** o visualizador DB3K_498a foi acessado; cinco valores de GENERAL DATA coincidem com a amostra Aircraft/3 em 498 e 498a. Faltou observar o cabeçalho com ID/nome, e a descrição textual apresenta medidas diferentes. Registrar como correspondência numérica parcial, sem validar os atributos. Fonte, hashes e divergências em [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md). Isso complementa os estados históricos abaixo.
+
 ## Atualização de evidências locais — 2026-11-08
 
 **Complemento de 2026-11-09:** a janela do jogo confirmou Command v1.05 — Build 1307, mas o visualizador não foi acessado. A seção 6.3.4 do manual digital foi consultada; texto e figura usam versões de banco diferentes (478 e 473). É necessário confirmar o banco ativo antes de comparar com 498. Amostra de quatro registros e 18 valores brutos preparada em [59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md); todos seguem sem validação de unidade SQL.

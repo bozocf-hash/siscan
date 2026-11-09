@@ -2,6 +2,8 @@
 
 ## Atualização posterior às missões documentais
 
+**Observação assistida posterior:** GENERAL DATA foi examinado no visualizador DB3K_498a. Cinco valores coincidem com DataAircraft/3 dos arquivos 498 e 498a, mas o cabeçalho com ID/nome ainda não foi observado. Há divergência entre a descrição textual e os dados gerais. Detalhes no final do [documento 59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md); os 580 valores continuam pendentes. As menções abaixo à ausência de acesso ao visualizador descrevem o estágio anterior.
+
 Em 2026-11-09 foi observado o jogo Command v1.05 — Build 1307. O [documento 59](59_ROTEIRO_COMPARACAO_VISUAL_DB3K.md) registra a leitura pontual das páginas 155–158 do manual digital, a inspeção visual da página 155 e quatro registros SQL preparados para comparação. Nenhuma ficha foi examinada no jogo; os atributos continuam pendentes.
 
 O estado descrito nas seções históricas abaixo corresponde ao encerramento das missões documentais. Posteriormente, o responsável autorizou a programação e a continuidade do protótipo. Para a preparação DB3K, consultar [52 — Preparação e revisão](52_PREPARACAO_CATALOGO_DB3K.md) e os documentos 53–58. A aprovação de 80 referências de origem está registrada em 55 e limita-se à identificação; os 580 valores técnicos inventariados em 56 permanecem pendentes.

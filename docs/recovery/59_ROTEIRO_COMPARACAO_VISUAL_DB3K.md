@@ -2,6 +2,8 @@
 
 ## Escopo e resultado — 2026-11-09
 
+**Atualização posterior com auxílio do responsável:** o visualizador foi acessado e a seção GENERAL DATA foi examinada. O resultado inicial abaixo descreve a tentativa anterior; os achados posteriores e suas limitações estão no final deste documento.
+
 Foi observada a janela do jogo **Command v1.05 — Build 1307**, além do painel inicial com o mesmo build. Isso complementa a confirmação anterior, restrita ao lançador (58). Nenhuma ficha de plataforma foi aberta no jogo; nenhuma unidade SQL foi validada e nenhum dos 580 valores técnicos foi promovido.
 
 A primeira tentativa de dispensar o painel inicial ficou sem resultado por expiração da revisão automática de permissão. Após recuperação da janela, foram tentados o fechamento pelo X, Escape e acesso à seleção de cenário existente. Não houve mudança observável do painel nas capturas de verificação. A captura da janela principal também apresentou conteúdo de outro aplicativo em uma consulta; recuperou-se então a janela secundária Command, que mostrou o painel inicial. Não se atribui causa a esses comportamentos nem se afirma que os comandos tenham sido processados pelo jogo. A interação foi encerrada sem carregar, editar ou salvar cenário por ação confirmada.
@@ -49,3 +51,27 @@ São 18 valores preparados para comparação, não 18 valores confirmados. Os 58
 ## Relação com o SISCAN
 
 Referências conceituais: separar catálogo de plataformas e composição do exercício; filtrar consultas; preservar versão/origem; controlar visibilidade por partido. O manual não altera a regra aprovada: o instrutor disponibiliza meios para AZUL ou VERMELHO, e os alunos do partido acessam esses meios. A exposição do catálogo de referência não equivale à alocação de meios.
+
+## Observação assistida do visualizador — 2026-11-09
+
+O responsável abriu o visualizador e navegou na ficha solicitada. Foram observados sucessivamente os títulos CWDB_498 e, após orientação para troca de banco, DB3K_498a. CWDB e DB3K são fontes distintas; o número 498 isolado não as identifica. A captura com os valores abaixo mostra explicitamente **Database Viewer (DB3K_498a)** e Type Aircraft.
+
+O arquivo instalado `DB\DB3K_498a.db3` tem SHA-256 `866f4cded2e03ad350bab5ed67fef16f74da06c849bcbaf886839b273906a7b4`, diferente do 498 original. Consultas SQLite somente leitura confirmaram que DataAircraft/3 se chama SH-60B Seahawk nos dois arquivos e que os cinco valores abaixo são iguais entre eles. Isso não demonstra igualdade das versões completas nem prova, isoladamente, qual arquivo o programa carregou; a evidência da versão ativa é o título da interface.
+
+| Campo SQL comparado em DataAircraft/3 | Valor bruto no 498 | Valor bruto no 498a instalado | Rótulo e valor visíveis em GENERAL DATA |
+|---|---|---|---|
+| Length | 15.2 | 15.2 | Length: 15,2 m |
+| Span | 2.2 | 2.2 | Wingspan: 2,2 m |
+| Height | 5.2 | 5.2 | Height: 5,2 m |
+| WeightEmpty | 6190 | 6190 | Empty Weight: 6190 kg |
+| WeightMax | 9927 | 9927 | Max Weight: 9927 kg |
+
+**Classificação:** cinco correspondências numéricas observadas, com rótulos m/kg na apresentação, ainda sem vínculo visual completo ao ID. O cabeçalho da ficha com nome e DBID ficou fora da região visível; a lista superior exibia variantes A/F-117X e o filtro SubType estava em Attack. A descrição inferior trata da família Seahawk. A orientação dada e a resposta do responsável não substituem a inspeção do cabeçalho. Portanto, ainda não se registra uma ficha plenamente identificada nem validação definitiva do mapeamento SQL/apresentação.
+
+A captura pertence à observação da janela via computer-use nesta conversa; não foi exportada como arquivo no repositório. A leitura dos números foi visual, sem OCR nem texto de acessibilidade dos campos. Não houve alteração de código, bancos ou status dos candidatos. Os 580 valores permanecem pendentes no lote.
+
+### Divergência entre descrição e dados gerais
+
+Na mesma tela, a seção textual SPECIFICATIONS informa comprimento de 19.75 m e diâmetro do rotor de 16.35 m; GENERAL DATA informa Length 15,2 m e Wingspan 2,2 m. São valores e rótulos de seções diferentes. Diâmetro do rotor não deve ser equiparado automaticamente a Wingspan, e não foi determinada a causa da diferença de comprimento. A descrição textual inclui referência externa, que não foi consultada nesta etapa. A concordância com valores SQL não comprova exatidão física nem adequação do atributo ao SISCAN.
+
+Próximo passo: observar o cabeçalho #3 / SH-60B Seahawk na mesma ficha e confirmar a continuidade com GENERAL DATA. Depois, ampliar a comparação para outras plataformas e para a versão 498 quando disponível no visualizador. Não substituir valores, unidades ou interpretação técnica com base nesta única observação.

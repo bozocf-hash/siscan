@@ -16,11 +16,20 @@ with closing(sqlite3.connect(':memory:')) as db:
  payload={'run_id':run['run_id'],'unit_id':run['states'][0]['unit_id'],'expected_revision':0,'segments':[{'regime_id':'SYN-ECO','minutes':10},{'regime_id':'SYN-REF','minutes':20},{'regime_id':'SYN-HIGH','minutes':5}]}
  before=list(db.iterdump());changes=db.total_changes
  preview=profiles.preview(db,teacher,payload)
+ assert profiles.verify_preview(db,teacher,payload,preview['manifest_sha256'])==preview
+ try:profiles.verify_preview(db,teacher,payload,'0'*64)
+ except Conflict:pass
+ else:raise AssertionError('Unreviewed preview accepted')
  assert preview['duration_minutes']==35 and preview['fuel_required_grams']==65000 and preview['fuel_remaining_grams']==535000 and preview['feasible']
  assert [s['fuel_required_grams'] for s in preview['segments']]==[5000,40000,20000]
  assert preview['curve'][0]['minute_offset']==0 and preview['curve'][-1]['minute_offset']==35
  assert profiles.preview(db,teacher,payload)==preview
  assert list(db.iterdump())==before and db.total_changes==changes
+ import fuel_limits
+ fuel_limits.set_limit(db,teacher,{'command_id':str(uuid.uuid4()),'run_id':run['run_id'],'unit_id':payload['unit_id'],'expected_revision':0,'expected_limit_revision':0,'minimum_kg':'550'})
+ try:profiles.verify_preview(db,teacher,payload,preview['manifest_sha256'])
+ except Conflict:pass
+ else:raise AssertionError('Changed operator minimum did not invalidate preview')
  exact={**payload,'segments':[{'regime_id':'SYN-HIGH','minutes':150}]};result=profiles.preview(db,teacher,exact)
  assert result['feasible'] and result['fuel_remaining_grams']==0 and result['exhaustion_at_offset_minutes']==150
  short={**payload,'segments':[{'regime_id':'SYN-HIGH','minutes':151}]};result=profiles.preview(db,teacher,short)

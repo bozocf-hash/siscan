@@ -9,6 +9,14 @@ DATA_PATH=Path(__file__).resolve().parent/'fixtures/engine/synthetic-profiles-01
 DATA_SHA256='1cd0f7ba3ac0b20ae3e3900a2702563d71329ed08d5fc6ffc3da2a3712b0e3d4'
 
 
+def verify_preview(db,user,payload,expected_manifest_sha256):
+    """Recompute the reviewed basis before any future transactional debit."""
+    if not isinstance(expected_manifest_sha256,str) or len(expected_manifest_sha256)!=64:raise ValueError('Manifesto de previsão inválido.')
+    result=preview(db,user,payload)
+    if result['manifest_sha256']!=expected_manifest_sha256:raise engine_runtime.Conflict('Plano, saldo, limite ou contrato mudou. Recalcule a previsão antes de aplicar.')
+    return result
+
+
 def contract():
     try:data=json.loads(DATA_PATH.read_text(encoding='utf-8'))
     except ValueError as exc:raise sqlite3.DatabaseError('Invalid synthetic profile dataset') from exc

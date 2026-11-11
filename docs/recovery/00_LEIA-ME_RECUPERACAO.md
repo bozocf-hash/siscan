@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Algoritmo CPC — [83](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md):** investigação complementar do manual oficial e da instalação do Command; proposta própria com pseudocódigo de ensaio isolado, eventos, recursos, adjudicação e aplicação transacional. Nenhum código-fonte do motor de combate foi localizado. Não é reprodução do Command, modelo físico validado ou implementação.
+
 **Pesquisa CPC — 82:** estudo preliminar com fontes primárias de wargaming, análise multicritério e credibilidade de simulações. Propõe comparação por dimensões, pacotes de encontro e decisão oficial do instrutor. Sem coeficientes físicos aprovados ou implementação.
 
 **Indicadores compactos — 81:** três barras (estado, armamento geral e combustível). Mínimo de combustível do operador, pré-alerta fixo M+5 pontos e vermelho em F<=M. Armamento baixo restringe combate sem apagar a condição de origem do instrutor; agregação/limiar exatos ainda a especificar. Requisitos registrados, não implementados.

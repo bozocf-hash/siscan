@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Algoritmo CPC — [83](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md):** orquestração proposta, ainda sem rubrica didática aprovada ou modelo físico validado. Fechar simultaneidade, conflitos de recursos, encerramento e contrato de regras. Não confundir manual HTML atual com PDF local de 353 páginas; consulta SQL não recupera código do motor. Proposta desatualizada não pode sobrescrever revisão nova do exercício.
+
 **CPC — 82:** pendentes objetivo/escala do primeiro recorte, rubrica, condições de aplicabilidade, dados/calibração e agregação de armamento. Pesquisa bibliográfica não valida coeficientes nem transforma indicador comparativo em probabilidade de vitória. Consumo e efeito confirmado precisam de registros distintos.
 
 **Indicadores — 81:** definir bases percentuais, agregação do armamento e limiar de combate, recomposição e exceções. Pré-alerta de combustível fixo M+5 confirmado, sem padrão M=30. Não transformar estoque desconhecido em zero nem perda de munição em atualização da avaliação original de avarias.

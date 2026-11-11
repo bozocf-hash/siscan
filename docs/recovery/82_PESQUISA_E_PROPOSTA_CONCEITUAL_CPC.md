@@ -1,5 +1,7 @@
 # 82 — Pesquisa e proposta conceitual do CPC
 
+Complementação posterior em [83 — Algoritmo conceitual CPC](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md): investigação do manual oficial/instalação do Command e pseudocódigo próprio para ensaio, adjudicação e aplicação de efeitos. A proposta não recupera código proprietário nem fornece coeficientes físicos validados.
+
 **Data da pesquisa: 2026-11-11. Estado: estudo preliminar para discussão.** Pedido do responsável: fundamentar o CPC — Comparação de Poderes Combatentes — nas interações de superfície, submarinas e aéreas, com apuração assistida ou julgamento didático do instrutor. Não é especificação aprovada, modelo calibrado ou implementação. Nenhum coeficiente de plataforma/armamento foi aprovado ou calculado neste estudo.
 
 ## Conclusão proposta

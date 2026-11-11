@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Complemento CPC — [83](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md):** usar o algoritmo conceitual como insumo da futura especificação de `force-confrontation`: ensaio isolado reproduzível, proposta, confirmação do instrutor e efeitos idempotentes. Primeiro recorte recomendado com regras fictícias verificáveis. Não inicia implementação nem substitui os gates de `technical-catalog`.
+
 **CPC — proposta de pesquisa 82:** discutir primeiro núcleo didático de adjudicação/efeitos, depois comparação por dimensões e modelos assistidos restritos. Não inicia código ou substitui o ciclo aprovado de technical-catalog; resultado oficial permanece com o instrutor.
 
 **Complemento — 81:** `resource-engine` fornece fatos/percentuais e alertas; `operational-state` consome esses fatos para restrições efetivas, preservando o resultado do instrutor. Três barras compactas previstas; frontend permanece para etapa posterior. Manter o recorte técnico atual e especificar esta evolução nos módulos correspondentes.

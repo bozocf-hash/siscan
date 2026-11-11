@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Pesquisa CPC — 82:** estudo preliminar com fontes primárias de wargaming, análise multicritério e credibilidade de simulações. Propõe comparação por dimensões, pacotes de encontro e decisão oficial do instrutor. Sem coeficientes físicos aprovados ou implementação.
+
 **Indicadores compactos — 81:** três barras (estado, armamento geral e combustível). Mínimo de combustível do operador, pré-alerta fixo M+5 pontos e vermelho em F<=M. Armamento baixo restringe combate sem apagar a condição de origem do instrutor; agregação/limiar exatos ainda a especificar. Requisitos registrados, não implementados.
 
 **Confronto e estado operativo — 2026-11-11:** [80](80_CONFRONTO_FORCAS_E_ESTADO_OPERATIVO.md) registra comparação de forças com resultado oficial sempre definido pelo instrutor, por apuração assistida ou intervenção didática. Faixas dos meios de superfície confirmadas: >60% combater; 40–60% navegar; <40% flutuar. Requisito documental, ainda sem implementação.

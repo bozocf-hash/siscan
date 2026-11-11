@@ -1,5 +1,7 @@
 # 80 — Confronto de forças e estado operativo
 
+**Pesquisa complementar:** [82](82_PESQUISA_E_PROPOSTA_CONCEITUAL_CPC.md) fundamenta a proposta do CPC e seus modos de arbitragem. Propostas metodológicas ainda exigem especificação/revisão; as decisões de autoridade e faixas aqui registradas continuam vigentes.
+
 **Decisões complementares do responsável — 2026-11-11.** Requisito acrescentado durante a revisão das tarefas de `technical-catalog`. Este documento registra escopo funcional; não é especificação técnica aprovada nem implementação. Número 79 está reservado, na lista de tarefas, ao relatório futuro do catálogo técnico.
 
 **Complemento:** [81](81_INDICADORES_COMPACTOS_E_RESTRICOES_RECURSOS.md) registra três barras compactas, pré-alerta de combustível M+5 pontos e restrição automática de combate por armamento baixo. A condição efetiva por recursos não apaga a avaliação/resultado de origem do instrutor.

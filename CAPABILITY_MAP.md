@@ -30,7 +30,7 @@ Dependências indicam contratos de provedores. Implementação já disponível s
 | `operational-state` | Definir disponibilidade/avarias, condição de origem e restrições efetivas por recursos; preservar efeitos confirmados pelo instrutor | `execution-core`, `resource-engine` | 35 DEC-019, 49, 69, 78, 80–81 |
 | `resource-engine` | Aplicar consumo por perfil, estoques e reabastecimento; fornecer indicadores de munição/combustível e pré-alerta M+5 pontos | `execution-core`, `party-inventory`, `technical-catalog` | 67–69, 72, 74–75, 81 |
 | `movement-engine` | Integrar trajetórias, marchas, tempo e consumo, respeitando vínculos e confirmações | `support-network`, `resource-engine`, `operational-state` | 49 APR-04/12/14/16, 76–78 |
-| `force-confrontation` | Contrapor composições de força, oferecer critérios configuráveis e apuração de apoio; resultado oficial sempre definido pelo instrutor, inclusive arbitragem direta | `unit-registry`, `party-inventory`, `operational-state` | 35 DEC-018/019, 49, 80 |
+| `force-confrontation` | CPC — Comparação de Poderes Combatentes: contrapor composições, apoiar apuração e arbitragem direta; resultado oficial sempre do instrutor | `unit-registry`, `party-inventory`, `operational-state` | 35 DEC-018/019, 49, 80–82 |
 | `mpnl-needs` | Consolidar necessidades logísticas por escalão, origem e recursos compartilhados | `support-network`, `resource-engine`, `operational-state` | 08, 49 APR-17/18, 69 |
 | `verification-recovery` | Verificar integração, concorrência, restauração e calibração dos recortes entregues | Capacidades anteriores | 09, 10, 69–78 |
 
@@ -51,3 +51,5 @@ A ordem é lógica de dependências, não calendário nem proibição de desenvo
 Gates de Fase 0, especificação [SPEC-technical-catalog.md](SPEC-technical-catalog.md) e plano [tasks/plan.md](tasks/plan.md) satisfeitos por aprovações distintas do responsável. Tarefas propostas para revisão de Fase 3 em [tasks/todo.md](tasks/todo.md); implementação ainda não iniciada. As demais especificações serão produzidas por módulo em ordem de dependências.
 
 Nesta etapa não houve alteração de código, schema, dados, dependências ou servidor. Não foram executados testes de software por ser uma proposta documental.
+
+Pesquisa conceitual do CPC em [82](docs/recovery/82_PESQUISA_E_PROPOSTA_CONCEITUAL_CPC.md). O nome funcional CPC foi solicitado pelo responsável; o ID `force-confrontation` é preservado. O estudo não é especificação/algoritmo aprovado nem altera a autoridade do instrutor. Relação CPC/PRC/SIM deve ser esclarecida na especificação própria.

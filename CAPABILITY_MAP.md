@@ -47,6 +47,6 @@ A ordem é lógica de dependências, não calendário nem proibição de desenvo
 
 ## Próximo gate
 
-Gates de Fase 0 e da especificação [SPEC-technical-catalog.md](SPEC-technical-catalog.md) satisfeitos por aprovações distintas do responsável. Plano técnico em [tasks/plan.md](tasks/plan.md), proposto para revisão de Fase 2. A lista [tasks/todo.md](tasks/todo.md) controla os gates; tarefas detalhadas de implementação só serão elaboradas após aprovação do plano. As demais especificações serão produzidas por módulo em ordem de dependências.
+Gates de Fase 0, especificação [SPEC-technical-catalog.md](SPEC-technical-catalog.md) e plano [tasks/plan.md](tasks/plan.md) satisfeitos por aprovações distintas do responsável. Tarefas propostas para revisão de Fase 3 em [tasks/todo.md](tasks/todo.md); implementação ainda não iniciada. As demais especificações serão produzidas por módulo em ordem de dependências.
 
 Nesta etapa não houve alteração de código, schema, dados, dependências ou servidor. Não foram executados testes de software por ser uma proposta documental.

@@ -1,6 +1,6 @@
 # Plano técnico: technical-catalog
 
-**Estado: proposta de Fase 2 para revisão — 2026-11-11.** Especificação [SPEC-technical-catalog.md](../SPEC-technical-catalog.md) e [mapa de capacidades](../CAPABILITY_MAP.md) aprovados em interações distintas. Este plano não constitui aprovação de atributos Command, não inicia implementação e não substitui os documentos 00–78. Controle de fases em [todo.md](todo.md); tarefas detalhadas serão elaboradas na Fase 3.
+**Estado: Fase 2 aprovada em 2026-11-11**, por resposta expressa “sim” do responsável após apresentação do plano. Mapa e especificação foram aprovados em interações anteriores. Tarefas de Fase 3 propostas para revisão em [todo.md](todo.md), sem implementação iniciada. A aprovação não homologa atributos Command nem designa contas reais.
 
 ## Resultado pretendido
 
@@ -93,11 +93,11 @@ Testes físicos exigem amostra e evidências independentes. Tolerâncias são po
 
 ## Pendências que o plano não resolve por presunção
 
-- Confirmar o mecanismo proposto de autoridade por conta explicitamente designada e identificar a conta antes de ativá-lo. Não promover a conta demonstrativa `instrutor` automaticamente.
+- O mecanismo de autoridade por conta explicitamente designada foi aceito com o plano; identificar a conta e registrar a designação antes de ativá-lo. Não promover a conta demonstrativa `instrutor` automaticamente.
 - Selecionar a amostra real e obter evidências da escala, base da taxa e configuração; conjunto candidato não significa conjunto aprovado.
 - Determinar critérios/tolerâncias com evidência antes de homologar dados reais.
 - Revisar o desenho SQL/migração concreto antes de aplicá-lo. Nenhuma alteração de schema foi feita nesta fase.
 
 ## Próximo gate
 
-Aprovar ou ajustar este plano técnico. Depois, elaborar e revisar as tarefas detalhadas em `tasks/todo.md`, cada uma com aceite, comando de verificação, dependências e aproximadamente até cinco arquivos. Só após esse gate haverá implementação. Nenhum código, banco, dependência ou servidor foi alterado e nenhum teste de software foi executado nesta fase documental.
+Gate de Fase 2 satisfeito. Revisar as tarefas detalhadas em `tasks/todo.md`, com aceite, comandos, dependências e até cinco arquivos previstos por tarefa. Só após aprovação da Fase 3 haverá implementação. Gates específicos de SQL, designação de autoridade e homologação física continuam explícitos. Nenhum código, banco, dependência ou servidor foi alterado nesta fase documental.

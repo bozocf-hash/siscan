@@ -193,3 +193,5 @@ O Checkpoint B restringe ativação real; testes fictícios de 06–08 podem con
 ## Complemento recebido após preparar esta lista
 
 O requisito de confronto/estado operativo está registrado em `docs/recovery/80_CONFRONTO_FORCAS_E_ESTADO_OPERATIVO.md` e no mapa. Pertence a `force-confrontation`/`operational-state`; não transforma a promoção de dados técnicos em decisão de confronto e não acrescenta execução automática a TCAT-01–09. A lista de tarefas de technical-catalog continua proposta, aguardando revisão; o esclarecimento do novo requisito não é sua aprovação.
+
+O complemento 81 acrescenta indicadores de recursos e restrição efetiva de emprego em `resource-engine`/`operational-state`. Não altera o aceite do catálogo técnico nem autoriza inferir prontidão de combate de atributos brutos.

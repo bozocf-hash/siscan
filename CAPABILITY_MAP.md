@@ -10,7 +10,7 @@
 - Usar Ponytail: reaproveitar código e bibliotecas existentes, especificar a menor fatia completa, evitar abstrações/dependências sem necessidade. A organização documental não determina uma reescrita.
 - Ensaios sintéticos não aprovam valores Command. Validação é por recorte/capacidade: não exigir validar todo o catálogo antes de continuar casos controlados.
 
-Inventário confirmado nesta etapa: **79 arquivos Markdown em `docs/recovery/` (00–78)**. O índice é [00](docs/recovery/00_LEIA-ME_RECUPERACAO.md), com inventário de fontes em [11](docs/recovery/11_INVENTARIO_FONTES.md). Esta contagem não representa releitura integral dos 79 arquivos nesta etapa.
+Inventário-base confirmado na Fase 0: **79 arquivos Markdown em `docs/recovery/` (00–78)**, anterior aos complementos 80/81. O índice é [00](docs/recovery/00_LEIA-ME_RECUPERACAO.md), com inventário de fontes em [11](docs/recovery/11_INVENTARIO_FONTES.md). Esta contagem não representa releitura integral dos 79 arquivos nesta etapa.
 
 Fundamentação: decisões/requisitos/modelo/arquitetura/interfaces em 35–39; decisões APR em 49; adjudicação por partido em 51; autoridade de promoção em 53; parecer de dados em 69; entregas/limitações posteriores em 70–78. Os avisos de proibição de implementação nas antigas missões documentais são históricos, conforme 00 e autorizações posteriores. Propostas antigas não prevalecem sobre decisões expressas posteriores.
 
@@ -27,8 +27,8 @@ Dependências indicam contratos de provedores. Implementação já disponível s
 | `party-inventory` | Controlar adjudicação, quantidades e criação de instâncias pelo operador sem duplicações | `unit-registry` | 49, 51, 76 |
 | `execution-core` | Consolidar estado, relógio, comandos idempotentes, revisões e histórico de execução | `unit-registry` | 49, 70–73 |
 | `support-network` | Cadastrar apoios, posições, capacidades, compatibilidade e vínculos planejados/efetivos | `party-inventory` | 49 APR-12/14, 76–78 |
-| `operational-state` | Definir disponibilidade/avarias, índice e condições de meios de superfície; aplicar efeitos confirmados pelo instrutor com histórico | `execution-core` | 35 DEC-019, 49, 69, 78, 80 |
-| `resource-engine` | Aplicar consumo por perfil, alertas mínimos, estoques, munição e reabastecimento com conservação | `execution-core`, `party-inventory`, `technical-catalog` | 67–69, 72, 74–75 |
+| `operational-state` | Definir disponibilidade/avarias, condição de origem e restrições efetivas por recursos; preservar efeitos confirmados pelo instrutor | `execution-core`, `resource-engine` | 35 DEC-019, 49, 69, 78, 80–81 |
+| `resource-engine` | Aplicar consumo por perfil, estoques e reabastecimento; fornecer indicadores de munição/combustível e pré-alerta M+5 pontos | `execution-core`, `party-inventory`, `technical-catalog` | 67–69, 72, 74–75, 81 |
 | `movement-engine` | Integrar trajetórias, marchas, tempo e consumo, respeitando vínculos e confirmações | `support-network`, `resource-engine`, `operational-state` | 49 APR-04/12/14/16, 76–78 |
 | `force-confrontation` | Contrapor composições de força, oferecer critérios configuráveis e apuração de apoio; resultado oficial sempre definido pelo instrutor, inclusive arbitragem direta | `unit-registry`, `party-inventory`, `operational-state` | 35 DEC-018/019, 49, 80 |
 | `mpnl-needs` | Consolidar necessidades logísticas por escalão, origem e recursos compartilhados | `support-network`, `resource-engine`, `operational-state` | 08, 49 APR-17/18, 69 |
@@ -40,7 +40,7 @@ Dependências indicam contratos de provedores. Implementação já disponível s
 
 1. `technical-catalog` → `unit-registry` → `party-inventory`.
 2. Com esses contratos disponíveis, `execution-core` e `support-network`.
-3. `operational-state` e `resource-engine`, respeitando suas dependências.
+3. `resource-engine` → `operational-state`: complemento de dependência proposto em 81 para condição efetiva por recursos. Preservar a avaliação de origem do instrutor.
 4. `force-confrontation`, `movement-engine` e `mpnl-needs`, respeitando suas dependências. Inclusão de `force-confrontation` é complemento proposto; sua ordem não obriga esperar o motor de movimento para testar adjudicação didática controlada.
 5. Consolidação de `verification-recovery`, com verificações já executadas em cada entrega.
 

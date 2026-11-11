@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Complemento — 81:** `resource-engine` fornece fatos/percentuais e alertas; `operational-state` consome esses fatos para restrições efetivas, preservando o resultado do instrutor. Três barras compactas previstas; frontend permanece para etapa posterior. Manter o recorte técnico atual e especificar esta evolução nos módulos correspondentes.
+
 **Complemento de confronto — 80:** incluir `force-confrontation` e ampliar `operational-state` conforme CAPABILITY_MAP.md. Resultado oficial e efeitos de confronto dependem do instrutor, inclusive no modo didático direto. Preservar o ciclo atual de technical-catalog; não usar a nova instrução como aprovação automática das tarefas ou de um algoritmo.
 
 **Mapa — entrega 78:** lateral, reposicionamento, representações e hover conferidos. Prosseguir com bases/vínculos de 76/77 e contratos de dados operacionais; não inferir prontidão a partir de adjudicação ou silhueta. Débito por perfil permanece pendente.

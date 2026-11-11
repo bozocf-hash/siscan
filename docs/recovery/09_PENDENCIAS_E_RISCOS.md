@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Indicadores — 81:** definir bases percentuais, agregação do armamento e limiar de combate, recomposição e exceções. Pré-alerta de combustível fixo M+5 confirmado, sem padrão M=30. Não transformar estoque desconhecido em zero nem perda de munição em atualização da avaliação original de avarias.
+
 **Confronto — requisito 80:** faltam critérios/modelos e fluxo de confirmação do instrutor, estado persistido/efeitos e índice agregado da força. Faixas individuais de superfície já confirmadas; não usar média da força, percentual de combustível ou resultado automático como estado operativo oficial.
 
 **Mapa — 78:** painel e reposicionamento corrigidos; vetores ilustrativos e motor Calunga disponíveis. Capacidade de combate/disponibilidade operacional sem campo validado continuam “não informado”. Combustível do ensaio é identificado como sintético; preferência visual não altera configuração física.

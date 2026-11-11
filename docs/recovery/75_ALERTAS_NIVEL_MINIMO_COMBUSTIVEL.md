@@ -1,5 +1,7 @@
 # 75 — Nível mínimo de combustível definido pelo operador
 
+**Evolução solicitada em 2026-11-11:** [81](81_INDICADORES_COMPACTOS_E_RESTRICOES_RECURSOS.md) acrescenta barra percentual e pré-alerta fixo a 5 pontos acima do mínimo do operador; não cria segundo limite configurável. Esta evolução ainda não migra o contrato em kg descrito abaixo nem está implementada.
+
 ## Decisão expressa e contrato — 2026-11-09
 
 O responsável determinou incluir alerta de nível mínimo antes de aplicar perfis ao estoque e confirmou: operador do próprio partido e instrutor podem definir o limite. Implementar por unidade, em kg, compartilhado entre operadores do partido. Autoridade conferida no backend: operador precisa de alocação ativa da unidade ao próprio partido; instrutor precisa estar atribuído ao exercício. Sem padrão presumido. Ausência de configuração aparece explicitamente; zero é um limite válido, não ausência. Permitir desativação explícita.

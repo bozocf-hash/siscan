@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Confronto e estado operativo — 2026-11-11:** [80](80_CONFRONTO_FORCAS_E_ESTADO_OPERATIVO.md) registra comparação de forças com resultado oficial sempre definido pelo instrutor, por apuração assistida ou intervenção didática. Faixas dos meios de superfície confirmadas: >60% combater; 40–60% navegar; <40% flutuar. Requisito documental, ainda sem implementação.
+
 **Ajustes do mapa:** [78](78_MAPA_PAINEL_REPOSICIONAMENTO_E_REPRESENTACOES.md) entrega lateral com abas, reposicionamento por botão direito, silhuetas, integração do motor Calunga e ficha automática, preservando identificação cadastral e indicando dados ainda desconhecidos.
 
 **Mapa integrado:** [77](77_PRIMEIRA_INTEGRACAO_MAPA_ATLANTICADOR.md) entrega plotagem de meios adjudicados e seleção por área no editor original. Apoios e transferências efetivas seguem pendentes em [76](76_REQUISITOS_MAPA_E_MEIOS_DE_APOIO.md).

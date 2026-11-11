@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Complemento de confronto — 80:** incluir `force-confrontation` e ampliar `operational-state` conforme CAPABILITY_MAP.md. Resultado oficial e efeitos de confronto dependem do instrutor, inclusive no modo didático direto. Preservar o ciclo atual de technical-catalog; não usar a nova instrução como aprovação automática das tarefas ou de um algoritmo.
+
 **Mapa — entrega 78:** lateral, reposicionamento, representações e hover conferidos. Prosseguir com bases/vínculos de 76/77 e contratos de dados operacionais; não inferir prontidão a partir de adjudicação ou silhueta. Débito por perfil permanece pendente.
 
 **Mapa — próxima fatia:** após [77](77_PRIMEIRA_INTEGRACAO_MAPA_ATLANTICADOR.md), implementar apoios e vínculos planejados no mapa reutilizado conforme 76. Débito por perfil continua autorizado e pendente, com relógio comum e taxas constantes para os demais meios, decisão já confirmada pelo responsável.

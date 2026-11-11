@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Confronto — requisito 80:** faltam critérios/modelos e fluxo de confirmação do instrutor, estado persistido/efeitos e índice agregado da força. Faixas individuais de superfície já confirmadas; não usar média da força, percentual de combustível ou resultado automático como estado operativo oficial.
+
 **Mapa — 78:** painel e reposicionamento corrigidos; vetores ilustrativos e motor Calunga disponíveis. Capacidade de combate/disponibilidade operacional sem campo validado continuam “não informado”. Combustível do ensaio é identificado como sintético; preferência visual não altera configuração física.
 
 **Mapa — 77:** primeira plotagem persistida por partido e seleção por retângulo entregues. Cadastro/referência de base fixa, hospedagem, compatibilidade e máscara geográfica permanecem pendentes. Rascunho local do editor não equivale ao estado oficial SISCAN.

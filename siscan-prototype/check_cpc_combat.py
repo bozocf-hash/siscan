@@ -1,0 +1,132 @@
+"""Verifica somente a regra sintética de disparo, sem bancos ou exercício ativo."""
+
+import random
+import unittest
+from unittest.mock import Mock
+
+from cpc_combat import GerenciadorDeCombate
+from cpc_models import Armamento, MeioNaval, VetorAereo
+
+
+class CombateTests(unittest.TestCase):
+    def setUp(self):
+        self.arma = Armamento(
+            identificador="arma-ficticia", tipo="missil_antinavio",
+            quantidade=2, pk=0.7, dano=30.0,
+        )
+        self.atacante = VetorAereo(
+            identificador="aereo-ficticio", pontos_de_vida=100.0,
+            assinatura_radar=None, velocidade=0.0, raio_de_acao=0.0,
+            teto_operacional=0.0, armamentos=[self.arma],
+        )
+        self.defensor = MeioNaval(
+            identificador="naval-ficticio", pontos_de_vida=80.0,
+            assinatura_radar=None, velocidade=0.0, capacidade_defesa_ponto=0.4,
+        )
+        self.rng = Mock(spec=random.Random)
+        self.motor = GerenciadorDeCombate(self.atacante, self.defensor, gerador=self.rng)
+
+    def disparar(self):
+        return self.motor.resolver_disparo(self.atacante, self.defensor, self.arma)
+
+    def test_interceptacao_consume_arma_sem_causar_dano(self):
+        self.rng.random.side_effect = [0.2]
+        self.assertIn("interceptado", self.disparar())
+        self.assertEqual(self.defensor.pontos_de_vida, 80.0)
+        self.assertEqual(self.arma.quantidade, 1)
+        self.assertEqual(self.rng.random.call_count, 1)
+
+    def test_impacto_e_narrativa(self):
+        self.rng.random.side_effect = [0.8, 0.2]
+        relato = self.disparar()
+        for texto in ("arma-ficticia", "aereo-ficticio", "naval-ficticio", "falhou", "30"):
+            self.assertIn(texto, relato)
+        self.assertEqual(self.defensor.pontos_de_vida, 50.0)
+        self.assertEqual(self.arma.quantidade, 1)
+
+    def test_erro_tambem_consume_arma(self):
+        self.rng.random.side_effect = [0.8, 0.9]
+        self.assertIn("errou", self.disparar())
+        self.assertEqual(self.defensor.pontos_de_vida, 80.0)
+        self.assertEqual(self.arma.quantidade, 1)
+
+    def test_dano_limitado_a_vida_restante(self):
+        self.defensor.pontos_de_vida = 10.0
+        self.rng.random.side_effect = [0.8, 0.2]
+        self.assertIn("10", self.disparar())
+        self.assertEqual(self.defensor.pontos_de_vida, 0.0)
+
+    def test_extremos_de_probabilidade(self):
+        self.defensor.capacidade_defesa_ponto = 0.0
+        self.arma.pk = 0.0
+        self.rng.random.side_effect = [0.0, 0.0]
+        self.assertIn("errou", self.disparar())
+        self.defensor.capacidade_defesa_ponto = 1.0
+        self.rng.random.side_effect = [0.999999]
+        self.assertIn("interceptado", self.disparar())
+
+    def test_valores_invalidos_nao_mutam_estado(self):
+        for atributo, valor in [("pk", -0.1), ("pk", 1.1), ("pk", float("nan")),
+                                ("pk", None), ("dano", -1), ("dano", float("inf")),
+                                ("quantidade", 0), ("quantidade", 1.5)]:
+            with self.subTest(atributo=atributo, valor=valor):
+                anterior = getattr(self.arma, atributo)
+                setattr(self.arma, atributo, valor)
+                with self.assertRaises(ValueError):
+                    self.disparar()
+                self.assertEqual(self.defensor.pontos_de_vida, 80.0)
+                self.rng.random.assert_not_called()
+                setattr(self.arma, atributo, anterior)
+
+    def test_defesa_desconhecida_nao_vira_zero(self):
+        self.defensor.capacidade_defesa_ponto = None
+        with self.assertRaises(ValueError):
+            self.disparar()
+        self.assertEqual(self.arma.quantidade, 2)
+
+    def test_defesa_invalida_recusada_antes_do_consumo(self):
+        for valor in (-0.1, 1.1, float("nan")):
+            with self.subTest(valor=valor):
+                self.defensor.capacidade_defesa_ponto = valor
+                with self.assertRaises(ValueError):
+                    self.disparar()
+                self.assertEqual(self.arma.quantidade, 2)
+                self.rng.random.assert_not_called()
+
+    def test_estoque_esgotado_impede_novo_disparo(self):
+        self.arma.quantidade = 1
+        self.rng.random.side_effect = [0.2]
+        self.disparar()
+        with self.assertRaises(ValueError):
+            self.disparar()
+        self.assertEqual(self.arma.quantidade, 0)
+        self.assertEqual(self.rng.random.call_count, 1)
+
+    def test_arma_nao_embarcada_e_par_diferente_recusados(self):
+        self.atacante.armamentos.clear()
+        with self.assertRaises(ValueError):
+            self.disparar()
+        with self.assertRaises(ValueError):
+            self.motor.resolver_disparo(self.defensor, self.atacante, self.arma)
+        self.assertEqual(self.arma.quantidade, 2)
+
+    def test_defensor_aereo_nao_recebe_defesa_naval(self):
+        self.defensor = VetorAereo(
+            identificador="outro-aereo", pontos_de_vida=100.0,
+            assinatura_radar=None, velocidade=0.0, raio_de_acao=0.0, teto_operacional=0.0,
+        )
+        self.motor = GerenciadorDeCombate(self.atacante, self.defensor, gerador=self.rng)
+        self.rng.random.side_effect = [0.1]
+        self.assertIn("Impacto", self.disparar())
+        self.assertEqual(self.rng.random.call_count, 1)
+
+    def test_semente_reproduz_relato(self):
+        r1 = GerenciadorDeCombate(self.atacante, self.defensor, gerador=random.Random(7))
+        relato = r1.resolver_disparo(self.atacante, self.defensor, self.arma)
+        self.setUp()
+        r2 = GerenciadorDeCombate(self.atacante, self.defensor, gerador=random.Random(7))
+        self.assertEqual(relato, r2.resolver_disparo(self.atacante, self.defensor, self.arma))
+
+
+if __name__ == "__main__":
+    unittest.main()

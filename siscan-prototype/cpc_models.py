@@ -17,6 +17,11 @@ class Armamento:
         tipo: Categoria didática: míssil antinavio, míssil ar-ar ou defesa de ponto.
         quantidade: Número de itens disponíveis na unidade de contabilização
             definida para este estoque. Não é uma porcentagem agregada.
+        pk: Probabilidade didática de acerto entre 0 e 1, condicionada a passar
+            pela defesa. Não é probabilidade validada de destruição. None indica
+            parâmetro não definido; não pode ser usado para resolver um disparo.
+        dano: Pontos abstratos de dano não negativos por impacto; None indica
+            parâmetro não definido. Não é dado físico importado do DB3K.
     """
 
     def __init__(
@@ -25,10 +30,14 @@ class Armamento:
         identificador: str,
         tipo: Literal["missil_antinavio", "missil_ar_ar", "defesa_ponto"],
         quantidade: int,
+        pk: float | None = None,
+        dano: float | None = None,
     ) -> None:
         self.identificador = identificador
         self.tipo = tipo
         self.quantidade = quantidade
+        self.pk = pk
+        self.dano = dano
 
 
 class UnidadeMilitar:
@@ -70,10 +79,10 @@ class MeioNaval(UnidadeMilitar):
     """Especializa uma unidade naval com uma capacidade didática declarada.
 
     Attributes:
-        capacidade_defesa_ponto: Pontos abstratos de capacidade, cuja escala deve
-            ser definida na rubrica do cenário; None indica não avaliado. Não é
-            probabilidade de interceptação nem quantidade de munição. O estoque
-            correspondente permanece em armamentos.
+        capacidade_defesa_ponto: Probabilidade didática de interceptação entre
+            0 e 1 na regra sintética atual; None indica não avaliado. Substitui a
+            escala abstrata inicialmente proposta. Não é eficácia real validada
+            nem quantidade de munição; não modela consumo da defesa nesta etapa.
 
     Os demais atributos seguem o contrato de UnidadeMilitar.
     """

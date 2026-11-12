@@ -72,6 +72,9 @@ class UnidadeMilitar:
             parâmetro não definido; não é automaticamente o alcance de um sensor DB3K.
         probabilidade_deteccao: Probabilidade-base didática entre 0 e 1, antes do
             fator explícito de assinatura do cenário; None indica não definido.
+        combustivel_atual: Massa disponível em kg no ensaio, não volume em litros.
+        taxa_consumo_combustivel: Taxa constante didática em kg/min. A camada
+            temporal atual aplica essa taxa somente às aeronaves em voo.
     """
 
     def __init__(
@@ -84,6 +87,8 @@ class UnidadeMilitar:
         armamentos: list[Armamento] | None = None,
         alcance_radar: float | None = None,
         probabilidade_deteccao: float | None = None,
+        combustivel_atual: float | None = None,
+        taxa_consumo_combustivel: float | None = None,
     ) -> None:
         self.identificador = identificador
         self.pontos_de_vida = pontos_de_vida
@@ -91,6 +96,8 @@ class UnidadeMilitar:
         self.velocidade = velocidade
         self.alcance_radar = alcance_radar
         self.probabilidade_deteccao = probabilidade_deteccao
+        self.combustivel_atual = combustivel_atual
+        self.taxa_consumo_combustivel = taxa_consumo_combustivel
         self.armamentos: list[Armamento] = (
             list(armamentos) if armamentos is not None else []
         )
@@ -120,6 +127,8 @@ class MeioNaval(UnidadeMilitar):
         armamentos: list[Armamento] | None = None,
         alcance_radar: float | None = None,
         probabilidade_deteccao: float | None = None,
+        combustivel_atual: float | None = None,
+        taxa_consumo_combustivel: float | None = None,
     ) -> None:
         super().__init__(
             identificador=identificador,
@@ -129,6 +138,8 @@ class MeioNaval(UnidadeMilitar):
             armamentos=armamentos,
             alcance_radar=alcance_radar,
             probabilidade_deteccao=probabilidade_deteccao,
+            combustivel_atual=combustivel_atual,
+            taxa_consumo_combustivel=taxa_consumo_combustivel,
         )
         self.capacidade_defesa_ponto = capacidade_defesa_ponto
 
@@ -141,6 +152,11 @@ class VetorAereo(UnidadeMilitar):
             e configuração declarados; não é alcance total nem autonomia atual.
         teto_operacional: Altitude máxima operacional de referência em metros
             acima do nível médio do mar; não é a altitude atual.
+        combustivel_minimo_retorno: Reserva explícita em kg, fornecida para o
+            ensaio; não é calculada de uma rota/base ou percentual fixo. Não
+            substitui o alerta mínimo configurável do operador no backend.
+        estado_voo: Situação do ensaio. Em evasão não se iniciam novos ataques;
+            perda_proposta por combustível zerado não é perda oficial adjudicada.
 
     Os demais atributos seguem o contrato de UnidadeMilitar.
     """
@@ -157,6 +173,10 @@ class VetorAereo(UnidadeMilitar):
         armamentos: list[Armamento] | None = None,
         alcance_radar: float | None = None,
         probabilidade_deteccao: float | None = None,
+        combustivel_atual: float | None = None,
+        taxa_consumo_combustivel: float | None = None,
+        combustivel_minimo_retorno: float | None = None,
+        estado_voo: Literal["em_voo", "evadindo", "pousado", "perda_proposta"] = "em_voo",
     ) -> None:
         super().__init__(
             identificador=identificador,
@@ -166,6 +186,27 @@ class VetorAereo(UnidadeMilitar):
             armamentos=armamentos,
             alcance_radar=alcance_radar,
             probabilidade_deteccao=probabilidade_deteccao,
+            combustivel_atual=combustivel_atual,
+            taxa_consumo_combustivel=taxa_consumo_combustivel,
         )
         self.raio_de_acao = raio_de_acao
         self.teto_operacional = teto_operacional
+        self.combustivel_minimo_retorno = combustivel_minimo_retorno
+        self.estado_voo = estado_voo
+
+
+def validar_estoques(unidades: tuple[UnidadeMilitar, ...]) -> dict[Armamento, int]:
+    """Confere propriedade e contabilização sem consumir ou reservar itens."""
+    estoques = {}
+    for unidade in unidades:
+        nomes = set()
+        for arma in unidade.armamentos:
+            if arma.identificador in nomes:
+                raise ValueError("Estoque deve ter identificador único dentro da unidade.")
+            nomes.add(arma.identificador)
+            if arma in estoques:
+                raise ValueError("Um estoque não pode ser duplicado ou compartilhado entre unidades.")
+            if type(arma.quantidade) is not int or arma.quantidade < 0:
+                raise ValueError("O estoque deve ter quantidade inteira não negativa.")
+            estoques[arma] = arma.quantidade
+    return estoques

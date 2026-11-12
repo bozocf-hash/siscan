@@ -57,3 +57,5 @@ Pesquisa conceitual do CPC em [82](docs/recovery/82_PESQUISA_E_PROPOSTA_CONCEITU
 Autorização posterior específica para o ensaio isolado de classes, disparo, rodadas e consumo defensivo registrada em [84](docs/recovery/84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md), com código entregue e 28 testes. Isso não implementa a integração oficial de `force-confrontation` nem satisfaz os gates pendentes de `technical-catalog`.
 
 Complemento solicitado de detecção, contatos e alcance implementado no ensaio estático em [85](docs/recovery/85_CPC_DETECCAO_CONTATOS_E_ALCANCE.md), com 47 testes. A geometria/rubrica é sintética, sem aprovação de eficácia real ou integração ao exercício oficial.
+
+Loop de um minuto solicitado e entregue em [86](docs/recovery/86_CPC_TURNOS_COMBUSTIVEL_E_MOVIMENTO.md): consumo aéreo, reserva explícita, evasão/perda proposta e movimento planar, com 63 testes. É ensaio em memória; não substitui `execution-core`/`resource-engine` oficiais, não integra bases ou altera decisões de promoção de dados.

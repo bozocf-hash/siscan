@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Turnos CPC — [86](86_CPC_TURNOS_COMBUSTIVEL_E_MOVIMENTO.md):** consumo aéreo e movimento implementados no ensaio temporal. Reserva e rumo de evasão são informados, não demonstram retorno a uma base. Falta consumo naval, perfis reais, relação reserva/alerta do operador, trajetórias, adjudicação e integração oficial. Perda por combustível zerado é proposta, não decisão do instrutor. O passo de um minuto pode omitir eventos transitórios entre instantes.
+
 **Detecção CPC — [85](85_CPC_DETECCAO_CONTATOS_E_ALCANCE.md):** bloqueios por contato/alcance implementados no ensaio estático. Fatores de assinatura são rubrica fictícia, não eficácia de radar validada. Faltam geometria dinâmica, trilhas temporais, identificação, sensores de munições e integração oficial. Contato não é compartilhado automaticamente; mudar parâmetros pode exigir nova detecção.
 
 **Recorte CPC — [84](84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md):** regras sintéticas de simultaneidade, iniciativa e conflitos de reservas implementadas em ensaio de duas unidades. Permanecem pendentes integração, autenticação do instrutor, adjudicação, revisões/idempotência e custos/modelos validados. Repetir chamada consome novamente; não há defesa automática sem estoque/custo declarados. Não tratar pontos zerados como afundamento ou os parâmetros do exemplo como dados do F/A-18/Niterói.

@@ -10,7 +10,8 @@ import random
 from dataclasses import dataclass, replace
 from typing import Literal
 
-from cpc_models import Armamento, MeioNaval, UnidadeMilitar, validar_numero as _validar_numero
+from cpc_models import Armamento, MeioNaval, UnidadeMilitar, VetorAereo, validar_estoques
+from cpc_models import validar_numero as _validar_numero
 from cpc_scenario import CenarioTatico
 
 
@@ -99,6 +100,8 @@ class GerenciadorDeCombate:
             _validar_numero(unidade.pontos_de_vida, "pontos_de_vida")
             if unidade.pontos_de_vida == 0:
                 raise ValueError("Unidade sem pontos não participa da busca neste ensaio.")
+            if isinstance(unidade, VetorAereo) and unidade.estado_voo == "perda_proposta":
+                raise ValueError("Aeronave com perda proposta não participa da busca.")
         _validar_numero(unidade_a.alcance_radar, "alcance_radar")
         _validar_numero(unidade_a.probabilidade_deteccao, "probabilidade_deteccao", 1.0)
         if self.cenario.distancia(unidade_a, unidade_b) > unidade_a.alcance_radar:
@@ -111,21 +114,11 @@ class GerenciadorDeCombate:
 
     def _validar_rodada(self, acoes: tuple[AcaoDisparo, ...]) -> dict[Armamento, int]:
         unidades = (self.atacante, self.defensor)
-        estoques = {}
         for unidade in unidades:
             _validar_numero(unidade.pontos_de_vida, "pontos_de_vida")
             if unidade.pontos_de_vida == 0:
                 raise ValueError("Unidade sem pontos de vida no início da rodada.")
-            nomes = set()
-            for arma in unidade.armamentos:
-                if arma.identificador in nomes:
-                    raise ValueError("Estoque deve ter identificador único dentro da unidade.")
-                nomes.add(arma.identificador)
-                if arma in estoques:
-                    raise ValueError("Um estoque não pode ser duplicado ou compartilhado entre unidades.")
-                if type(arma.quantidade) is not int or arma.quantidade < 0:
-                    raise ValueError("O estoque deve ter quantidade inteira não negativa.")
-                estoques[arma] = arma.quantidade
+        estoques = validar_estoques(unidades)
         ids, reservas = set(), {}
         for acao in acoes:
             if not isinstance(acao.identificador, str) or not acao.identificador.strip() or acao.identificador in ids:
@@ -134,6 +127,10 @@ class GerenciadorDeCombate:
             if (acao.atacante not in unidades or acao.defensor not in unidades
                     or acao.atacante is acao.defensor):
                 raise ValueError("A ação deve pertencer ao par deste ensaio.")
+            if isinstance(acao.atacante, VetorAereo) and acao.atacante.estado_voo != "em_voo":
+                raise ValueError("Aeronave que não está em voo disponível não inicia novos ataques.")
+            if isinstance(acao.defensor, VetorAereo) and acao.defensor.estado_voo == "perda_proposta":
+                raise ValueError("Alvo com perda proposta indisponível no ensaio.")
             if acao.arma not in acao.atacante.armamentos or acao.arma.tipo == "defesa_ponto":
                 raise ValueError("Informe um armamento ofensivo pertencente ao atacante.")
             if self.cenario is None:
@@ -265,16 +262,19 @@ if __name__ == "__main__":
     import argparse
     from pathlib import Path
 
-    from cpc_models import VetorAereo
+    from cpc_time import SimulacaoTemporal
     from source_catalog import browse
 
     parser = argparse.ArgumentParser(description="Ensaio fictício CPC com identidades do catálogo compilado.")
     parser.add_argument("--catalogo", type=Path,
                         default=Path(__file__).parent / "data/db3k-compiled-06.sqlite3")
     parser.add_argument("--semente", type=int, default=7)
+    parser.add_argument("--turnos", type=int, default=3, help="Minutos simulados, de 1 a 1440.")
     parser.add_argument("--iniciativa", choices=("simultanea", "aereo", "naval"), default="simultanea",
                         help="Condição didática explícita; não é calculada dos atributos técnicos.")
     args = parser.parse_args()
+    if not 1 <= args.turnos <= 1440:
+        parser.error("Informe de 1 a 1440 turnos de um minuto.")
     try:
         aeronaves = browse(args.catalogo, "DataAircraft", "8")["items"]
         navios = browse(args.catalogo, "DataShip", "1349")["items"]
@@ -295,9 +295,10 @@ if __name__ == "__main__":
                                  tipo="defesa_ponto", quantidade=4)
     caca = VetorAereo(
         identificador=f"{aeronaves[0]['name']} [ensaio-aereo-01]",
-        pontos_de_vida=100.0, assinatura_radar=1.0, velocidade=0.0,
+        pontos_de_vida=100.0, assinatura_radar=1.0, velocidade=60.0,
         raio_de_acao=0.0, teto_operacional=0.0, armamentos=[arma],
         alcance_radar=20.0, probabilidade_deteccao=0.8,
+        combustivel_atual=5.0, taxa_consumo_combustivel=2.0, combustivel_minimo_retorno=1.0,
     )
     fragata = MeioNaval(
         identificador=f"{navios[0]['name']} [ensaio-naval-01]",
@@ -307,20 +308,27 @@ if __name__ == "__main__":
     )
     cenario = CenarioTatico([caca, fragata],
                             {(caca.identificador, fragata.identificador): 10.0},
-                            {1.0: 0.5, 2.0: 1.0})
+                            {1.0: 0.5, 2.0: 1.0},
+                            posicoes={caca.identificador: (0.0, 0.0), fragata.identificador: (10.0, 0.0)})
     motor = GerenciadorDeCombate(caca, fragata, cenario=cenario, gerador=random.Random(args.semente))
     iniciativa = {"simultanea": None, "aereo": caca, "naval": fragata}[args.iniciativa]
     acao = AcaoDisparo("acao-sintetica-01", caca, fragata, arma,
                        defesa=estoque_defensivo, consumo_defensivo=2)
     print(f"Regime: {args.iniciativa}. Custo fictício declarado: 2 pacotes por tentativa defensiva.")
     print("Distância fictícia: 10 MN; radar fictício: 20 MN; alcance da arma fictícia: 15 MN.")
-    detectado = motor.tentar_detecao(caca, fragata)
-    print(f"Detecção do alvo: {'sim' if detectado else 'não'}. "
-          f"Contatos do observador: {sorted(cenario.contatos_detectados(caca))}")
-    if not detectado:
-        print("Disparo não iniciado: alvo não detectado. Nenhum estoque consumido.")
-    else:
-        for resultado in motor.resolver_rodada([acao], iniciativa=iniciativa):
+    print("Logística fictícia: 5 kg iniciais, 2 kg/min e reserva de retorno de 1 kg; não são dados do F/A-18.")
+    simulacao = SimulacaoTemporal(motor, rumos={caca.identificador: 90.0},
+                                  rumos_evasao={caca.identificador: 270.0})
+    for _ in range(args.turnos):
+        turno = simulacao.avancar_turno([acao], iniciativa=iniciativa)
+        print(f"\nMinuto {turno.minuto}: distância {cenario.distancia(caca, fragata):.3f} MN")
+        for unidade in turno.logistica:
+            if unidade.estado_voo is not None:
+                print(f"  {unidade.unidade_id}: combustível {unidade.combustivel_antes:g} -> "
+                      f"{unidade.combustivel_depois:g} kg; {unidade.estado_voo}")
+        for evento in turno.eventos:
+            print(evento)
+        for resultado in turno.combate:
             print(f"Fase {resultado.fase}: {resultado.narrativa}")
             for consumo in resultado.consumos:
                 print(f"  {consumo.finalidade}: {consumo.estoque_id}; "

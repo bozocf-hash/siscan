@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Tempo/logística CPC — [86](86_CPC_TURNOS_COMBUSTIVEL_E_MOVIMENTO.md):** turnos de 1 minuto, consumo aéreo em kg/min, reserva de retorno explícita, evasão/perda proposta e movimento planar com distâncias recalculadas. 63 testes passaram. Detecção/combate no fim de cada minuto; erro não publica o turno. Não altera o relógio ou dados do exercício oficial.
+
 **Detecção CPC — [85](85_CPC_DETECCAO_CONTATOS_E_ALCANCE.md):** cenário com matriz de distâncias em MN, radar/probabilidade nas unidades, contatos direcionais e alcance máximo por armamento. Disparo/rodada exigem contato e alcance antes de consumir. 47 testes passaram. Regra de assinatura explicitamente fictícia; sem promoção dos dados técnicos ou alteração do exercício.
 
 **Incremento CPC — [84](84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md):** ensaio isolado implementado com rodada simultânea, iniciativa explícita, estoque/custo defensivo e resultados estruturados. 28 testes passaram. Identidades F/A-18C e Niterói consultadas no catálogo; parâmetros fictícios. Não altera o exercício oficial. As declarações de “não implementado” nos estudos 82/83 registram seu escopo/estado anterior, não anulam esta entrega parcial posterior.

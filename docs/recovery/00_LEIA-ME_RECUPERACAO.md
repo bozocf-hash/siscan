@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Incremento CPC — [84](84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md):** ensaio isolado implementado com rodada simultânea, iniciativa explícita, estoque/custo defensivo e resultados estruturados. 28 testes passaram. Identidades F/A-18C e Niterói consultadas no catálogo; parâmetros fictícios. Não altera o exercício oficial. As declarações de “não implementado” nos estudos 82/83 registram seu escopo/estado anterior, não anulam esta entrega parcial posterior.
+
 **Algoritmo CPC — [83](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md):** investigação complementar do manual oficial e da instalação do Command; proposta própria com pseudocódigo de ensaio isolado, eventos, recursos, adjudicação e aplicação transacional. Nenhum código-fonte do motor de combate foi localizado. Não é reprodução do Command, modelo físico validado ou implementação.
 
 **Pesquisa CPC — 82:** estudo preliminar com fontes primárias de wargaming, análise multicritério e credibilidade de simulações. Propõe comparação por dimensões, pacotes de encontro e decisão oficial do instrutor. Sem coeficientes físicos aprovados ou implementação.

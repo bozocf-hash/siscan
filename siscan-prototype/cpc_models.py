@@ -82,7 +82,8 @@ class MeioNaval(UnidadeMilitar):
         capacidade_defesa_ponto: Probabilidade didática de interceptação entre
             0 e 1 na regra sintética atual; None indica não avaliado. Substitui a
             escala abstrata inicialmente proposta. Não é eficácia real validada
-            nem quantidade de munição; não modela consumo da defesa nesta etapa.
+            nem quantidade de munição. Uma tentativa exige estoque defensivo e
+            custo explícitos na ação; a probabilidade sozinha não ativa a defesa.
 
     Os demais atributos seguem o contrato de UnidadeMilitar.
     """

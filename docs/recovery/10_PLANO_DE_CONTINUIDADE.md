@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Entrega CPC — [84](84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md):** após autorização específica posterior, classes/disparo/rodadas e consumo defensivo foram implementados como ensaio isolado. Antes da integração oficial, fechar proposta/adjudicação/aplicação, snapshots, autorização e idempotência. Não converter a entrega em aprovação de modelos físicos ou alterar o ciclo independente de `technical-catalog`. As propostas documentais abaixo permanecem referências históricas do escopo mais amplo.
+
 **Complemento CPC — [83](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md):** usar o algoritmo conceitual como insumo da futura especificação de `force-confrontation`: ensaio isolado reproduzível, proposta, confirmação do instrutor e efeitos idempotentes. Primeiro recorte recomendado com regras fictícias verificáveis. Não inicia implementação nem substitui os gates de `technical-catalog`.
 
 **CPC — proposta de pesquisa 82:** discutir primeiro núcleo didático de adjudicação/efeitos, depois comparação por dimensões e modelos assistidos restritos. Não inicia código ou substitui o ciclo aprovado de technical-catalog; resultado oficial permanece com o instrutor.

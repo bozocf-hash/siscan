@@ -53,3 +53,5 @@ Gates de Fase 0, especificação [SPEC-technical-catalog.md](SPEC-technical-cata
 Nesta etapa não houve alteração de código, schema, dados, dependências ou servidor. Não foram executados testes de software por ser uma proposta documental.
 
 Pesquisa conceitual do CPC em [82](docs/recovery/82_PESQUISA_E_PROPOSTA_CONCEITUAL_CPC.md) e proposta de algoritmo em [83](docs/recovery/83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md). O nome funcional CPC foi solicitado pelo responsável; o ID `force-confrontation` é preservado. Os estudos não são especificação/algoritmo aprovado nem alteram a autoridade do instrutor. Relação CPC/PRC/SIM deve ser esclarecida na especificação própria.
+
+Autorização posterior específica para o ensaio isolado de classes, disparo, rodadas e consumo defensivo registrada em [84](docs/recovery/84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md), com código entregue e 28 testes. Isso não implementa a integração oficial de `force-confrontation` nem satisfaz os gates pendentes de `technical-catalog`.

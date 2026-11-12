@@ -19,21 +19,27 @@ class CombateTests(unittest.TestCase):
             assinatura_radar=None, velocidade=0.0, raio_de_acao=0.0,
             teto_operacional=0.0, armamentos=[self.arma],
         )
+        self.defesa = Armamento(
+            identificador="defesa-ficticia", tipo="defesa_ponto", quantidade=10,
+        )
         self.defensor = MeioNaval(
             identificador="naval-ficticio", pontos_de_vida=80.0,
             assinatura_radar=None, velocidade=0.0, capacidade_defesa_ponto=0.4,
+            armamentos=[self.defesa],
         )
         self.rng = Mock(spec=random.Random)
         self.motor = GerenciadorDeCombate(self.atacante, self.defensor, gerador=self.rng)
 
     def disparar(self):
-        return self.motor.resolver_disparo(self.atacante, self.defensor, self.arma)
+        parametros = dict(defesa=self.defesa, consumo_defensivo=2) if isinstance(self.defensor, MeioNaval) else {}
+        return self.motor.resolver_disparo(self.atacante, self.defensor, self.arma, **parametros)
 
     def test_interceptacao_consume_arma_sem_causar_dano(self):
         self.rng.random.side_effect = [0.2]
         self.assertIn("interceptado", self.disparar())
         self.assertEqual(self.defensor.pontos_de_vida, 80.0)
         self.assertEqual(self.arma.quantidade, 1)
+        self.assertEqual(self.defesa.quantidade, 8)
         self.assertEqual(self.rng.random.call_count, 1)
 
     def test_impacto_e_narrativa(self):

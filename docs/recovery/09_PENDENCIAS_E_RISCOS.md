@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Recorte CPC — [84](84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md):** regras sintéticas de simultaneidade, iniciativa e conflitos de reservas implementadas em ensaio de duas unidades. Permanecem pendentes integração, autenticação do instrutor, adjudicação, revisões/idempotência e custos/modelos validados. Repetir chamada consome novamente; não há defesa automática sem estoque/custo declarados. Não tratar pontos zerados como afundamento ou os parâmetros do exemplo como dados do F/A-18/Niterói.
+
 **Algoritmo CPC — [83](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md):** orquestração proposta, ainda sem rubrica didática aprovada ou modelo físico validado. Fechar simultaneidade, conflitos de recursos, encerramento e contrato de regras. Não confundir manual HTML atual com PDF local de 353 páginas; consulta SQL não recupera código do motor. Proposta desatualizada não pode sobrescrever revisão nova do exercício.
 
 **CPC — 82:** pendentes objetivo/escala do primeiro recorte, rubrica, condições de aplicabilidade, dados/calibração e agregação de armamento. Pesquisa bibliográfica não valida coeficientes nem transforma indicador comparativo em probabilidade de vitória. Consumo e efeito confirmado precisam de registros distintos.

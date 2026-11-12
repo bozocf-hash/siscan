@@ -5,7 +5,17 @@ campos brutos do DB3K. A integração futura exige conversão e validação expl
 Type hints documentam o contrato; estes construtores não validam entradas externas.
 """
 
+import math
 from typing import Literal
+
+
+def validar_numero(valor: float | None, nome: str, maximo: float | None = None) -> None:
+    """Valida grandezas do ensaio nas fronteiras de cenário e execução."""
+    if (isinstance(valor, bool) or not isinstance(valor, (float, int))
+            or not math.isfinite(valor) or valor < 0
+            or (maximo is not None and valor > maximo)):
+        raise ValueError(f"{nome}: informe número finito não negativo"
+                         + (f" até {maximo}." if maximo is not None else "."))
 
 
 class Armamento:
@@ -22,6 +32,7 @@ class Armamento:
             parâmetro não definido; não pode ser usado para resolver um disparo.
         dano: Pontos abstratos de dano não negativos por impacto; None indica
             parâmetro não definido. Não é dado físico importado do DB3K.
+        alcance_maximo: Limite didático em milhas náuticas; None impede disparo.
     """
 
     def __init__(
@@ -32,12 +43,14 @@ class Armamento:
         quantidade: int,
         pk: float | None = None,
         dano: float | None = None,
+        alcance_maximo: float | None = None,
     ) -> None:
         self.identificador = identificador
         self.tipo = tipo
         self.quantidade = quantidade
         self.pk = pk
         self.dano = dano
+        self.alcance_maximo = alcance_maximo
 
 
 class UnidadeMilitar:
@@ -55,6 +68,10 @@ class UnidadeMilitar:
         armamentos: Lista própria de estoques embarcados. A lista recebida é
             copiada superficialmente; os objetos Armamento continuam os mesmos
             e devem pertencer à unidade, sem compartilhamento entre unidades.
+        alcance_radar: Limite didático de busca em milhas náuticas. None indica
+            parâmetro não definido; não é automaticamente o alcance de um sensor DB3K.
+        probabilidade_deteccao: Probabilidade-base didática entre 0 e 1, antes do
+            fator explícito de assinatura do cenário; None indica não definido.
     """
 
     def __init__(
@@ -65,11 +82,15 @@ class UnidadeMilitar:
         assinatura_radar: float | None,
         velocidade: float,
         armamentos: list[Armamento] | None = None,
+        alcance_radar: float | None = None,
+        probabilidade_deteccao: float | None = None,
     ) -> None:
         self.identificador = identificador
         self.pontos_de_vida = pontos_de_vida
         self.assinatura_radar = assinatura_radar
         self.velocidade = velocidade
+        self.alcance_radar = alcance_radar
+        self.probabilidade_deteccao = probabilidade_deteccao
         self.armamentos: list[Armamento] = (
             list(armamentos) if armamentos is not None else []
         )
@@ -97,6 +118,8 @@ class MeioNaval(UnidadeMilitar):
         velocidade: float,
         capacidade_defesa_ponto: float | None,
         armamentos: list[Armamento] | None = None,
+        alcance_radar: float | None = None,
+        probabilidade_deteccao: float | None = None,
     ) -> None:
         super().__init__(
             identificador=identificador,
@@ -104,6 +127,8 @@ class MeioNaval(UnidadeMilitar):
             assinatura_radar=assinatura_radar,
             velocidade=velocidade,
             armamentos=armamentos,
+            alcance_radar=alcance_radar,
+            probabilidade_deteccao=probabilidade_deteccao,
         )
         self.capacidade_defesa_ponto = capacidade_defesa_ponto
 
@@ -130,6 +155,8 @@ class VetorAereo(UnidadeMilitar):
         raio_de_acao: float,
         teto_operacional: float,
         armamentos: list[Armamento] | None = None,
+        alcance_radar: float | None = None,
+        probabilidade_deteccao: float | None = None,
     ) -> None:
         super().__init__(
             identificador=identificador,
@@ -137,6 +164,8 @@ class VetorAereo(UnidadeMilitar):
             assinatura_radar=assinatura_radar,
             velocidade=velocidade,
             armamentos=armamentos,
+            alcance_radar=alcance_radar,
+            probabilidade_deteccao=probabilidade_deteccao,
         )
         self.raio_de_acao = raio_de_acao
         self.teto_operacional = teto_operacional

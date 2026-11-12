@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Entrega CPC — [85](85_CPC_DETECCAO_CONTATOS_E_ALCANCE.md):** detecção didática e alcance acrescentados ao recorte de 84, com 47 testes. Preservar as portas de entrada sem contato automático e unidades em MN. A futura integração continua dependendo de snapshots, autorização/adjudicação e dados aprovados; não converter a rubrica sintética em modelo físico por associação SQL.
+
 **Entrega CPC — [84](84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md):** após autorização específica posterior, classes/disparo/rodadas e consumo defensivo foram implementados como ensaio isolado. Antes da integração oficial, fechar proposta/adjudicação/aplicação, snapshots, autorização e idempotência. Não converter a entrega em aprovação de modelos físicos ou alterar o ciclo independente de `technical-catalog`. As propostas documentais abaixo permanecem referências históricas do escopo mais amplo.
 
 **Complemento CPC — [83](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md):** usar o algoritmo conceitual como insumo da futura especificação de `force-confrontation`: ensaio isolado reproduzível, proposta, confirmação do instrutor e efeitos idempotentes. Primeiro recorte recomendado com regras fictícias verificáveis. Não inicia implementação nem substitui os gates de `technical-catalog`.

@@ -6,29 +6,38 @@ from unittest.mock import Mock
 
 from cpc_combat import GerenciadorDeCombate
 from cpc_models import Armamento, MeioNaval, VetorAereo
+from cpc_scenario import CenarioTatico
 
 
 class CombateTests(unittest.TestCase):
     def setUp(self):
         self.arma = Armamento(
             identificador="arma-ficticia", tipo="missil_antinavio",
-            quantidade=2, pk=0.7, dano=30.0,
+            quantidade=2, pk=0.7, dano=30.0, alcance_maximo=20.0,
         )
         self.atacante = VetorAereo(
             identificador="aereo-ficticio", pontos_de_vida=100.0,
-            assinatura_radar=None, velocidade=0.0, raio_de_acao=0.0,
+            assinatura_radar=1.0, velocidade=0.0, raio_de_acao=0.0,
             teto_operacional=0.0, armamentos=[self.arma],
+            alcance_radar=20.0, probabilidade_deteccao=1.0,
         )
         self.defesa = Armamento(
             identificador="defesa-ficticia", tipo="defesa_ponto", quantidade=10,
         )
         self.defensor = MeioNaval(
             identificador="naval-ficticio", pontos_de_vida=80.0,
-            assinatura_radar=None, velocidade=0.0, capacidade_defesa_ponto=0.4,
+            assinatura_radar=1.0, velocidade=0.0, capacidade_defesa_ponto=0.4,
             armamentos=[self.defesa],
+            alcance_radar=20.0, probabilidade_deteccao=1.0,
         )
         self.rng = Mock(spec=random.Random)
-        self.motor = GerenciadorDeCombate(self.atacante, self.defensor, gerador=self.rng)
+        self.cenario = CenarioTatico([self.atacante, self.defensor],
+                                    {("aereo-ficticio", "naval-ficticio"): 5.0}, {1.0: 1.0})
+        self.motor = GerenciadorDeCombate(self.atacante, self.defensor,
+                                         cenario=self.cenario, gerador=random.Random(0))
+        assert self.motor.tentar_detecao(self.atacante, self.defensor)
+        assert self.motor.tentar_detecao(self.defensor, self.atacante)
+        self.motor.gerador = self.rng
 
     def disparar(self):
         parametros = dict(defesa=self.defesa, consumo_defensivo=2) if isinstance(self.defensor, MeioNaval) else {}
@@ -119,18 +128,26 @@ class CombateTests(unittest.TestCase):
     def test_defensor_aereo_nao_recebe_defesa_naval(self):
         self.defensor = VetorAereo(
             identificador="outro-aereo", pontos_de_vida=100.0,
-            assinatura_radar=None, velocidade=0.0, raio_de_acao=0.0, teto_operacional=0.0,
+            assinatura_radar=1.0, velocidade=0.0, raio_de_acao=0.0, teto_operacional=0.0,
+            alcance_radar=20.0, probabilidade_deteccao=1.0,
         )
-        self.motor = GerenciadorDeCombate(self.atacante, self.defensor, gerador=self.rng)
+        cenario = CenarioTatico([self.atacante, self.defensor],
+                               {("aereo-ficticio", "outro-aereo"): 5.0}, {1.0: 1.0})
+        self.motor = GerenciadorDeCombate(self.atacante, self.defensor,
+                                         cenario=cenario, gerador=random.Random(0))
+        assert self.motor.tentar_detecao(self.atacante, self.defensor)
+        self.motor.gerador = self.rng
         self.rng.random.side_effect = [0.1]
         self.assertIn("Impacto", self.disparar())
         self.assertEqual(self.rng.random.call_count, 1)
 
     def test_semente_reproduz_relato(self):
-        r1 = GerenciadorDeCombate(self.atacante, self.defensor, gerador=random.Random(7))
+        r1 = GerenciadorDeCombate(self.atacante, self.defensor,
+                                  cenario=self.cenario, gerador=random.Random(7))
         relato = r1.resolver_disparo(self.atacante, self.defensor, self.arma)
         self.setUp()
-        r2 = GerenciadorDeCombate(self.atacante, self.defensor, gerador=random.Random(7))
+        r2 = GerenciadorDeCombate(self.atacante, self.defensor,
+                                  cenario=self.cenario, gerador=random.Random(7))
         self.assertEqual(relato, r2.resolver_disparo(self.atacante, self.defensor, self.arma))
 
 

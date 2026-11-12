@@ -6,23 +6,30 @@ from unittest.mock import Mock
 
 from cpc_combat import AcaoDisparo, GerenciadorDeCombate
 from cpc_models import Armamento, MeioNaval
+from cpc_scenario import CenarioTatico
 
 
 class RodadaTests(unittest.TestCase):
     def setUp(self):
         self.arma_a = Armamento(identificador="ofensivo-a", tipo="missil_antinavio",
-                               quantidade=3, pk=1.0, dano=100.0)
+                               quantidade=3, pk=1.0, dano=100.0, alcance_maximo=20.0)
         self.arma_b = Armamento(identificador="ofensivo-b", tipo="missil_antinavio",
-                               quantidade=3, pk=1.0, dano=100.0)
+                               quantidade=3, pk=1.0, dano=100.0, alcance_maximo=20.0)
         self.defesa = Armamento(identificador="defensivo-b", tipo="defesa_ponto", quantidade=4)
-        self.a = MeioNaval(identificador="a", pontos_de_vida=100.0, assinatura_radar=None,
-                          velocidade=0.0, capacidade_defesa_ponto=None, armamentos=[self.arma_a])
-        self.b = MeioNaval(identificador="b", pontos_de_vida=100.0, assinatura_radar=None,
+        self.a = MeioNaval(identificador="a", pontos_de_vida=100.0, assinatura_radar=1.0,
+                          velocidade=0.0, capacidade_defesa_ponto=None, armamentos=[self.arma_a],
+                          alcance_radar=20.0, probabilidade_deteccao=1.0)
+        self.b = MeioNaval(identificador="b", pontos_de_vida=100.0, assinatura_radar=1.0,
                           velocidade=0.0, capacidade_defesa_ponto=0.5,
-                          armamentos=[self.arma_b, self.defesa])
+                          armamentos=[self.arma_b, self.defesa],
+                          alcance_radar=20.0, probabilidade_deteccao=1.0)
         self.rng = Mock(spec=random.Random)
         self.rng.random.return_value = 0.0
-        self.motor = GerenciadorDeCombate(self.a, self.b, gerador=self.rng)
+        self.cenario = CenarioTatico([self.a, self.b], {("a", "b"): 5.0}, {1.0: 1.0})
+        self.motor = GerenciadorDeCombate(self.a, self.b, cenario=self.cenario, gerador=random.Random(0))
+        assert self.motor.tentar_detecao(self.a, self.b)
+        assert self.motor.tentar_detecao(self.b, self.a)
+        self.motor.gerador = self.rng
         self.ab = AcaoDisparo("a-para-b", self.a, self.b, self.arma_a)
         self.ba = AcaoDisparo("b-para-a", self.b, self.a, self.arma_b)
 

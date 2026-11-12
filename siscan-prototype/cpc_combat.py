@@ -1,24 +1,17 @@
 """Disparo estocástico didático em memória; não aplica resultado ao exercício.
 
 Regra fictícia de duas etapas independentes: interceptação e acerto condicional.
-Não representa o motor do Command ou desempenho de sistemas reais. Não modela
-detecção, compatibilidade de alvos ou trajetórias. As rodadas são ensaios isolados.
+Não representa o motor do Command ou desempenho de sistemas reais. A detecção
+usa uma rubrica fictícia explícita; não modela propagação de radar, compatibilidade
+de alvos ou trajetórias. As rodadas são ensaios isolados.
 """
 
-import math
 import random
 from dataclasses import dataclass, replace
 from typing import Literal
 
-from cpc_models import Armamento, MeioNaval, UnidadeMilitar
-
-
-def _validar_numero(valor: float | None, nome: str, maximo: float | None = None) -> None:
-    if (isinstance(valor, bool) or not isinstance(valor, (float, int))
-            or not math.isfinite(valor) or valor < 0
-            or (maximo is not None and valor > maximo)):
-        raise ValueError(f"{nome}: informe número finito não negativo"
-                         + (f" até {maximo}." if maximo is not None else "."))
+from cpc_models import Armamento, MeioNaval, UnidadeMilitar, validar_numero as _validar_numero
+from cpc_scenario import CenarioTatico
 
 
 @dataclass(frozen=True)
@@ -78,13 +71,43 @@ class GerenciadorDeCombate:
 
     def __init__(
         self, atacante: UnidadeMilitar, defensor: UnidadeMilitar,
-        *, gerador: random.Random | None = None,
+        *, cenario: CenarioTatico | None = None, gerador: random.Random | None = None,
     ) -> None:
         if atacante is defensor or atacante.identificador == defensor.identificador:
             raise ValueError("Atacante e defensor devem ter identidades distintas.")
         self.atacante = atacante
         self.defensor = defensor
+        self.cenario = cenario
         self.gerador = gerador if gerador is not None else random.Random()
+
+    def tentar_detecao(self, unidade_a: UnidadeMilitar, unidade_b: UnidadeMilitar) -> bool:
+        """Atualiza contato direcional: distância válida e sorteio < p_base × fator.
+
+        Fator é declarado na rubrica do cenário para a assinatura do alvo. Não
+        há estimativa física de eficácia. Uma tentativa falha remove o contato
+        anterior deste par; dado desconhecido provoca erro, não sucesso ou zero.
+        """
+        if self.cenario is None:
+            raise ValueError("Declare um cenário antes de tentar detecção.")
+        par = (self.atacante, self.defensor)
+        if unidade_a not in par or unidade_b not in par or unidade_a is unidade_b:
+            raise ValueError("Detecção deve envolver as duas unidades distintas deste ensaio.")
+        self.cenario.validar_unidade(unidade_a)
+        self.cenario.validar_unidade(unidade_b)
+        self.cenario._remover_contato(unidade_a, unidade_b)
+        for unidade in (unidade_a, unidade_b):
+            _validar_numero(unidade.pontos_de_vida, "pontos_de_vida")
+            if unidade.pontos_de_vida == 0:
+                raise ValueError("Unidade sem pontos não participa da busca neste ensaio.")
+        _validar_numero(unidade_a.alcance_radar, "alcance_radar")
+        _validar_numero(unidade_a.probabilidade_deteccao, "probabilidade_deteccao", 1.0)
+        if self.cenario.distancia(unidade_a, unidade_b) > unidade_a.alcance_radar:
+            return False
+        fator = self.cenario.fator_assinatura(unidade_b.assinatura_radar)
+        detectado = self.gerador.random() < unidade_a.probabilidade_deteccao * fator
+        if detectado:
+            self.cenario._registrar_contato(unidade_a, unidade_b)
+        return detectado
 
     def _validar_rodada(self, acoes: tuple[AcaoDisparo, ...]) -> dict[Armamento, int]:
         unidades = (self.atacante, self.defensor)
@@ -113,6 +136,14 @@ class GerenciadorDeCombate:
                 raise ValueError("A ação deve pertencer ao par deste ensaio.")
             if acao.arma not in acao.atacante.armamentos or acao.arma.tipo == "defesa_ponto":
                 raise ValueError("Informe um armamento ofensivo pertencente ao atacante.")
+            if self.cenario is None:
+                raise ValueError("Declare um cenário para conferir contato e alcance.")
+            self.cenario.validar_unidade(acao.defensor)
+            if acao.defensor.identificador not in self.cenario.contatos_detectados(acao.atacante):
+                raise ValueError("Contato detectado válido é obrigatório antes de declarar disparo.")
+            _validar_numero(acao.arma.alcance_maximo, "alcance_maximo")
+            if self.cenario.distancia(acao.atacante, acao.defensor) > acao.arma.alcance_maximo:
+                raise ValueError("Alvo fora do alcance máximo do armamento.")
             _validar_numero(acao.arma.pk, "pk", 1.0)
             _validar_numero(acao.arma.dano, "dano")
             if estoques[acao.arma] == 0:
@@ -225,7 +256,7 @@ class GerenciadorDeCombate:
         self, atacante: UnidadeMilitar, defensor: UnidadeMilitar, arma: Armamento,
         *, defesa: Armamento | None = None, consumo_defensivo: int | None = None,
     ) -> str:
-        """Atalho de uma ação; defesa só ocorre com estoque e custo explícitos."""
+        """Exige contato e alcance; defesa só ocorre com estoque/custo explícitos."""
         acao = AcaoDisparo("disparo", atacante, defensor, arma, defesa, consumo_defensivo)
         return self.resolver_rodada([acao])[0].narrativa
 
@@ -259,26 +290,38 @@ if __name__ == "__main__":
     print(f"DataAircraft/8: {aeronaves[0]['name']}")
     print(f"DataShip/1349: {navios[0]['name']}")
     arma = Armamento(identificador="municao-sintetica-01", tipo="missil_antinavio",
-                     quantidade=2, pk=0.5, dano=10.0)
+                     quantidade=2, pk=0.5, dano=10.0, alcance_maximo=15.0)
     estoque_defensivo = Armamento(identificador="pacotes-defensivos-sinteticos-01",
                                  tipo="defesa_ponto", quantidade=4)
     caca = VetorAereo(
         identificador=f"{aeronaves[0]['name']} [ensaio-aereo-01]",
-        pontos_de_vida=100.0, assinatura_radar=None, velocidade=0.0,
+        pontos_de_vida=100.0, assinatura_radar=1.0, velocidade=0.0,
         raio_de_acao=0.0, teto_operacional=0.0, armamentos=[arma],
+        alcance_radar=20.0, probabilidade_deteccao=0.8,
     )
     fragata = MeioNaval(
         identificador=f"{navios[0]['name']} [ensaio-naval-01]",
-        pontos_de_vida=100.0, assinatura_radar=None, velocidade=0.0,
+        pontos_de_vida=100.0, assinatura_radar=2.0, velocidade=0.0,
         capacidade_defesa_ponto=0.2, armamentos=[estoque_defensivo],
+        alcance_radar=20.0, probabilidade_deteccao=0.8,
     )
-    motor = GerenciadorDeCombate(caca, fragata, gerador=random.Random(args.semente))
+    cenario = CenarioTatico([caca, fragata],
+                            {(caca.identificador, fragata.identificador): 10.0},
+                            {1.0: 0.5, 2.0: 1.0})
+    motor = GerenciadorDeCombate(caca, fragata, cenario=cenario, gerador=random.Random(args.semente))
     iniciativa = {"simultanea": None, "aereo": caca, "naval": fragata}[args.iniciativa]
     acao = AcaoDisparo("acao-sintetica-01", caca, fragata, arma,
                        defesa=estoque_defensivo, consumo_defensivo=2)
     print(f"Regime: {args.iniciativa}. Custo fictício declarado: 2 pacotes por tentativa defensiva.")
-    for resultado in motor.resolver_rodada([acao], iniciativa=iniciativa):
-        print(f"Fase {resultado.fase}: {resultado.narrativa}")
-        for consumo in resultado.consumos:
-            print(f"  {consumo.finalidade}: {consumo.estoque_id}; "
-                  f"{consumo.antes} - {consumo.quantidade} = {consumo.depois}")
+    print("Distância fictícia: 10 MN; radar fictício: 20 MN; alcance da arma fictícia: 15 MN.")
+    detectado = motor.tentar_detecao(caca, fragata)
+    print(f"Detecção do alvo: {'sim' if detectado else 'não'}. "
+          f"Contatos do observador: {sorted(cenario.contatos_detectados(caca))}")
+    if not detectado:
+        print("Disparo não iniciado: alvo não detectado. Nenhum estoque consumido.")
+    else:
+        for resultado in motor.resolver_rodada([acao], iniciativa=iniciativa):
+            print(f"Fase {resultado.fase}: {resultado.narrativa}")
+            for consumo in resultado.consumos:
+                print(f"  {consumo.finalidade}: {consumo.estoque_id}; "
+                      f"{consumo.antes} - {consumo.quantidade} = {consumo.depois}")

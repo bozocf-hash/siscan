@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Detecção CPC — [85](85_CPC_DETECCAO_CONTATOS_E_ALCANCE.md):** cenário com matriz de distâncias em MN, radar/probabilidade nas unidades, contatos direcionais e alcance máximo por armamento. Disparo/rodada exigem contato e alcance antes de consumir. 47 testes passaram. Regra de assinatura explicitamente fictícia; sem promoção dos dados técnicos ou alteração do exercício.
+
 **Incremento CPC — [84](84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md):** ensaio isolado implementado com rodada simultânea, iniciativa explícita, estoque/custo defensivo e resultados estruturados. 28 testes passaram. Identidades F/A-18C e Niterói consultadas no catálogo; parâmetros fictícios. Não altera o exercício oficial. As declarações de “não implementado” nos estudos 82/83 registram seu escopo/estado anterior, não anulam esta entrega parcial posterior.
 
 **Algoritmo CPC — [83](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md):** investigação complementar do manual oficial e da instalação do Command; proposta própria com pseudocódigo de ensaio isolado, eventos, recursos, adjudicação e aplicação transacional. Nenhum código-fonte do motor de combate foi localizado. Não é reprodução do Command, modelo físico validado ou implementação.

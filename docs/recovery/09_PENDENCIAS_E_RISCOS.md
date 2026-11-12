@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Detecção CPC — [85](85_CPC_DETECCAO_CONTATOS_E_ALCANCE.md):** bloqueios por contato/alcance implementados no ensaio estático. Fatores de assinatura são rubrica fictícia, não eficácia de radar validada. Faltam geometria dinâmica, trilhas temporais, identificação, sensores de munições e integração oficial. Contato não é compartilhado automaticamente; mudar parâmetros pode exigir nova detecção.
+
 **Recorte CPC — [84](84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md):** regras sintéticas de simultaneidade, iniciativa e conflitos de reservas implementadas em ensaio de duas unidades. Permanecem pendentes integração, autenticação do instrutor, adjudicação, revisões/idempotência e custos/modelos validados. Repetir chamada consome novamente; não há defesa automática sem estoque/custo declarados. Não tratar pontos zerados como afundamento ou os parâmetros do exemplo como dados do F/A-18/Niterói.
 
 **Algoritmo CPC — [83](83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md):** orquestração proposta, ainda sem rubrica didática aprovada ou modelo físico validado. Fechar simultaneidade, conflitos de recursos, encerramento e contrato de regras. Não confundir manual HTML atual com PDF local de 353 páginas; consulta SQL não recupera código do motor. Proposta desatualizada não pode sobrescrever revisão nova do exercício.

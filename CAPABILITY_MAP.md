@@ -64,6 +64,8 @@ Ratificação posterior em [87](docs/recovery/87_REGRA_ESGOTAMENTO_COMBUSTIVEL_P
 
 Logging e exportação pós-ação entregues em [88](docs/recovery/88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md), com 81 testes e 60 turnos/314 eventos demonstrativos. Artefatos locais são resultados propostos, sem adjudicação ou alteração das dependências entre capacidades.
 
-## Complemento proposto para revisão — grupamentos e dados descritivos
+## Complemento de escopo — grupamentos e dados descritivos
+
+**Escopo aprovado em 2026-11-16**, por “pode seguir” após 89. Primeira especificação proposta para revisão: [SPEC-unit-registry.md](SPEC-unit-registry.md), recorte de composição versionada de grupamentos diretos em memória, resumido em [90](docs/recovery/90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md). Plano/implementação não iniciados. Essa aprovação não aprova contratos individuais ou valores técnicos.
 
 [89](docs/recovery/89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md) registra o pedido e a inspeção descritiva de sensores. Manter os IDs existentes: `technical-catalog` fornece evidência/consulta; `unit-registry` define unidades/grupos/versionamento; `party-inventory` confere disponibilidade ao partido; `force-confrontation` consome composições/snapshots para apoio didático e adjudicação; `verification-recovery` verifica os contratos. Não inverter a dependência entre identidade e inventário nem introduzir ciclos. Recorte proposto para revisão de escopo antes de especificações próprias; não recomenda composição real otimizada ou modelo de eficácia operacional. O ciclo aprovado de `technical-catalog` permanece independente.

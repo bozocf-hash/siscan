@@ -1,6 +1,8 @@
 # 89 — Grupamentos e dados descritivos: proposta de escopo do CPC
 
-**Data: 2026-11-16. Estado: complemento de escopo proposto para revisão, com inventário descritivo efetuado.** Atende ao pedido de iniciativa analítica, composição de grupamentos com referências do catálogo e apoio explicável ao instrutor. Não é especificação aprovada, plano de implementação ou modelo calibrado de combate real. Não recomenda composição otimizada para derrotar forças reais.
+**Atualização de gate:** escopo aprovado pelo responsável em 2026-11-16, por “pode seguir”. A Fase 1 proposta de `unit-registry` está em `SPEC-unit-registry.md`, com resumo em [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md). A aprovação do escopo não aprova automaticamente o contrato detalhado ou sua implementação.
+
+**Data: 2026-11-16. Estado: complemento de escopo aprovado, com inventário descritivo efetuado.** Atende ao pedido de iniciativa analítica, composição de grupamentos com referências do catálogo e apoio explicável ao instrutor. A especificação detalhada posterior permanece proposta em 90. Este documento não é plano de implementação ou modelo calibrado de combate real. Não recomenda composição otimizada para derrotar forças reais.
 
 ## Objetivo e premissas explícitas
 
@@ -8,7 +10,7 @@ Propor uma evolução do protótipo de pares de unidades para apoio didático a 
 
 Premissas: usar os dados já compilados sem refazer a extração integral; preservar identidade/configuração e aprovações por finalidade de 53; composição limitada aos meios disponíveis ao partido; manter os níveis MPNL de 08; não usar a demonstração de esgotamento de 86 como autonomia real; não converter alcance, classe ou campos brutos de sensores em probabilidades reais de vitória/dano.
 
-As capacidades existentes serão preservadas. Esta ampliação envolve catálogo, identidade/composição, inventário e CPC, com critérios verificáveis distintos; por isso apresenta primeiro o complemento do mapa de capacidades, conforme a skill spec-driven-development já solicitada pelo responsável. Não foram elaboradas especificações de módulos ou iniciada implementação nesta etapa.
+As capacidades existentes serão preservadas. Esta ampliação envolve catálogo, identidade/composição, inventário e CPC, com critérios verificáveis distintos; por isso apresentou primeiro o complemento do mapa de capacidades, conforme a skill spec-driven-development já solicitada pelo responsável. A etapa inicial deste levantamento antecedeu as especificações; a proposta posterior de `unit-registry` está em 90. Nenhuma implementação foi iniciada por este levantamento.
 
 ## Evidência local: sensores e vínculos diretos
 

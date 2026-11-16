@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Especificação de grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** escopo de 89 aprovado. `SPEC-unit-registry.md` propõe composição direta naval/aérea em memória, versões, disponibilidade por partido e arquivamento, com 15 critérios de aceite. Especificação para revisão; plano e código não iniciados.
+
 **Grupamentos e sensores — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** complemento de escopo proposto para apoio didático ao instrutor. Inspeção local confirmou 6.747 sensores, 78 campos e 50.399 vínculos diretos nas quatro categorias examinadas, com chaves correspondentes. Não valida semântica/eficácia ou promove atributos. Composição versionada por partido e preservação MPNL propostas para revisão; nenhum código/banco alterado.
 
 **Pós-ação CPC — [88](88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md):** histórico estruturado, snapshots inicial/final e exportação TXT/CSV com balanço de sobreviventes, perdas propostas e recursos gastos. Execução de 60 turnos verificada: 314 eventos. 81 testes passaram. Arquivos existentes preservados; relatório não adjudica nem altera o exercício.

@@ -1,6 +1,6 @@
 # Tarefas: unit-registry — grupamentos diretos
 
-**Estado: Fase 3 proposta para revisão.** [Especificação](../../SPEC-unit-registry.md) e [plano](plan.md) aprovados pelo responsável em interações distintas; plano aprovado em 2026-11-16 por “aprovado”. Esta lista ainda não está aprovada e não inicia código. Preservar as tarefas abertas de `technical-catalog` em `tasks/plan.md` e `tasks/todo.md`.
+**Estado: Fase 3 aprovada em 2026-11-16, por “sim”; Fase 4 em execução.** [Especificação](../../SPEC-unit-registry.md), [plano](plan.md) e esta lista foram aprovados em interações distintas. Preservar as tarefas abertas de `technical-catalog` em `tasks/plan.md` e `tasks/todo.md`.
 
 ## Regras da execução futura
 
@@ -17,7 +17,7 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ## UGR-01 — Criar e consultar composição verificada
 
-- [ ] Implementar e verificar.
+- [x] Implementar e verificar.
 - **Resultado:** registro privado `RegistroGrupamentos`, contexto, visão de unidades, JSON canônico/hashes, criação e consulta atual/histórica.
 - **Aceite:**
   - Criar grupo naval heterogêneo e grupo aéreo com designação “esquadrilha”, preservando IDs/snapshots e sem inferir escalão MPNL.
@@ -30,7 +30,7 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ## UGR-02 — Revisar composição preservando versões
 
-- [ ] Implementar e verificar.
+- [x] Implementar e verificar.
 - **Resultado:** substituição completa dos membros/metadados com `expected_revision`, referências históricas e troca dos vínculos ativos.
 - **Aceite:**
   - Publicar nova revisão somente sobre a revisão esperada, preservando conteúdo/hash anteriores; remoções/adições alteram vínculos junto com a publicação.
@@ -43,9 +43,9 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ### Checkpoint A — Criação e revisão
 
-- [ ] Fluxos de criação/consulta/revisão e recusas passam no verificador focado.
-- [ ] Não há estado parcial ou informação de outro contexto nos caminhos de erro.
-- [ ] IDs, recursos/snapshots de entrada e histórico permanecem preservados; comunicar o resultado antes da etapa seguinte.
+- [x] Fluxos de criação/consulta/revisão e recusas passam no verificador focado.
+- [x] Não há estado parcial ou informação de outro contexto nos caminhos de erro.
+- [x] IDs, recursos/snapshots de entrada e histórico permanecem preservados; resultado comunicado antes da etapa seguinte. Checkpoint A verificado com 14 testes focados.
 
 ## UGR-03 — Arquivar e liberar vínculos diretos
 
@@ -116,6 +116,6 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ## Gate antes do código
 
-O responsável revisa esta lista de Fase 3. Após aprovação em nova interação, executar a Fase 4 na ordem indicada. Checkpoints são verificações do contrato aprovado, não aprovação de novo escopo; qualquer alteração material exige revisar a decisão afetada antes de implementá-la.
+Gate da Fase 3 satisfeito pela aprovação acima; Fase 4 em andamento. Checkpoints são verificações do contrato aprovado, não aprovação de novo escopo; qualquer alteração material exige revisar a decisão afetada antes de implementá-la.
 
-Nesta fase somente documentos foram criados/atualizados. Nenhuma tarefa acima foi executada, nenhum teste futuro foi apresentado como existente e não houve alteração de código ou banco.
+As tarefas marcadas acima foram implementadas e verificadas. As demais permanecem pendentes; não há alteração de banco ou estado do exercício.

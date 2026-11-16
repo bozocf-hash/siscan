@@ -1,6 +1,6 @@
 # Spec: force-confrontation — preparação didática de grupamentos
 
-**Data: 2026-11-16. Estado: Fase 1 aprovada por “siga”; plano de Fase 2 aprovado por “seguimos”; tarefas propostas em 96.** O registro de grupamentos entregue em [93](docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md) permanece concluído. Esta especificação acrescenta um consumidor de suas composições; não reabre os gates de `unit-registry` ou de `technical-catalog`.
+**Data: 2026-11-16. Estado: especificação, plano e tarefas aprovados; recorte implementado e verificado em [98](docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md).** A lista de Fase 3 foi aprovada por “siga”. O registro entregue em 93 permanece preservado. Esta entrega acrescenta o consumidor de composições em memória, sem execução ou interface de confronto. Mantido o mapa ATLANTICADOR já definido.
 
 ## Objetivo e premissas
 
@@ -49,7 +49,7 @@ Falhas de entrada usam `ValueError`; ausência de grupo no contexto usa `KeyErro
 
 ## Estrutura e estilo
 
-Python 3.11+, biblioteca padrão, mantendo a estrutura existente. Implementação proposta em `siscan-prototype/cpc_group_preparation.py`, verificador em `siscan-prototype/check_cpc_group_preparation.py`. Não duplicar o registro, renomear IDs ou importar fixtures de testes no módulo de produção. Nome da função pública e assinatura concreta serão fechados no plano após aprovação do contrato funcional.
+Python 3.11+, biblioteca padrão, mantendo a estrutura existente. Implementação proposta em `siscan-prototype/cpc_group_preparation.py`, verificador em `siscan-prototype/check_cpc_group_preparation.py`. Não duplicar o registro, renomear IDs ou importar fixtures de testes no módulo de produção. A função pública implementada é `preparar_dossie_grupamentos`, com assinatura detalhada no plano e em 98.
 
 Seguir funções com type hints e docstrings como no código atual:
 
@@ -74,7 +74,7 @@ $pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\depende
 git diff --check
 ```
 
-O novo verificador ainda não existe: estes são comandos futuros, não resultados obtidos. Na entrega canônica, os fontes ficam em `C:\Users\bozoc\Documents\siscan\prototype`. Não há build, servidor ou navegador a iniciar para este módulo em memória.
+O verificador foi implementado: 21 testes focados passaram, além das regressões descritas em 98. Na entrega canônica, os fontes ficam em `C:\Users\bozoc\Documents\siscan\prototype`. Não há build, servidor ou navegador a iniciar para este módulo em memória.
 
 Usar `unittest`, fixtures inteiramente sintéticas e testes positivos/negativos. Exercitar a fronteira com o registro real em memória, sem banco real. Verificar preservação por comparação antes/depois, sem testes que só reproduzam funções auxiliares. Não repetir baterias por edições exclusivamente documentais.
 
@@ -101,8 +101,8 @@ Usar `unittest`, fixtures inteiramente sintéticas e testes positivos/negativos.
 - Exigir revisão própria para persistência/DDL, HTTP/autenticação, integração gráfica, publicação de efeitos, execução temporal de grupamentos ou mudança dos contratos aprovados.
 - Nunca modificar DB3K/originais, sugerir composição otimizada, derivar eficácia operacional real ou substituir a decisão do instrutor.
 
-A proposta não inclui execução do confronto, exportador novo, gravador durável, cálculo agregado ou nova tela. A pergunta desta revisão é se a preparação rastreável das duas composições, com snapshots integrais e sem efeitos, é a próxima fatia desejada. A aprovação anterior de `unit-registry` não é aprovação automática desta especificação.
+A proposta não inclui execução do confronto, exportador novo, gravador durável, cálculo agregado ou nova tela. A preparação rastreável das duas composições foi aprovada e entregue; a aprovação desta fatia não amplia automaticamente o escopo para execução ou publicação de efeitos.
 
-## Gate
+## Conclusão
 
-Fase 1 aprovada pelo responsável por “siga”. [Plano de Fase 2](tasks/force-confrontation/plan.md) aprovado por “seguimos”, conforme [95](docs/recovery/95_PLANO_PREPARACAO_CPC_GRUPAMENTOS.md). [Tarefas de Fase 3](tasks/force-confrontation/todo.md) propostas conforme [96](docs/recovery/96_TAREFAS_PREPARACAO_CPC_GRUPAMENTOS.md); não iniciar código antes de sua aprovação. A frente gráfica conceitual de 97 usa obrigatoriamente o mapa existente e não altera este recorte em memória.
+Gates de especificação, plano e tarefas satisfeitos por aprovações distintas. Implementação verificada em [98](docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md); não reabrir os gates desta fatia. Novas integrações gráficas/execução/persistência seguem escopo próprio. A concepção de 97 mantém o mapa existente.

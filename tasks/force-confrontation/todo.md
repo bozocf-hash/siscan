@@ -1,6 +1,6 @@
 # Tarefas: force-confrontation — preparação dos grupamentos
 
-**Data: 2026-11-16. Estado: especificação e plano aprovados por “siga” e “seguimos”; Fase 3 aprovada por “siga”; Fase 4 em execução.** Referências: [especificação](../../SPEC-force-confrontation.md), [plano](plan.md) e [96](../../docs/recovery/96_TAREFAS_PREPARACAO_CPC_GRUPAMENTOS.md). As ideias gráficas de [97](../../docs/recovery/97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md) são frente futura, não ampliação destas tarefas.
+**Data: 2026-11-16. Estado: especificação e plano aprovados por “siga” e “seguimos”; Fase 3 aprovada por “siga”; Fase 4 concluída; entrega em [98](../../docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md).** Referências: [especificação](../../SPEC-force-confrontation.md), [plano](plan.md) e [96](../../docs/recovery/96_TAREFAS_PREPARACAO_CPC_GRUPAMENTOS.md). As ideias gráficas de [97](../../docs/recovery/97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md) são frente futura, não ampliação destas tarefas.
 
 Executar sequencialmente após aprovação desta lista, com testes de comportamento antes da implementação correspondente. Preservar `tasks/plan.md`, `tasks/todo.md` e a entrega `unit-registry` concluída. Checkpoints verificam o contrato aprovado; alteração material exige revisar a decisão afetada.
 
@@ -11,7 +11,7 @@ $pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\depende
 & $pythonCpc .\siscan-prototype\check_cpc_group_preparation.py
 ```
 
-O verificador ainda não existe. Não houve execução de testes nesta fase documental. Não iniciar servidor, build, banco ou navegador para esta fatia em memória.
+O verificador foi implementado e passou em 21 testes; regressão com 29 testes de registro e 102 CPC, incluindo os 21 novos, conforme 98. Não iniciar servidor, build, banco ou navegador para esta fatia em memória.
 
 ## GPREP-01 — Preparar dois partidos com autorização
 
@@ -45,7 +45,7 @@ O verificador ainda não existe. Não houve execução de testes nesta fase docu
 
 ## GPREP-04 — Conferir regressões e documentar o resultado
 
-- [ ] Executar verificação final e registrar evidências reais.
+- [x] Executar verificação final e registrar evidências reais. Passaram 131 testes distintos (21 novos incluídos nos 102 CPC, mais 29 do registro). Entrega em 98.
 - **Aceite:** GP-01–12 demonstrados, regressões afetadas passam, documentação distingue implementado/pendente e identifica limites de consistência, autorização interna e ausência de execução. Não presumir contagem ou aceitação por descoberta vazia.
 - **Verificar:** uma vez após alterações pertinentes:
 
@@ -62,13 +62,13 @@ O verificador ainda não existe. Não houve execução de testes nesta fase docu
 
 ### Checkpoint B — Preparação concluída
 
-- [ ] GP-01–12 cobertos por verificações executadas e resultado comunicado.
-- [ ] Nenhum banco, estado oficial, gráfico ou algoritmo de combate alterado; mapa definido continua preservado.
-- [ ] Não apresentar preparação de forças como confronto de grupamentos já integrado.
+- [x] GP-01–12 cobertos por verificações executadas e resultado comunicado.
+- [x] Nenhum banco, estado oficial, gráfico ou algoritmo de combate alterado; mapa definido continua preservado.
+- [x] Não apresentar preparação de forças como confronto de grupamentos já integrado.
 
 ## GPREP-05 — Atualizar controles
 
-- [ ] Consolidar índices, riscos e continuidade com o resultado comprovado.
+- [x] Consolidar índices, riscos e continuidade com o resultado comprovado; 00/09/10 e mapa de capacidades atualizados, links/hashes de preservação conferidos.
 - **Aceite:** 00/09/10 e mapa de capacidades refletem o estado real, distinguem a futura interface de 97 e não reabrem gates já aprovados. Planos antigos permanecem idênticos.
 - **Verificar:** links, hashes de preservação e `git diff --check`; sem nova bateria por documentação.
 - **Dependência:** GPREP-04 e Checkpoint B verificado.
@@ -76,7 +76,7 @@ O verificador ainda não existe. Não houve execução de testes nesta fase docu
 
 ## GPREP-06 — Sincronizar e versionar a entrega
 
-- [ ] Sincronizar arquivos autorizados e registrar no GitHub.
+- [x] Sincronizar arquivos autorizados e registrar no GitHub, conferindo SHA-256 origem/destino e preservando dados locais.
 - **Aceite:** códigos/docs entregues em `C:\Users\bozoc\Documents\siscan` com hashes iguais; somente o recorte é versionado, sem credenciais, fontes proprietárias ou artefatos locais de dados. Documento de entrega informa commit/limites verificáveis.
 - **Verificar:** SHA-256 origem/destino, diff preparado, situação Git e resultado do envio. Se a checagem no destino for necessária, executar somente o verificador focado; não repetir toda a bateria sem motivo.
 - **Dependência:** GPREP-05.
@@ -84,4 +84,4 @@ O verificador ainda não existe. Não houve execução de testes nesta fase docu
 
 ## Gate
 
-Lista de Fase 3 aprovada por “siga”; implementação em execução, sem reabrir gates anteriores. A solicitação de pensar na interface foi registrada em 97; não cria dependência que bloqueie esta fatia de backend e não autoriza mudanças silenciosas de mapa ou visibilidade.
+Lista de Fase 3 aprovada por “siga”; GPREP-01–06 implementadas e verificadas, sem reabrir gates anteriores. A solicitação de pensar na interface foi registrada em 97; não cria dependência que bloqueie esta fatia de backend e não autoriza mudanças silenciosas de mapa ou visibilidade.

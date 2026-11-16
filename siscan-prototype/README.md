@@ -1,5 +1,14 @@
 # Protótipo didático SISCAN
 
+**Dossiê inicial dos grupamentos:** `cpc_group_preparation.preparar_dossie_grupamentos` confere autorização interna do instrutor e prepara AZUL/VERMELHO com as revisões e snapshots integrais dos membros selecionados. Preserva os estados individuais, não consome recursos e não inicia confronto. A saída exige revisão do instrutor e inclui hash canônico; não reserva disponibilidade futura. São 21 testes novos; detalhes e exemplo em [98 — Entrega](../docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md). A interface futura permanece no mesmo mapa ATLANTICADOR definido, conforme [97](../docs/recovery/97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md); ainda não há botão gráfico integrado ao dossiê.
+
+Na pasta `prototype`, verificação focada:
+
+```powershell
+$pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+& $pythonCpc check_cpc_group_preparation.py
+```
+
 **Grupamentos em memória:** `unit_groups.RegistroGrupamentos` implementa criação, consulta por revisão, revisão, arquivamento e preparação de composições diretas navais/aéreas. Recebe contexto e visão de inventário de um provedor interno confiável; não autentica usuários nem consulta bancos. Preserva IDs/configurações/snapshots, recusa integrantes indisponíveis ou duplicados e mantém um único vínculo operativo direto ativo por unidade/contexto. Versão/recibo/vínculos são publicados juntos sob lock no mesmo processo. Reenvio retorna o resultado histórico; `preparar_composicao` revalida disponibilidade e não inicia simulação ou promove dados. Ver [93 — Entrega](../docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md).
 
 Na pasta `prototype`, execute o verificador com o Python disponível nesta máquina:

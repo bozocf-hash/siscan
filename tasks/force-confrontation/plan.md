@@ -1,6 +1,6 @@
 # Plano técnico: force-confrontation — preparação de grupamentos
 
-**Data: 2026-11-16. Estado: Fase 1 aprovada por “siga”; Fase 2 aprovada por “seguimos”; tarefas propostas para revisão.** Referência: [especificação](../../SPEC-force-confrontation.md). Manter intactos os planos/listas de `technical-catalog` e a entrega concluída de `unit-registry`. Este local segue a organização por módulo adotada anteriormente; não sobrescreve `tasks/plan.md` ou `tasks/todo.md`.
+**Data: 2026-11-16. Estado: Fase 1 aprovada por “siga”; Fase 2 e tarefas aprovadas; recorte implementado e verificado em 98.** Referência: [especificação](../../SPEC-force-confrontation.md). Manter intactos os planos/listas de `technical-catalog` e a entrega concluída de `unit-registry`. Este local segue a organização por módulo adotada anteriormente; não sobrescreve `tasks/plan.md` ou `tasks/todo.md`.
 
 ## Resultado e fronteira
 
@@ -88,7 +88,7 @@ $pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\depende
 git diff --check
 ```
 
-O novo verificador ainda não existe. Estes comandos não foram executados nesta etapa documental; nenhuma contagem de testes é presumida. A descoberta `check_cpc_*.py` também incluirá o novo verificador após sua criação; a execução focada serve para diagnóstico. Não há build/navegador/servidor a iniciar.
+O verificador foi implementado e os comandos executados na entrega 98: 21 testes focados, 29 do registro e 102 na descoberta CPC, que já inclui os 21 novos. A descoberta `check_cpc_*.py` também incluirá o novo verificador após sua criação; a execução focada serve para diagnóstico. Não há build/navegador/servidor a iniciar.
 
 ## Riscos e mitigação
 
@@ -104,6 +104,6 @@ O novo verificador ainda não existe. Estes comandos não foram executados nesta
 
 Sem DDL, dependências, gravação de dados oficiais, integração gráfica ou interpretação física de sensores. Os bancos originais, estados do exercício e decisões MPNL permanecem intocados.
 
-## Gate da Fase 2
+## Conclusão
 
-Especificação e plano aprovados pelo responsável. Lista de [Fase 3](todo.md) proposta conforme [96](../../docs/recovery/96_TAREFAS_PREPARACAO_CPC_GRUPAMENTOS.md), aguardando aprovação. A concepção gráfica de [97](../../docs/recovery/97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md) preserva expressamente o mapa já definido e não amplia o escopo desta implementação. Não iniciar código antes do gate da lista.
+Plano e lista de tarefas aprovados por respostas distintas. GPREP-01–06 concluídas e verificadas conforme [98](../../docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md). Concepção gráfica de 97 é integração futura no mesmo mapa definido, sem alterar o recorte entregue.

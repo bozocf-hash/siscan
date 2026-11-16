@@ -47,6 +47,10 @@ class GrupamentosTests(unittest.TestCase):
         pedido.update(group_id=grupo['group_id'], expected_revision=grupo['composition_revision'])
         return pedido
 
+    def arquivo(self, grupo, **campos):
+        return dict(command_id=str(uuid.uuid4()), group_id=grupo['group_id'],
+                    expected_revision=grupo['composition_revision'], **campos)
+
     def test_criacao_heterogenea_preserva_referencias_e_entradas(self):
         antes = deepcopy(self.inventario)
         grupo = self.criar()
@@ -166,29 +170,193 @@ class GrupamentosTests(unittest.TestCase):
         self.inventario['n1']['allocated'] = False
         self.assertEqual(self.criar(pedido), grupo)
 
-    def test_duas_revisoes_concorrentes_publicam_uma_so(self):
-        original = self.criar()
-        pedidos = [self.revisao(original, ['n1']), self.revisao(original, ['n2'])]
+    def concorrer(self, chamadas):
         barrier, saida = Barrier(3), SimpleQueue()
 
-        def executar(pedido):
+        def executar(chamada):
             try:
                 barrier.wait(timeout=5)
-                novo = self.registro.revisar_grupamento(self.contexto, self.inventario, pedido)
+                novo = chamada()
                 saida.put(('ok', novo['composition_revision']))
             except BaseException as exc:
                 saida.put((type(exc).__name__, None))
 
-        threads = [Thread(target=executar, args=(pedido,), daemon=True) for pedido in pedidos]
+        threads = [Thread(target=executar, args=(chamada,), daemon=True) for chamada in chamadas]
         for thread in threads:
             thread.start()
         barrier.wait(timeout=5)
         for thread in threads:
             thread.join(timeout=5)
             self.assertFalse(thread.is_alive())
-        respostas = [saida.get_nowait(), saida.get_nowait()]
+        return [saida.get_nowait(), saida.get_nowait()]
+
+    def test_duas_revisoes_concorrentes_publicam_uma_so(self):
+        original = self.criar()
+        pedidos = [self.revisao(original, ['n1']), self.revisao(original, ['n2'])]
+        respostas = self.concorrer([
+            lambda p=p: self.registro.revisar_grupamento(self.contexto, self.inventario, p) for p in pedidos])
         self.assertCountEqual(respostas, [('ok', 2), ('GroupConflict', None)])
         self.assertEqual(self.registro.consultar_grupamento(self.contexto, original['group_id'])['composition_revision'], 2)
+
+    def test_criacao_concorrente_nao_compartilha_integrante(self):
+        chamadas = [lambda: self.criar(self.pedido(['n1'])) for _ in range(2)]
+        self.assertCountEqual(self.concorrer(chamadas), [('ok', 1), ('GroupConflict', None)])
+        self.criar(self.pedido(['n2']))
+
+    def test_arquivar_libera_unidades_e_preserva_historico(self):
+        original = self.criar()
+        pedido = self.arquivo(original)
+        arquivado = self.registro.arquivar_grupamento(self.contexto, pedido)
+        self.assertFalse(arquivado['active'])
+        self.assertEqual(arquivado['composition_revision'], 2)
+        self.assertEqual(arquivado['members'], original['members'])
+        self.assertEqual(self.registro.consultar_grupamento(self.contexto, original['group_id'], 1), original)
+        self.assertEqual(self.registro.arquivar_grupamento(self.contexto, pedido), arquivado)
+        self.criar()
+        with self.assertRaises(GroupConflict):
+            self.registro.revisar_grupamento(self.contexto, self.inventario,
+                                             self.revisao(arquivado, ['n1']))
+
+    def test_arquivo_invalido_nao_libera_vinculos(self):
+        original = self.criar()
+        for campo in ({'active': False}, {'role': 'instructor'}):
+            with self.assertRaises(ValueError):
+                self.registro.arquivar_grupamento(self.contexto, self.arquivo(original, **campo))
+        pedido = self.arquivo(original)
+        pedido['expected_revision'] = 2
+        with self.assertRaises(GroupConflict):
+            self.registro.arquivar_grupamento(self.contexto, pedido)
+        with self.assertRaises(GroupConflict):
+            self.criar()
+        self.assertEqual(self.registro.consultar_grupamento(self.contexto, original['group_id']), original)
+
+    def test_chave_de_comando_nao_pode_mudar_de_operacao(self):
+        pedido = self.pedido()
+        grupo = self.criar(pedido)
+        arquivar = self.arquivo(grupo)
+        arquivar['command_id'] = pedido['command_id']
+        with self.assertRaises(GroupConflict):
+            self.registro.arquivar_grupamento(self.contexto, arquivar)
+
+    def preparar(self, grupo, inventario=None):
+        return self.registro.preparar_composicao(
+            self.contexto, self.inventario if inventario is None else inventario,
+            grupo['group_id'], grupo['composition_revision'])
+
+    def test_preparar_retorna_referencias_sem_alterar_recursos(self):
+        grupo = self.criar()
+        antes = deepcopy(self.inventario)
+        preparado = self.preparar(grupo)
+        self.assertEqual(preparado['members'], grupo['members'])
+        self.assertEqual(preparado['composition_sha256'], grupo['composition_sha256'])
+        self.assertEqual(self.inventario, antes)
+        self.assertFalse(preparado['simulation_started'])
+        self.assertFalse(preparado['official_calculation_ready'])
+        preparado['members'].clear()
+        self.assertEqual(self.preparar(grupo)['members'], grupo['members'])
+        self.assertEqual(self.registro.consultar_grupamento(self.contexto, grupo['group_id']), grupo)
+
+    def test_preparacao_revalida_disponibilidade_apos_reenvio(self):
+        pedido = self.pedido()
+        grupo = self.criar(pedido)
+        self.inventario['n1']['allocated'] = False
+        self.assertEqual(self.criar(pedido), grupo)
+        with self.assertRaises(PermissionError):
+            self.preparar(grupo)
+
+    def test_preparacao_exige_revisao_se_snapshot_ou_configuracao_mudar(self):
+        grupo = self.criar()
+        for campo in ('snapshot', 'configuration_version_id', 'snapshot_id'):
+            with self.subTest(campo=campo):
+                inventario = deepcopy(self.inventario)
+                row = inventario['n1']
+                if campo == 'snapshot':
+                    row['snapshot']['combustivel_kg'] = 9
+                elif campo == 'configuration_version_id':
+                    row[campo] = row['snapshot'][campo] = 'config-nova'
+                else:
+                    row[campo] = 'snapshot-novo'
+                row['snapshot_sha256'] = digest(row['snapshot'])
+                with self.assertRaises(GroupConflict):
+                    self.preparar(grupo, inventario)
+        self.assertEqual(self.registro.consultar_grupamento(self.contexto, grupo['group_id']), grupo)
+
+    def test_preparacao_recusa_grupo_inativo_ou_revisao_antiga(self):
+        original = self.criar()
+        atual = self.registro.revisar_grupamento(self.contexto, self.inventario,
+                                                 self.revisao(original, ['n1']))
+        with self.assertRaises(GroupConflict):
+            self.preparar(original)
+        arquivado = self.registro.arquivar_grupamento(self.contexto, self.arquivo(atual))
+        with self.assertRaises(GroupConflict):
+            self.preparar(arquivado)
+
+    def test_preparacao_nao_promove_referencia_descritiva(self):
+        row = self.inventario['n1']
+        row['snapshot']['source_kind'] = 'descriptive_reference'
+        row['snapshot']['official_calculation_ready'] = False
+        row['snapshot_sha256'] = digest(row['snapshot'])
+        grupo = self.criar(self.pedido(['n1']))
+        preparado = self.preparar(grupo)
+        self.assertEqual(preparado['members'][0]['source_kind'], 'descriptive_reference')
+        self.assertFalse(preparado['members'][0]['official_calculation_ready'])
+        self.assertFalse(preparado['official_calculation_ready'])
+
+    def test_inventario_nao_utilizado_nao_altera_manifesto_dos_membros(self):
+        grupo = self.criar()
+        preparado = self.preparar(grupo)
+        self.inventario['n3']['allocated'] = False
+        self.assertEqual(self.preparar(grupo), preparado)
+
+    def test_reenvio_antigo_nao_reativa_grupo_arquivado(self):
+        pedido = self.pedido()
+        grupo = self.criar(pedido)
+        arquivado = self.registro.arquivar_grupamento(self.contexto, self.arquivo(grupo))
+        self.assertEqual(self.criar(pedido), grupo)
+        self.assertEqual(self.registro.consultar_grupamento(self.contexto, grupo['group_id']), arquivado)
+        with self.assertRaises(GroupConflict):
+            self.preparar(grupo)
+
+    def test_identidade_falsa_no_snapshot_e_recusada_mesmo_com_hash_recalculado(self):
+        for campo, valor in (('unit_id', 'outra'), ('exercise_id', 2), ('team', 'VERMELHO'),
+                              ('configuration_version_id', 'outra-config')):
+            with self.subTest(campo=campo):
+                inventario = deepcopy(self.inventario)
+                inventario['n1']['snapshot'][campo] = valor
+                inventario['n1']['snapshot_sha256'] = digest(inventario['n1']['snapshot'])
+                with self.assertRaises(ValueError):
+                    self.registro.criar_grupamento(self.contexto, inventario, self.pedido(['n1']))
+
+    def test_recibos_de_comando_nao_atravessam_contextos(self):
+        pedido = self.pedido(['n1'])
+        azul = self.criar(pedido)
+        vermelho = dict(exercise_id=1, team='VERMELHO')
+        inventario = {'n1': unidade('n1', team='VERMELHO')}
+        outro = self.registro.criar_grupamento(vermelho, inventario, pedido)
+        self.assertEqual(outro['team'], 'VERMELHO')
+        self.assertNotEqual(outro['group_id'], azul['group_id'])
+        self.assertEqual(self.criar(pedido), azul)
+
+    def test_dominio_aereo_nao_determina_forca_organizacional(self):
+        pedido = self.pedido(['a1'], organization_label='Esquadrilha',
+                             mpnl_binding={'force': 'MARINHA', 'level': 1})
+        pedido['domain'] = 'aereo'
+        grupo = self.criar(pedido)
+        self.assertEqual(grupo['mpnl_binding'], {'force': 'MARINHA', 'level': 1})
+
+    def test_limites_de_pedido_e_revisao(self):
+        for campo, valor in (('command_id', 'invalido'), ('designation', ' '),
+                              ('designation', 'x' * 121), ('member_unit_ids', []),
+                              ('member_unit_ids', ['']), ('member_unit_ids', ['n1', None])):
+            with self.subTest(campo=campo, valor=valor):
+                pedido = self.pedido()
+                pedido[campo] = valor
+                with self.assertRaises(ValueError):
+                    self.criar(pedido)
+        grupo = self.criar()
+        for rev in (0, -1, True, '1'):
+            with self.assertRaises(ValueError):
+                self.registro.consultar_grupamento(self.contexto, grupo['group_id'], rev)
 
 
 if __name__ == '__main__':

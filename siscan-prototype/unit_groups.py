@@ -241,3 +241,39 @@ class RegistroGrupamentos:
             for member in members:
                 state['owners'][context + (member['unit_id'],)] = version['group_id']
             return self._publish(state, context, 'revise', request, version)
+
+    def arquivar_grupamento(self, contexto: dict, pedido: dict) -> dict:
+        """Libera vínculos ativos; nenhuma unidade ou versão é apagada."""
+        context = _context(contexto)
+        if not isinstance(pedido, dict) or set(pedido) != {'command_id', 'group_id', 'expected_revision'}:
+            raise ValueError('Arquivamento exige somente comando, grupo e revisão esperada.')
+        request = dict(command_id=_uuid(pedido['command_id'], 'command_id'),
+                       group_id=_uuid(pedido['group_id'], 'group_id'),
+                       expected_revision=_revision(pedido['expected_revision']))
+        with self._lock:
+            replay = self._replay(context, 'archive', request)
+            if replay is not None:
+                return replay
+            current = self._current(context, request['group_id'], request['expected_revision'])
+            version = self._version(context, current['group_id'], current['composition_revision'] + 1,
+                                    current, current['members'], current['inventory_snapshot_sha256'], active=False)
+            state = deepcopy(self._state)
+            self._release(state, context, current)
+            return self._publish(state, context, 'archive', request, version)
+
+    def preparar_composicao(self, contexto: dict, inventario: dict, group_id: str, expected_revision: int) -> dict:
+        """Revalida referências/disponibilidade sem iniciar ou aprovar cálculo."""
+        context = _context(contexto)
+        group_id = _uuid(group_id, 'group_id')
+        expected_revision = _revision(expected_revision)
+        with self._lock:
+            current = self._current(context, group_id, expected_revision)
+            ids = [member['unit_id'] for member in current['members']]
+            members, inventory_sha = _members(context, inventario, ids, current['domain'])
+            if members != current['members']:
+                raise GroupConflict('Snapshot/configuração mudou; revise explicitamente a composição.')
+            return dict(schema_version='siscan-group-composition-01', exercise_id=context[0], team=context[1],
+                        group_id=group_id, composition_revision=current['composition_revision'],
+                        composition_sha256=current['composition_sha256'], members=members,
+                        inventory_snapshot_sha256=inventory_sha,
+                        simulation_started=False, official_calculation_ready=False)

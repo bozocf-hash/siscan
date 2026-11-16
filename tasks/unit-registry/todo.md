@@ -49,7 +49,7 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ## UGR-03 — Arquivar e liberar vínculos diretos
 
-- [ ] Implementar e verificar.
+- [x] Implementar e verificar.
 - **Resultado:** revisão inativa, sem apagar o grupo, suas versões ou as unidades.
 - **Aceite:**
   - Arquivar com revisão esperada cria versão inativa e libera integrantes para outro grupo ativo, mantendo referências históricas consultáveis.
@@ -62,7 +62,7 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ## UGR-04 — Preparar composição com disponibilidade atual
 
-- [ ] Implementar e verificar.
+- [x] Implementar e verificar.
 - **Resultado:** snapshot de referências da composição e manifesto da visão usada, sem iniciar CPC ou publicar efeitos.
 - **Aceite:**
   - Conferir grupo/revisão ativos e inventário atual; indisponibilidade, mudança de configuração/snapshot ou dados obrigatórios ausentes produzem recusa explícita.
@@ -75,9 +75,9 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ### Checkpoint B — Ciclo completo
 
-- [ ] Criar → consultar → revisar → preparar → arquivar funciona no mesmo contexto com histórico intacto.
-- [ ] Reenvios, disputa de integrante, revisão desatualizada e perda de disponibilidade mantêm os invariantes.
-- [ ] Todos os critérios UG-01–UG-15 estão ligados a verificações reais; não há alegação de autenticação, persistência ou validação física implementadas.
+- [x] Criar → consultar → revisar → preparar → arquivar funciona no mesmo contexto com histórico intacto.
+- [x] Reenvios, disputa de integrante, revisão desatualizada e perda de disponibilidade mantêm os invariantes.
+- [x] Todos os critérios UG-01–UG-15 estão ligados a verificações reais; não há alegação de autenticação, persistência ou validação física implementadas. Checkpoint B verificado com 24 testes focados.
 
 ## UGR-05 — Conferir preservação e documentar a entrega
 

@@ -1,6 +1,6 @@
 # Spec: force-confrontation — preparação didática de grupamentos
 
-**Data: 2026-11-16. Estado: Fase 1 aprovada por “siga”; plano de Fase 2 proposto em 95.** O registro de grupamentos entregue em [93](docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md) permanece concluído. Esta especificação acrescenta um consumidor de suas composições; não reabre os gates de `unit-registry` ou de `technical-catalog`.
+**Data: 2026-11-16. Estado: Fase 1 aprovada por “siga”; plano de Fase 2 aprovado por “seguimos”; tarefas propostas em 96.** O registro de grupamentos entregue em [93](docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md) permanece concluído. Esta especificação acrescenta um consumidor de suas composições; não reabre os gates de `unit-registry` ou de `technical-catalog`.
 
 ## Objetivo e premissas
 
@@ -105,4 +105,4 @@ A proposta não inclui execução do confronto, exportador novo, gravador duráv
 
 ## Gate
 
-Fase 1 aprovada pelo responsável por “siga”. [Plano de Fase 2](tasks/force-confrontation/plan.md) proposto para revisão, conforme [95](docs/recovery/95_PLANO_PREPARACAO_CPC_GRUPAMENTOS.md). Não iniciar tarefas ou código antes dos gates correspondentes.
+Fase 1 aprovada pelo responsável por “siga”. [Plano de Fase 2](tasks/force-confrontation/plan.md) aprovado por “seguimos”, conforme [95](docs/recovery/95_PLANO_PREPARACAO_CPC_GRUPAMENTOS.md). [Tarefas de Fase 3](tasks/force-confrontation/todo.md) propostas conforme [96](docs/recovery/96_TAREFAS_PREPARACAO_CPC_GRUPAMENTOS.md); não iniciar código antes de sua aprovação. A frente gráfica conceitual de 97 usa obrigatoriamente o mapa existente e não altera este recorte em memória.

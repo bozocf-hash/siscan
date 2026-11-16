@@ -1,5 +1,7 @@
 # 95 — Plano de preparação dos grupamentos CPC
 
+**Atualização de gate:** plano aprovado por “seguimos”; lista de tarefas proposta em [96](96_TAREFAS_PREPARACAO_CPC_GRUPAMENTOS.md). Concepção gráfica no mapa existente registrada em [97](97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md). O conteúdo abaixo registra a preparação histórica do plano.
+
 **Data: 2026-11-16. Estado: especificação aprovada por “siga”; plano de Fase 2 proposto.** O responsável aprovou a proposta de 94. O [plano](../../tasks/force-confrontation/plan.md) detalha o consumidor da [especificação](../../SPEC-force-confrontation.md), preservando a entrega 93 e os planos antigos do catálogo.
 
 O plano propõe uma função pura para preparar o dossiê dos partidos AZUL/VERMELHO: autorização por provedor confiável, visões isoladas do inventário, operações públicas do registro, snapshots integrais e conferência final de revisões observadas. Não cria autenticação, persistência, exportador, mapa ou combate de grupamentos.

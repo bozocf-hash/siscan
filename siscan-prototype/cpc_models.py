@@ -64,7 +64,8 @@ class UnidadeMilitar:
         assinatura_radar: Seção reta radar de referência em m², no contexto
             declarado pelo cenário; None indica dado desconhecido. Este escalar
             não representa sozinho um modelo de detecção.
-        velocidade: Velocidade atual em nós; não representa velocidade máxima.
+        velocidade: Velocidade informada em nós; não representa velocidade máxima.
+            O deslocamento efetivo é limitado pelo combustível disponível.
         armamentos: Lista própria de estoques embarcados. A lista recebida é
             copiada superficialmente; os objetos Armamento continuam os mesmos
             e devem pertencer à unidade, sem compartilhamento entre unidades.
@@ -73,8 +74,8 @@ class UnidadeMilitar:
         probabilidade_deteccao: Probabilidade-base didática entre 0 e 1, antes do
             fator explícito de assinatura do cenário; None indica não definido.
         combustivel_atual: Massa disponível em kg no ensaio, não volume em litros.
-        taxa_consumo_combustivel: Taxa constante didática em kg/min. A camada
-            temporal atual aplica essa taxa somente às aeronaves em voo.
+        taxa_consumo_combustivel: Taxa constante didática em kg/min, aplicada
+            pelo loop de logística quando o consumo está configurado.
     """
 
     def __init__(
@@ -142,6 +143,14 @@ class MeioNaval(UnidadeMilitar):
             taxa_consumo_combustivel=taxa_consumo_combustivel,
         )
         self.capacidade_defesa_ponto = capacidade_defesa_ponto
+
+
+class MeioTerrestre(UnidadeMilitar):
+    """Meio terrestre do ensaio; herda os atributos comuns e a logística.
+
+    Sem combustível permanece no cenário, incapaz de se deslocar por meios
+    próprios. Isso não implica destruição ou perda de capacidade de combate.
+    """
 
 
 class VetorAereo(UnidadeMilitar):

@@ -4,7 +4,7 @@ import random
 import unittest
 
 from cpc_combat import AcaoDisparo, GerenciadorDeCombate
-from cpc_models import Armamento, MeioNaval, VetorAereo
+from cpc_models import Armamento, MeioNaval, MeioTerrestre, VetorAereo
 from cpc_scenario import CenarioTatico
 from cpc_time import SimulacaoTemporal
 
@@ -71,6 +71,8 @@ class TempoTests(unittest.TestCase):
 
     def test_dois_movimentos_atualizam_distancia_por_posicoes(self):
         self.b.velocidade = 60.0
+        self.b.combustivel_atual = 10.0
+        self.b.taxa_consumo_combustivel = 1.0
         self.sim.rumos["b"] = 270.0
         self.sim.avancar_turno([])
         self.assertAlmostEqual(self.cenario.distancia(self.a, self.b), 8.0)
@@ -153,6 +155,69 @@ class TempoTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             CenarioTatico([self.a, self.b], {("a", "b"): 10.0}, {1.0: 1.0},
                            posicoes={"a": (0.0, 0.0), "b": (11.0, 0.0)})
+
+    def preparar_meio_superficie_ou_terrestre(self, classe, saldo, taxa):
+        self.a.estado_voo = "pousado"
+        extras = {"capacidade_defesa_ponto": None} if classe is MeioNaval else {}
+        self.b = classe(identificador="b", pontos_de_vida=100.0, assinatura_radar=1.0,
+                        velocidade=60.0, combustivel_atual=saldo,
+                        taxa_consumo_combustivel=taxa, **extras)
+        self.cenario = CenarioTatico([self.a, self.b], {("a", "b"): 10.0}, {1.0: 1.0},
+                                     posicoes={"a": (0.0, 0.0), "b": (10.0, 0.0)})
+        self.motor = GerenciadorDeCombate(self.a, self.b, cenario=self.cenario, gerador=random.Random(7))
+        self.sim = SimulacaoTemporal(self.motor, rumos={"b": 90.0}, rumos_evasao={})
+
+    def test_superficie_e_terrestre_sem_combustivel_imobilizam_sem_perda(self):
+        for classe in (MeioNaval, MeioTerrestre):
+            with self.subTest(classe=classe):
+                self.preparar_meio_superficie_ou_terrestre(classe, 0.0, None)
+                turno = self.sim.avancar_turno([])
+                self.assertEqual(self.cenario.posicao(self.b), (10.0, 0.0))
+                self.assertEqual(self.b.pontos_de_vida, 100.0)
+                self.assertIsNone(turno.logistica[1].estado_voo)
+                self.assertTrue(turno.logistica[1].imobilizado_por_combustivel)
+
+    def test_esgotamento_no_meio_do_minuto_limita_deslocamento_nao_aereo(self):
+        for classe in (MeioNaval, MeioTerrestre):
+            with self.subTest(classe=classe):
+                self.preparar_meio_superficie_ou_terrestre(classe, 1.0, 2.0)
+                turno = self.sim.avancar_turno([])
+                self.assertAlmostEqual(self.cenario.distancia(self.a, self.b), 10.5)
+                self.assertEqual(self.b.combustivel_atual, 0.0)
+                self.assertTrue(turno.logistica[1].imobilizado_por_combustivel)
+                self.sim.avancar_turno([])
+                self.assertAlmostEqual(self.cenario.distancia(self.a, self.b), 10.5)
+                self.assertEqual(self.b.pontos_de_vida, 100.0)
+
+    def test_movimento_nao_aereo_com_combustivel_desconhecido_e_recusado(self):
+        self.preparar_meio_superficie_ou_terrestre(MeioNaval, None, None)
+        with self.assertRaises(ValueError):
+            self.sim.avancar_turno([])
+        self.assertEqual(self.sim.minuto_atual, 0)
+        self.assertEqual(self.cenario.posicao(self.b), (10.0, 0.0))
+
+    def test_combustivel_aereo_zerado_no_solo_nao_propoe_queda(self):
+        self.a.estado_voo = "pousado"
+        self.a.combustivel_atual = 0.0
+        self.sim.avancar_turno([])
+        self.assertEqual(self.a.estado_voo, "pousado")
+        self.assertEqual(self.a.pontos_de_vida, 100.0)
+
+    def test_combustivel_aereo_zerado_independe_de_taxa_reserva_e_rumo(self):
+        self.a.combustivel_atual = 0.0
+        self.a.taxa_consumo_combustivel = None
+        self.a.combustivel_minimo_retorno = None
+        self.sim.rumos_evasao.clear()
+        self.sim.avancar_turno([])
+        self.assertEqual(self.a.estado_voo, "perda_proposta")
+        self.assertEqual(self.cenario.posicao(self.a), (0.0, 0.0))
+
+    def test_aeronave_sem_combustivel_nao_dispara_antes_do_proximo_turno(self):
+        self.assertTrue(self.motor.tentar_detecao(self.a, self.b))
+        self.a.combustivel_atual = 0.0
+        with self.assertRaises(ValueError):
+            self.motor.resolver_disparo(self.a, self.b, self.arma)
+        self.assertEqual(self.arma.quantidade, 3)
 
 
 if __name__ == "__main__":

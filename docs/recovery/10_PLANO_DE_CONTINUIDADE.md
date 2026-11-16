@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Regra por domínio — [87](87_REGRA_ESGOTAMENTO_COMBUSTIVEL_POR_DOMINIO.md):** preservar perda aérea em voo e imobilização de superfície/terrestre por combustível zerado. O consumo não aéreo constante já foi entregue; integração com perfis/snapshots, apoio logístico e decisão oficial do instrutor permanece pendente. Não generalizar a restrição de movimento para perda automática do meio.
+
 **Entrega CPC — [86](86_CPC_TURNOS_COMBUSTIVEL_E_MOVIMENTO.md):** loop temporal isolado entregue, com 63 testes e relógio global do cenário. Manter consumo/movimento antes da nova detecção e ações do minuto. A integração futura precisa unificar contratos de snapshot/recursos, retorno e alerta do operador, sem substituir os limites/configurações existentes ou aprovar taxas DB3K por inferência.
 
 **Entrega CPC — [85](85_CPC_DETECCAO_CONTATOS_E_ALCANCE.md):** detecção didática e alcance acrescentados ao recorte de 84, com 47 testes. Preservar as portas de entrada sem contato automático e unidades em MN. A futura integração continua dependendo de snapshots, autorização/adjudicação e dados aprovados; não converter a rubrica sintética em modelo físico por associação SQL.

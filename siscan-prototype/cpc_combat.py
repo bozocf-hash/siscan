@@ -100,7 +100,8 @@ class GerenciadorDeCombate:
             _validar_numero(unidade.pontos_de_vida, "pontos_de_vida")
             if unidade.pontos_de_vida == 0:
                 raise ValueError("Unidade sem pontos não participa da busca neste ensaio.")
-            if isinstance(unidade, VetorAereo) and unidade.estado_voo == "perda_proposta":
+            if isinstance(unidade, VetorAereo) and (unidade.estado_voo == "perda_proposta"
+                    or (unidade.estado_voo in ("em_voo", "evadindo") and unidade.combustivel_atual == 0)):
                 raise ValueError("Aeronave com perda proposta não participa da busca.")
         _validar_numero(unidade_a.alcance_radar, "alcance_radar")
         _validar_numero(unidade_a.probabilidade_deteccao, "probabilidade_deteccao", 1.0)
@@ -127,9 +128,11 @@ class GerenciadorDeCombate:
             if (acao.atacante not in unidades or acao.defensor not in unidades
                     or acao.atacante is acao.defensor):
                 raise ValueError("A ação deve pertencer ao par deste ensaio.")
-            if isinstance(acao.atacante, VetorAereo) and acao.atacante.estado_voo != "em_voo":
+            if isinstance(acao.atacante, VetorAereo) and (acao.atacante.estado_voo != "em_voo"
+                    or acao.atacante.combustivel_atual == 0):
                 raise ValueError("Aeronave que não está em voo disponível não inicia novos ataques.")
-            if isinstance(acao.defensor, VetorAereo) and acao.defensor.estado_voo == "perda_proposta":
+            if isinstance(acao.defensor, VetorAereo) and (acao.defensor.estado_voo == "perda_proposta"
+                    or (acao.defensor.estado_voo in ("em_voo", "evadindo") and acao.defensor.combustivel_atual == 0)):
                 raise ValueError("Alvo com perda proposta indisponível no ensaio.")
             if acao.arma not in acao.atacante.armamentos or acao.arma.tipo == "defesa_ponto":
                 raise ValueError("Informe um armamento ofensivo pertencente ao atacante.")
@@ -326,6 +329,8 @@ if __name__ == "__main__":
             if unidade.estado_voo is not None:
                 print(f"  {unidade.unidade_id}: combustível {unidade.combustivel_antes:g} -> "
                       f"{unidade.combustivel_depois:g} kg; {unidade.estado_voo}")
+            elif unidade.imobilizado_por_combustivel:
+                print(f"  {unidade.unidade_id}: imobilizado por combustível zerado; sem perda automática.")
         for evento in turno.eventos:
             print(evento)
         for resultado in turno.combate:

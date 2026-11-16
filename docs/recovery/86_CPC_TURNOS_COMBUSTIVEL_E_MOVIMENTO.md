@@ -1,5 +1,7 @@
 # 86 — CPC: turnos de um minuto, combustível e movimento
 
+**Complemento posterior:** [87](87_REGRA_ESGOTAMENTO_COMBUSTIVEL_POR_DOMINIO.md), de 2026-11-16, implementa consumo/imobilização de superfície e terrestre, mantendo perda aérea em voo. A ausência de consumo naval descrita abaixo é o estado histórico deste incremento anterior; o contrato atual está em 87.
+
 **Data: 2026-11-12. Estado: incremento didático implementado e verificado.** Pedido expresso: loop de um minuto, combustível/consumo nas unidades, reserva de retorno, limite de munição e movimento no cenário. Complementa [84](84_CPC_RODADAS_INICIATIVA_E_CONSUMO_DEFENSIVO.md) e [85](85_CPC_DETECCAO_CONTATOS_E_ALCANCE.md). Não altera dados oficiais nem transforma os parâmetros fictícios em características dos meios reais.
 
 ## Contratos e unidades

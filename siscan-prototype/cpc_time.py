@@ -12,7 +12,7 @@ import math
 import random
 from typing import TYPE_CHECKING
 
-from cpc_models import VetorAereo, validar_estoques, validar_numero
+from cpc_models import MeioNaval, MeioTerrestre, VetorAereo, validar_estoques, validar_numero
 
 if TYPE_CHECKING:
     from cpc_combat import AcaoDisparo, GerenciadorDeCombate, ResultadoDisparo
@@ -27,6 +27,7 @@ class ResumoLogistico:
     estado_voo: str | None
     posicao_antes: tuple[float, float]
     posicao_depois: tuple[float, float]
+    imobilizado_por_combustivel: bool | None
 
 
 @dataclass(frozen=True)
@@ -84,7 +85,11 @@ class SimulacaoTemporal:
                     raise ValueError("Estado de voo não reconhecido.")
                 normal = 0.0
                 if unidade.estado_voo in ("em_voo", "evadindo"):
-                    for nome in ("combustivel_atual", "taxa_consumo_combustivel", "combustivel_minimo_retorno"):
+                    validar_numero(unidade.combustivel_atual, "combustivel_atual")
+                    if unidade.combustivel_atual == 0:
+                        unidade.estado_voo = "perda_proposta"
+                if unidade.estado_voo in ("em_voo", "evadindo"):
+                    for nome in ("taxa_consumo_combustivel", "combustivel_minimo_retorno"):
                         validar_numero(getattr(unidade, nome), nome)
                     taxa, saldo = unidade.taxa_consumo_combustivel, unidade.combustivel_atual
                     if taxa == 0:
@@ -100,6 +105,21 @@ class SimulacaoTemporal:
                         unidade.estado_voo = "evadindo"
                     if unidade.velocidade > 0 and chave not in self.rumos_evasao:
                         raise ValueError("Declare rumo de evasão para cada aeronave móvel em voo.")
+            elif isinstance(unidade, (MeioNaval, MeioTerrestre)):
+                saldo, taxa = unidade.combustivel_atual, unidade.taxa_consumo_combustivel
+                if saldo is not None:
+                    validar_numero(saldo, "combustivel_atual")
+                if taxa is not None:
+                    validar_numero(taxa, "taxa_consumo_combustivel")
+                if saldo == 0:
+                    normal = 0.0
+                elif saldo is None and taxa is None and unidade.velocidade == 0:
+                    normal = 0.0  # Meio estacionário sem logística avaliada.
+                else:
+                    validar_numero(saldo, "combustivel_atual")
+                    validar_numero(taxa, "taxa_consumo_combustivel")
+                    normal = min(1.0, saldo / taxa) if taxa > 0 else 1.0
+                    unidade.combustivel_atual = max(0.0, saldo - taxa)
             if unidade.velocidade > 0 and normal > 0 and chave not in self.rumos:
                 raise ValueError("Declare o rumo de cada unidade que se movimenta.")
             dx, dy = _deslocamento(unidade.velocidade, rumo, normal)
@@ -110,6 +130,8 @@ class SimulacaoTemporal:
             u.identificador, antes[u.identificador][0], u.combustivel_atual,
             u.estado_voo if isinstance(u, VetorAereo) else None,
             antes[u.identificador][1], cenario.posicao(u),
+            u.combustivel_atual == 0 if isinstance(u, (MeioNaval, MeioTerrestre))
+            and u.combustivel_atual is not None else None,
         ) for u in cenario.unidades)
 
     def avancar_turno(

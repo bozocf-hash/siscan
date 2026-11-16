@@ -59,3 +59,5 @@ Autorização posterior específica para o ensaio isolado de classes, disparo, r
 Complemento solicitado de detecção, contatos e alcance implementado no ensaio estático em [85](docs/recovery/85_CPC_DETECCAO_CONTATOS_E_ALCANCE.md), com 47 testes. A geometria/rubrica é sintética, sem aprovação de eficácia real ou integração ao exercício oficial.
 
 Loop de um minuto solicitado e entregue em [86](docs/recovery/86_CPC_TURNOS_COMBUSTIVEL_E_MOVIMENTO.md): consumo aéreo, reserva explícita, evasão/perda proposta e movimento planar, com 63 testes. É ensaio em memória; não substitui `execution-core`/`resource-engine` oficiais, não integra bases ou altera decisões de promoção de dados.
+
+Ratificação posterior em [87](docs/recovery/87_REGRA_ESGOTAMENTO_COMBUSTIVEL_POR_DOMINIO.md): consumo não aéreo constante e regra de combustível zerado por domínio, com 69 testes. Superfície/terrestre imobilizam; aéreo em voo tem perda no ensaio para adjudicação. Não altera os IDs das capacidades ou aplica efeitos oficiais.

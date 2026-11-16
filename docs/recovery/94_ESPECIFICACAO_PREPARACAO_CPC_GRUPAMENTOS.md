@@ -1,5 +1,7 @@
 # 94 — Preparação de grupamentos para conferência CPC
 
+**Atualização de gate:** especificação aprovada pelo responsável por “siga”; plano proposto em [95](95_PLANO_PREPARACAO_CPC_GRUPAMENTOS.md). Os parágrafos seguintes registram a preparação histórica da Fase 1. Sem implementação.
+
 **Data: 2026-11-16. Estado: Fase 1 proposta; sem implementação.** Após a entrega 93, o responsável orientou “seguimos”. Foi produzida [SPEC-force-confrontation.md](../../SPEC-force-confrontation.md), preservando os IDs do mapa e os contratos já aprovados.
 
 Próxima fatia proposta: preparar um dossiê de um grupamento AZUL e um VERMELHO, no mesmo exercício, por contexto de instrutor autorizado pelo provedor. Conferir versões, disponibilidade e hashes; copiar os snapshots integrais dos integrantes; manter estados/logística individuais sem substituir desconhecidos por zero. Saída canônica e rastreável, sem execução, agregação de poder ou efeito oficial.

@@ -1,6 +1,6 @@
 # 10 — Plano de continuidade
 
-**Preparação CPC — [94](94_ESPECIFICACAO_PREPARACAO_CPC_GRUPAMENTOS.md):** revisar `SPEC-force-confrontation.md`, limitada ao dossiê inicial de dois grupamentos. Após aprovação, elaborar plano próprio, preservando planos anteriores; não iniciar execução ou publicação de efeitos nesta proposta.
+**Preparação CPC — [95](95_PLANO_PREPARACAO_CPC_GRUPAMENTOS.md):** especificação aprovada por “siga”. Revisar o plano em `tasks/force-confrontation/plan.md`; após aprovação, detalhar tarefas no mesmo diretório, preservando os planos anteriores. Recorte continua limitado ao dossiê inicial de dois grupamentos, sem confronto ou efeitos oficiais.
 
 **Grupamentos — entrega [93](93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md):** ciclo aprovado e concluído em memória, com 29 testes do registro, 81 CPC e verificador de unidades passando. Checkpoints A/B e UGR-01–UGR-06 concluídos; não reabrir aprovações dadas. Uma próxima fatia de integração deve especificar o adaptador de membros/snapshots, permissões, persistência e vínculo com ensaio/adjudicação, sem consumir recursos na mera preparação da composição. Preservar os quatro níveis MPNL, as decisões do instrutor e os planos abertos do catálogo. Documentos 89–92 registram etapas históricas; não representam gates ainda pendentes desta entrega.
 

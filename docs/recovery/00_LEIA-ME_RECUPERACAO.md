@@ -1,6 +1,6 @@
 # Recuperação documental do SISCAN
 
-**Próxima fatia proposta — [94](94_ESPECIFICACAO_PREPARACAO_CPC_GRUPAMENTOS.md):** especificação de preparação didática de dois grupamentos, com snapshots integrais e versões conferidas. Fase 1 aguarda revisão; sem código ou execução de confronto. A entrega 93 permanece concluída.
+**Preparação CPC — [95](95_PLANO_PREPARACAO_CPC_GRUPAMENTOS.md):** especificação de 94 aprovada por “siga”; plano técnico proposto em `tasks/force-confrontation/plan.md`, sem sobrescrever os planos antigos do catálogo. Próxima revisão é do plano; tarefas e código ainda não iniciados. Entrega 93 preservada.
 
 **Grupamentos entregues — [93](93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md):** escopo, especificação, plano e tarefas aprovados; UGR-01–UGR-06 concluídas. Registro em memória com criação, consulta, revisão, arquivamento e preparação revalidada por exercício/partido. Passaram 29 testes novos, 81 CPC e o verificador de unidades. Sem API, persistência ou confronto de grupamentos integrado. Os documentos [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md), [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md), [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md) e [92](92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md) são registros históricos das aprovações/preparação; suas pendências de gates desta fatia foram superadas pela entrega 93. Planos antigos do catálogo preservados.
 

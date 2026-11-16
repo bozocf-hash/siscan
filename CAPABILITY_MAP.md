@@ -72,4 +72,4 @@ Manter IDs/dependências: `technical-catalog` fornece evidência/consulta; `unit
 
 ## Próxima fatia de force-confrontation
 
-[Especificação proposta](SPEC-force-confrontation.md), registrada em [94](docs/recovery/94_ESPECIFICACAO_PREPARACAO_CPC_GRUPAMENTOS.md): preparação de dossiê inicial AZUL/VERMELHO consumindo os contratos de composição e inventário. Fase 1 aguarda revisão; não inclui execução, persistência ou resultado oficial. Mantidos IDs/dependências, entrega 93 e ciclo independente do catálogo.
+[Especificação aprovada](SPEC-force-confrontation.md) por “siga”, registrada em [94](docs/recovery/94_ESPECIFICACAO_PREPARACAO_CPC_GRUPAMENTOS.md): preparação de dossiê inicial AZUL/VERMELHO consumindo os contratos de composição e inventário. [Plano de Fase 2](tasks/force-confrontation/plan.md) proposto conforme [95](docs/recovery/95_PLANO_PREPARACAO_CPC_GRUPAMENTOS.md), aguardando revisão. Sem tarefas/código iniciados; não inclui execução, persistência ou resultado oficial. Mantidos IDs/dependências, entrega 93 e ciclo independente do catálogo.

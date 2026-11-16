@@ -1,6 +1,6 @@
 # Spec: unit-registry — composição versionada de grupamentos
 
-**Estado: Fase 1 aprovada pelo responsável em 2026-11-16, por “sim”.** Complemento de escopo de [89](docs/recovery/89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md) e do [mapa de capacidades](CAPABILITY_MAP.md) previamente aprovado por “pode seguir”. A aprovação permite o planejamento, não a implementação. Plano de Fase 2 proposto em [tasks/unit-registry/plan.md](tasks/unit-registry/plan.md), local escolhido pelo responsável na opção 1, preservando o trabalho aberto de `technical-catalog`.
+**Estado: Fase 1 aprovada pelo responsável em 2026-11-16, por “sim”.** Complemento de escopo de [89](docs/recovery/89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md) e do [mapa de capacidades](CAPABILITY_MAP.md) previamente aprovado por “pode seguir”. Plano de Fase 2 aprovado posteriormente por “aprovado” em [tasks/unit-registry/plan.md](tasks/unit-registry/plan.md), local escolhido pelo responsável. Lista de Fase 3 proposta em [tasks/unit-registry/todo.md](tasks/unit-registry/todo.md), antes da implementação; preservar o trabalho aberto de `technical-catalog`.
 
 ## Objetivo
 
@@ -148,4 +148,4 @@ Fora desta primeira entrega: sensor físico, previsão operacional de eficácia,
 
 ## Gate de conclusão
 
-Gate da Fase 1 satisfeito pela aprovação registrada acima. O plano técnico foi elaborado posteriormente como Fase 2 e aguarda sua própria revisão; lista detalhada e implementação ainda não iniciadas. A aprovação desta especificação não aprova automaticamente decisões de plano, tarefas ou código.
+Gates de Fase 1 e do plano de Fase 2 satisfeitos por aprovações distintas. Lista detalhada de Fase 3 proposta para revisão; implementação não iniciada. Aprovações anteriores não aprovam automaticamente tarefas ou código.

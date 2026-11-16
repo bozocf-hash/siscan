@@ -1,6 +1,8 @@
 # Recuperação documental do SISCAN
 
-**Plano de grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** especificação de 90 aprovada; plano de Fase 2 proposto em `tasks/unit-registry/plan.md`, local escolhido pelo responsável. Criação/consulta, revisão, arquivamento, preparação e verificação final, sem alterar os planos abertos do catálogo. Aguarda revisão do plano; nenhum código iniciado.
+**Tarefas de grupamentos — [92](92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md):** plano aprovado; seis tarefas de Fase 3 propostas em `tasks/unit-registry/todo.md`, com aceites, dependências e verificações. Lista aguarda revisão antes do código; os arquivos abertos do catálogo foram preservados.
+
+**Plano de grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** plano de Fase 2 aprovado em `tasks/unit-registry/plan.md`, local escolhido pelo responsável. Criação/consulta, revisão, arquivamento, preparação e verificação final, sem alterar os planos abertos do catálogo. Tarefas propostas posteriormente em 92; código não iniciado.
 
 **Especificação de grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** escopo de 89 e `SPEC-unit-registry.md` aprovados. Composição direta naval/aérea em memória, versões, disponibilidade por partido e arquivamento, com 15 critérios de aceite. Plano proposto posteriormente em 91; código não iniciado.
 

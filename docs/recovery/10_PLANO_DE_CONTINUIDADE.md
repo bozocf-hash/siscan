@@ -1,6 +1,8 @@
 # 10 — Plano de continuidade
 
-**Grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** Fase 1 aprovada; plano de Fase 2 proposto no caminho escolhido `tasks/unit-registry/plan.md`. Após aprovação, detalhar tarefas em `tasks/unit-registry/todo.md`. Não sobrescrever `tasks/plan.md` ou `tasks/todo.md` do catálogo nem iniciar código nesta fase.
+**Grupamentos — [92](92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md):** plano aprovado; lista detalhada proposta para aceite. Após aprovação, executar a Fase 4 em ordem e conferir checkpoints A/B, sem reabrir decisões aprovadas ou tocar tarefas abertas do catálogo. Não houve implementação nesta preparação documental.
+
+**Grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** Fases 1/2 aprovadas; lista de Fase 3 proposta em `tasks/unit-registry/todo.md`. Não sobrescrever `tasks/plan.md` ou `tasks/todo.md` do catálogo. A aprovação da lista antecede o código.
 
 **Grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** Fases 0/1 aprovadas; plano técnico elaborado posteriormente em 91 para revisão. Não avançar para tarefas/código ou substituir o ciclo independente de `technical-catalog` antes de cumprir os gates correspondentes.
 

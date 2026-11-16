@@ -1,6 +1,6 @@
 # Plano técnico: unit-registry — grupamentos diretos
 
-**Estado: Fase 2 proposta para revisão.** A [especificação](../../SPEC-unit-registry.md) foi aprovada pelo responsável em 2026-11-16, por “sim”. Local deste plano escolhido explicitamente pelo responsável na opção 1: `tasks/unit-registry/plan.md`. Preservar `tasks/plan.md` e `tasks/todo.md`, referentes ao trabalho aberto de `technical-catalog`.
+**Estado: Fase 2 aprovada pelo responsável em 2026-11-16, por “aprovado”.** A [especificação](../../SPEC-unit-registry.md) foi aprovada em interação anterior, por “sim”. Local deste plano escolhido explicitamente pelo responsável na opção 1: `tasks/unit-registry/plan.md`. Lista de Fase 3 proposta em [todo.md](todo.md), sem código iniciado. Preservar `tasks/plan.md` e `tasks/todo.md`, referentes ao trabalho aberto de `technical-catalog`.
 
 ## Resultado pretendido
 
@@ -34,7 +34,7 @@ Contexto verificado + visão do provedor de unidades/inventário
 
 O provedor é uma entrada do consumidor; não criar import de `party-inventory` dentro de `unit-registry`. Também não importar `engine_runtime` para obter exceções: usar `GroupConflict(ValueError)` local, evitando ciclo com o núcleo de execução.
 
-## Decisões de implementação propostas
+## Decisões de implementação aprovadas no plano
 
 ### 1. Um registro em memória, sem estado global
 
@@ -86,7 +86,7 @@ A preparação não promove dados técnicos. Flags/estados de evidência e aprov
 | Checkpoint B | Fluxo completo criar → revisar → preparar → arquivar; reenvios não duplicam; nenhum efeito em recursos, relógio ou bancos | UG-01–15 |
 | 5 | Revisão final e documentação do recorte, seus comandos e suas limitações; conferir regressão afetada | UG-01–15 e preservação do protótipo |
 
-As etapas são a ordem de construção, não a lista detalhada de tarefas. Após aprovação deste plano, a Fase 3 detalhará aceites, arquivos e verificações em `tasks/unit-registry/todo.md`, sem alterar o checklist aberto de `technical-catalog`.
+As etapas são a ordem de construção. Após aprovação deste plano, a lista de Fase 3 foi proposta em `tasks/unit-registry/todo.md`, sem alterar o checklist aberto de `technical-catalog`. A divisão da verificação final em conferência funcional e controles documentais mantém cada tarefa dentro do limite de arquivos.
 
 ## Verificação planejada
 
@@ -122,4 +122,4 @@ Não alterar originais ou promover dados; não selecionar composições otimizad
 
 ## Gate de conclusão da Fase 2
 
-O responsável revisa ordem, fronteiras, checkpoints e decisões de implementação. Após aprovação em nova interação, detalhar as tarefas de Fase 3 no diretório deste módulo. Não criar código ou iniciar implementação nesta fase.
+Gate da Fase 2 satisfeito pela aprovação acima. A lista de Fase 3 está proposta para revisão e precisa de seu próprio aceite antes da implementação. Nenhum código foi iniciado por este plano.

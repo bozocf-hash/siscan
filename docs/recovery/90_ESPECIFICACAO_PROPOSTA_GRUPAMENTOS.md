@@ -1,6 +1,6 @@
 # 90 — Especificação aprovada de grupamentos
 
-**Data: 2026-11-16. Estado: especificação de Fase 1 aprovada por “sim”.** O responsável havia aprovado o escopo de 89 por “pode seguir”. A especificação completa está em `SPEC-unit-registry.md`, na raiz do repositório e na pasta de entrega SISCAN. Plano de Fase 2 posteriormente proposto em `tasks/unit-registry/plan.md`, local escolhido pelo responsável na opção 1; resumo em [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md). Nenhum código ou lista detalhada de implementação foi iniciado.
+**Data: 2026-11-16. Estado: especificação de Fase 1 aprovada por “sim”.** O responsável havia aprovado o escopo de 89 por “pode seguir”. A especificação completa está em `SPEC-unit-registry.md`, na raiz do repositório e na pasta de entrega SISCAN. Plano de Fase 2 posteriormente aprovado em `tasks/unit-registry/plan.md`, conforme [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md). Lista detalhada de Fase 3 proposta conforme [92](92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md); código não iniciado.
 
 ## Primeira entrega proposta
 
@@ -20,6 +20,6 @@ Autenticação real continua no backend: fornecer um campo de perfil no pedido n
 
 ## Próximo gate
 
-Revisão do plano técnico de Fase 2, sem reabrir o contrato já aprovado. A futura lista de Fase 3 ficará no diretório do módulo, sem sobrescrever as tarefas abertas de `technical-catalog`. Plano antigo e novo permanecem independentes.
+Revisão da lista de Fase 3, sem reabrir o contrato/plano já aprovados. A lista está no diretório do módulo, sem sobrescrever as tarefas abertas de `technical-catalog`. Plano antigo e novo permanecem independentes.
 
 Verificação desta etapa: revisão documental e conferência dos links. Não houve execução de testes de software por ausência de alteração de código; a especificação não afirma que `check_unit_groups.py` já existe.

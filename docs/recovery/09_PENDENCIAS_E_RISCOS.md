@@ -1,6 +1,8 @@
 # 09 — Pendências e riscos
 
-**Plano de grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** especificação aprovada; decisões técnicas do plano em revisão. Tratar idempotência em memória, inventário alterado após criação e conflitos no mesmo processo. Preservar o trabalho incompleto de `technical-catalog`; reinício não oferece recuperação de grupos/recibos.
+**Tarefas de grupamentos — [92](92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md):** especificação/plano aprovados, lista de implementação em revisão. Os testes novos ainda não existem; cobertura dos critérios UG deverá ser demonstrada durante a execução. Sem persistência/API ou efeitos no exercício nesta primeira entrega.
+
+**Plano de grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** especificação e plano aprovados. Tratar idempotência em memória, inventário alterado após criação e conflitos no mesmo processo. Preservar o trabalho incompleto de `technical-catalog`; reinício não oferece recuperação de grupos/recibos.
 
 **Grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** especificação aprovada, incluindo exclusividade de vínculo direto ativo e arquivamento. Contexto/visão de inventário não substituem autenticação. Persistência, API e hierarquia completa ficam fora dessa primeira entrega; relação de “esquadrilha” com MPNL não será inferida.
 

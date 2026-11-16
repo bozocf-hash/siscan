@@ -13,6 +13,7 @@ import random
 from typing import TYPE_CHECKING
 
 from cpc_models import MeioNaval, MeioTerrestre, VetorAereo, validar_estoques, validar_numero
+from cpc_reporting import HistoricoCombate, capturar_estado
 
 if TYPE_CHECKING:
     from cpc_combat import AcaoDisparo, GerenciadorDeCombate, ResultadoDisparo
@@ -28,6 +29,7 @@ class ResumoLogistico:
     posicao_antes: tuple[float, float]
     posicao_depois: tuple[float, float]
     imobilizado_por_combustivel: bool | None
+    distancia_percorrida_mn: float
 
 
 @dataclass(frozen=True)
@@ -55,6 +57,7 @@ class SimulacaoTemporal:
     def __init__(
         self, gerenciador: GerenciadorDeCombate, *, rumos: dict[str, float],
         rumos_evasao: dict[str, float],
+        origem: str = "biblioteca_cpc", semente: int | None = None,
     ) -> None:
         if gerenciador.cenario is None:
             raise ValueError("Turnos exigem cenário com posições.")
@@ -64,6 +67,14 @@ class SimulacaoTemporal:
         self.rumos = dict(rumos)
         self.rumos_evasao = dict(rumos_evasao)
         self.minuto_atual = 0
+        self.historico = HistoricoCombate(origem=origem, semente=semente)
+
+    @property
+    def eventos(self) -> list[dict]:
+        return self.historico.eventos
+
+    def exportar_relatorio_pos_acao(self, caminho="relatorio_pos_acao.txt"):
+        return self.historico.exportar_relatorio_pos_acao(caminho)
 
     def _logistica_e_movimento(self, motor):
         cenario = motor.cenario
@@ -73,7 +84,7 @@ class SimulacaoTemporal:
                 raise ValueError("Rumo declarado para unidade fora do cenário.")
             for rumo in rumos.values():
                 validar_numero(rumo, "rumo_graus", 360.0)
-        deslocamentos, antes = {}, {}
+        deslocamentos, percorridas, antes = {}, {}, {}
         for unidade in cenario.unidades:
             chave = unidade.identificador
             antes[chave] = (unidade.combustivel_atual, cenario.posicao(unidade))
@@ -125,6 +136,7 @@ class SimulacaoTemporal:
             dx, dy = _deslocamento(unidade.velocidade, rumo, normal)
             ex, ey = _deslocamento(unidade.velocidade, self.rumos_evasao.get(chave, 0.0), evasao)
             deslocamentos[chave] = dx + ex, dy + ey
+            percorridas[chave] = unidade.velocidade * (normal + evasao) / 60.0
         cenario.aplicar_deslocamentos(deslocamentos)
         return tuple(ResumoLogistico(
             u.identificador, antes[u.identificador][0], u.combustivel_atual,
@@ -132,6 +144,7 @@ class SimulacaoTemporal:
             antes[u.identificador][1], cenario.posicao(u),
             u.combustivel_atual == 0 if isinstance(u, (MeioNaval, MeioTerrestre))
             and u.combustivel_atual is not None else None,
+            percorridas[u.identificador],
         ) for u in cenario.unidades)
 
     def avancar_turno(
@@ -146,9 +159,36 @@ class SimulacaoTemporal:
         original = self.gerenciador
         if iniciativa is not None and iniciativa not in (original.atacante, original.defensor):
             raise ValueError("Iniciativa fora do par do ensaio.")
-        motor, declaradas, primeira = deepcopy((original, acoes, iniciativa))
+        inicial = capturar_estado(original.cenario)
+        motor, declaradas, primeira = deepcopy((original, acoes, iniciativa), {id(original._eventos): []})
+        motor.minuto_eventos = self.minuto_atual + 1
+        motor._registrar_evento("inicio_turno", rumos=self.rumos, rumos_evasao=self.rumos_evasao,
+                                iniciativa=primeira.identificador if primeira is not None else None,
+                                fatores_assinatura=sorted(motor.cenario._fatores_assinatura.items()))
         validar_estoques(motor.cenario.unidades)
         logistica = self._logistica_e_movimento(motor)
+        antes_por_id = {u["unidade_id"]: u for u in inicial}
+        for resumo in logistica:
+            contexto = dict(unidade_id=resumo.unidade_id)
+            antes = antes_por_id[resumo.unidade_id]
+            if resumo.combustivel_antes is not None and resumo.combustivel_depois != resumo.combustivel_antes:
+                motor._registrar_evento("consumo_combustivel", **contexto,
+                                        combustivel_antes_kg=resumo.combustivel_antes,
+                                        combustivel_depois_kg=resumo.combustivel_depois,
+                                        consumido_kg=resumo.combustivel_antes - resumo.combustivel_depois)
+            if resumo.distancia_percorrida_mn > 0:
+                motor._registrar_evento("movimento", **contexto,
+                                        x_antes_mn=resumo.posicao_antes[0], y_antes_mn=resumo.posicao_antes[1],
+                                        x_depois_mn=resumo.posicao_depois[0], y_depois_mn=resumo.posicao_depois[1],
+                                        distancia_percorrida_mn=resumo.distancia_percorrida_mn,
+                                        deslocamento_resultante_mn=math.dist(resumo.posicao_antes, resumo.posicao_depois))
+            if resumo.estado_voo != antes["estado_voo"]:
+                motor._registrar_evento("mudanca_estado_voo", **contexto,
+                                        estado_antes=antes["estado_voo"], estado_depois=resumo.estado_voo)
+                if resumo.estado_voo == "perda_proposta":
+                    motor._registrar_evento("perda_aerea_proposta", **contexto, motivo="combustivel_zerado", oficial=False)
+            if resumo.imobilizado_por_combustivel and resumo.combustivel_antes != 0:
+                motor._registrar_evento("imobilizacao_combustivel", **contexto, perda=False)
         eventos, elegiveis, deteccoes, ids = [], [], {}, set()
         par = (motor.atacante, motor.defensor)
         for acao in sorted(declaradas, key=lambda a: a.identificador):
@@ -180,8 +220,17 @@ class SimulacaoTemporal:
             if motivo is None:
                 elegiveis.append(acao)
             else:
-                eventos.append(f"Ação {acao.identificador} não iniciada: {motivo}; sem consumo de armamento.")
+                mensagem = f"Ação {acao.identificador} não iniciada: {motivo}; sem consumo de armamento."
+                eventos.append(mensagem)
+                motor._registrar_evento("acao_nao_iniciada", unidade_id=acao.atacante.identificador,
+                                        alvo_id=acao.defensor.identificador, acao_id=acao.identificador, motivo=motivo)
         combate = motor.resolver_rodada(elegiveis, iniciativa=primeira) if elegiveis else ()
+        final = capturar_estado(motor.cenario)
+        for estado in final:
+            dados = {k: v for k, v in estado.items() if k != "unidade_id"}
+            motor._registrar_evento("estado_unidade", unidade_id=estado["unidade_id"], **dados)
+        motor._registrar_evento("turno_concluido", acoes_executadas=len(combate))
+        preparado = self.historico.preparar_turno(inicial, final, motor._eventos, self.minuto_atual + 1)
         estado_gerador = motor.gerador.getstate()
         copias = {u.identificador: u for u in motor.cenario.unidades}
         original.cenario._copiar_estado_de(motor.cenario)
@@ -194,5 +243,7 @@ class SimulacaoTemporal:
             for estoque, novo in zip(unidade.armamentos, copia.armamentos):
                 estoque.quantidade = novo.quantidade
         original.gerador.setstate(estado_gerador)
+        original._eventos.extend(motor._eventos)
         self.minuto_atual += 1
+        self.historico.publicar_turno(preparado)
         return ResultadoTurno(self.minuto_atual, logistica, tuple(eventos), combate)

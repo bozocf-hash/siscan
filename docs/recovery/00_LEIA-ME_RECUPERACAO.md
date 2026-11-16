@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Pós-ação CPC — [88](88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md):** histórico estruturado, snapshots inicial/final e exportação TXT/CSV com balanço de sobreviventes, perdas propostas e recursos gastos. Execução de 60 turnos verificada: 314 eventos. 81 testes passaram. Arquivos existentes preservados; relatório não adjudica nem altera o exercício.
+
 **Ratificação por domínio — [87](87_REGRA_ESGOTAMENTO_COMBUSTIVEL_POR_DOMINIO.md):** combustível zerado causa perda aérea em voo no ensaio; superfície/terrestre ficam imobilizados, sem destruição automática. Acrescentado consumo não aéreo constante, movimento limitado até esgotamento e classe `MeioTerrestre`. 69 testes passaram. Resultado oficial permanece com o instrutor.
 
 **Tempo/logística CPC — [86](86_CPC_TURNOS_COMBUSTIVEL_E_MOVIMENTO.md):** turnos de 1 minuto, consumo aéreo em kg/min, reserva de retorno explícita, evasão/perda proposta e movimento planar com distâncias recalculadas. 63 testes passaram. Detecção/combate no fim de cada minuto; erro não publica o turno. Não altera o relógio ou dados do exercício oficial.

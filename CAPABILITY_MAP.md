@@ -61,3 +61,5 @@ Complemento solicitado de detecção, contatos e alcance implementado no ensaio 
 Loop de um minuto solicitado e entregue em [86](docs/recovery/86_CPC_TURNOS_COMBUSTIVEL_E_MOVIMENTO.md): consumo aéreo, reserva explícita, evasão/perda proposta e movimento planar, com 63 testes. É ensaio em memória; não substitui `execution-core`/`resource-engine` oficiais, não integra bases ou altera decisões de promoção de dados.
 
 Ratificação posterior em [87](docs/recovery/87_REGRA_ESGOTAMENTO_COMBUSTIVEL_POR_DOMINIO.md): consumo não aéreo constante e regra de combustível zerado por domínio, com 69 testes. Superfície/terrestre imobilizam; aéreo em voo tem perda no ensaio para adjudicação. Não altera os IDs das capacidades ou aplica efeitos oficiais.
+
+Logging e exportação pós-ação entregues em [88](docs/recovery/88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md), com 81 testes e 60 turnos/314 eventos demonstrativos. Artefatos locais são resultados propostos, sem adjudicação ou alteração das dependências entre capacidades.

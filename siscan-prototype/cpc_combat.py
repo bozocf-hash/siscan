@@ -7,6 +7,7 @@ de alvos ou trajetórias. As rodadas são ensaios isolados.
 """
 
 import random
+from copy import deepcopy
 from dataclasses import dataclass, replace
 from typing import Literal
 
@@ -80,6 +81,17 @@ class GerenciadorDeCombate:
         self.defensor = defensor
         self.cenario = cenario
         self.gerador = gerador if gerador is not None else random.Random()
+        self._eventos = []
+        self.minuto_eventos = 0
+
+    @property
+    def eventos(self) -> list[dict]:
+        return deepcopy(self._eventos)
+
+    def _registrar_evento(self, tipo, *, unidade_id=None, alvo_id=None, acao_id=None, **dados):
+        self._eventos.append({"minuto": self.minuto_eventos, "tipo": tipo, "nivel": "info",
+                              "unidade_id": unidade_id, "alvo_id": alvo_id, "acao_id": acao_id,
+                              "dados": deepcopy(dados)})
 
     def tentar_detecao(self, unidade_a: UnidadeMilitar, unidade_b: UnidadeMilitar) -> bool:
         """Atualiza contato direcional: distância válida e sorteio < p_base × fator.
@@ -105,13 +117,58 @@ class GerenciadorDeCombate:
                 raise ValueError("Aeronave com perda proposta não participa da busca.")
         _validar_numero(unidade_a.alcance_radar, "alcance_radar")
         _validar_numero(unidade_a.probabilidade_deteccao, "probabilidade_deteccao", 1.0)
-        if self.cenario.distancia(unidade_a, unidade_b) > unidade_a.alcance_radar:
+        distancia = self.cenario.distancia(unidade_a, unidade_b)
+        if distancia > unidade_a.alcance_radar:
+            self._registrar_evento("deteccao", unidade_id=unidade_a.identificador, alvo_id=unidade_b.identificador,
+                                   detectado=False, motivo="fora_do_radar", distancia_mn=distancia,
+                                   alcance_radar_mn=unidade_a.alcance_radar, sorteio=None)
             return False
         fator = self.cenario.fator_assinatura(unidade_b.assinatura_radar)
-        detectado = self.gerador.random() < unidade_a.probabilidade_deteccao * fator
+        probabilidade = unidade_a.probabilidade_deteccao * fator
+        sorteio = self.gerador.random()
+        detectado = sorteio < probabilidade
         if detectado:
             self.cenario._registrar_contato(unidade_a, unidade_b)
+        self._registrar_evento("deteccao", unidade_id=unidade_a.identificador, alvo_id=unidade_b.identificador,
+                               detectado=detectado, motivo="sorteio", distancia_mn=distancia,
+                               alcance_radar_mn=unidade_a.alcance_radar, assinatura_alvo_m2=unidade_b.assinatura_radar,
+                               probabilidade_base=unidade_a.probabilidade_deteccao, fator_assinatura=fator,
+                               probabilidade_efetiva=probabilidade, sorteio=sorteio)
         return detectado
+
+    def _registrar_resultados(self, acoes, resultados):
+        por_id = {a.identificador: a for a in acoes}
+        for fase in sorted({r.fase for r in resultados}):
+            danos = {}
+            for r in (r for r in resultados if r.fase == fase):
+                acao = por_id[r.acao_id]
+                contexto = dict(unidade_id=acao.atacante.identificador,
+                                alvo_id=acao.defensor.identificador, acao_id=r.acao_id, fase=fase)
+                if r.situacao == "nao_iniciada":
+                    self._registrar_evento("acao_nao_iniciada", **contexto, motivo=r.narrativa)
+                    continue
+                self._registrar_evento("disparo", **contexto, estoque_id=acao.arma.identificador,
+                                       tipo_armamento=acao.arma.tipo)
+                for consumo in r.consumos:
+                    estoque = acao.arma if consumo.finalidade == "ofensiva" else acao.defesa
+                    self._registrar_evento("consumo_armamento", unidade_id=consumo.unidade_id,
+                                           acao_id=r.acao_id, fase=fase, estoque_id=consumo.estoque_id,
+                                           tipo_armamento=estoque.tipo, finalidade=consumo.finalidade,
+                                           quantidade=consumo.quantidade, antes=consumo.antes, depois=consumo.depois)
+                if r.sorteio_defesa is not None:
+                    self._registrar_evento("tentativa_defesa", **contexto, sorteio=r.sorteio_defesa,
+                                           interceptado=r.situacao == "interceptado")
+                tipo = {"impacto": "acerto", "erro": "erro_disparo", "interceptado": "interceptacao"}[r.situacao]
+                self._registrar_evento(tipo, **contexto, dano_proposto=r.dano_proposto,
+                                       sorteio_acerto=r.sorteio_acerto)
+                if r.vida_antes != r.vida_apos_lote:
+                    danos[acao.defensor.identificador] = (r.vida_antes, r.vida_apos_lote)
+            for alvo_id, (antes, depois) in sorted(danos.items()):
+                self._registrar_evento("dano_aplicado", unidade_id=alvo_id, fase=fase,
+                                       vida_antes=antes, vida_depois=depois, dano_efetivo=antes - depois)
+                if antes > 0 and depois == 0:
+                    self._registrar_evento("destruicao_proposta", unidade_id=alvo_id, fase=fase,
+                                           motivo="pontos_de_vida_zerados_no_modelo", oficial=False)
 
     def _validar_rodada(self, acoes: tuple[AcaoDisparo, ...]) -> dict[Armamento, int]:
         unidades = (self.atacante, self.defensor)
@@ -250,6 +307,7 @@ class GerenciadorDeCombate:
             arma.quantidade = quantidade
         for unidade, vida in vidas.items():
             unidade.pontos_de_vida = vida
+        self._registrar_resultados(ordenadas, resultados)
         return tuple(resultados)
 
     def resolver_disparo(
@@ -273,11 +331,19 @@ if __name__ == "__main__":
                         default=Path(__file__).parent / "data/db3k-compiled-06.sqlite3")
     parser.add_argument("--semente", type=int, default=7)
     parser.add_argument("--turnos", type=int, default=3, help="Minutos simulados, de 1 a 1440.")
+    parser.add_argument("--relatorio", type=Path, nargs="+", metavar="ARQUIVO",
+                        help="Destinos novos .txt/.csv para o histórico e balanço pós-ação.")
     parser.add_argument("--iniciativa", choices=("simultanea", "aereo", "naval"), default="simultanea",
                         help="Condição didática explícita; não é calculada dos atributos técnicos.")
     args = parser.parse_args()
     if not 1 <= args.turnos <= 1440:
         parser.error("Informe de 1 a 1440 turnos de um minuto.")
+    destinos = [p.expanduser().resolve() for p in (args.relatorio or [])]
+    if len(set(destinos)) != len(destinos):
+        parser.error("Os caminhos de relatório devem ser distintos.")
+    for destino in destinos:
+        if destino.suffix.lower() not in (".txt", ".csv") or destino.exists():
+            parser.error(f"Informe um arquivo .txt/.csv novo, sem sobrescrever: {destino}")
     try:
         aeronaves = browse(args.catalogo, "DataAircraft", "8")["items"]
         navios = browse(args.catalogo, "DataShip", "1349")["items"]
@@ -321,7 +387,8 @@ if __name__ == "__main__":
     print("Distância fictícia: 10 MN; radar fictício: 20 MN; alcance da arma fictícia: 15 MN.")
     print("Logística fictícia: 5 kg iniciais, 2 kg/min e reserva de retorno de 1 kg; não são dados do F/A-18.")
     simulacao = SimulacaoTemporal(motor, rumos={caca.identificador: 90.0},
-                                  rumos_evasao={caca.identificador: 270.0})
+                                  rumos_evasao={caca.identificador: 270.0},
+                                  origem="terminal_cpc", semente=args.semente)
     for _ in range(args.turnos):
         turno = simulacao.avancar_turno([acao], iniciativa=iniciativa)
         print(f"\nMinuto {turno.minuto}: distância {cenario.distancia(caca, fragata):.3f} MN")
@@ -338,3 +405,9 @@ if __name__ == "__main__":
             for consumo in resultado.consumos:
                 print(f"  {consumo.finalidade}: {consumo.estoque_id}; "
                       f"{consumo.antes} - {consumo.quantidade} = {consumo.depois}")
+    for destino in destinos:
+        try:
+            caminho = simulacao.exportar_relatorio_pos_acao(destino)
+        except (OSError, ValueError) as exc:
+            parser.exit(2, f"Falha ao exportar relatório: {exc}\n")
+        print(f"Relatório pós-ação salvo: {caminho}")

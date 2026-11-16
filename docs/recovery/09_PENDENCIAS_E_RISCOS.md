@@ -1,8 +1,10 @@
 # 09 — Pendências e riscos
 
-**Grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** escopo aprovado; especificação `SPEC-unit-registry.md` aguarda revisão do recorte em memória, exclusividade de vínculo direto ativo e arquivamento. Contexto/visão de inventário não substituem autenticação. Persistência, API e hierarquia completa ficam fora dessa primeira entrega; relação de “esquadrilha” com MPNL não será inferida.
+**Plano de grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** especificação aprovada; decisões técnicas do plano em revisão. Tratar idempotência em memória, inventário alterado após criação e conflitos no mesmo processo. Preservar o trabalho incompleto de `technical-catalog`; reinício não oferece recuperação de grupos/recibos.
 
-**Grupamentos — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** fechar escopo, vínculo da designação “esquadrilha” com os níveis provisórios MPNL, versão/pertencimento e indicadores coletivos. Correspondência estrutural dos sensores não valida unidades, códigos, condições ou eficácia. Dados descritivos e regras didáticas devem manter identidades e finalidades distintas; não usar autonomia/pacotes fictícios como características reais.
+**Grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** especificação aprovada, incluindo exclusividade de vínculo direto ativo e arquivamento. Contexto/visão de inventário não substituem autenticação. Persistência, API e hierarquia completa ficam fora dessa primeira entrega; relação de “esquadrilha” com MPNL não será inferida.
+
+**Grupamentos — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** escopo e contrato inicial de composição aprovados conforme 90. Permanecem pendentes vínculo da designação “esquadrilha” com os níveis provisórios MPNL e indicadores coletivos. Correspondência estrutural dos sensores não valida unidades, códigos, condições ou eficácia. Dados descritivos e regras didáticas devem manter identidades e finalidades distintas; não usar autonomia/pacotes fictícios como características reais.
 
 **Relatórios CPC — [88](88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md):** exportação local e balanço implementados. Histórico permanece em memória até exportar; faltam journal durável, autorização/adjudicação oficial e validação física. Não somar mísseis com pacotes defensivos ou converter imobilização em destruição. Os 60 turnos do exemplo incluem minutos sem combate após a perda aérea proposta no minuto 3.
 

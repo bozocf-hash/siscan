@@ -1,6 +1,8 @@
 # 10 — Plano de continuidade
 
-**Grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** Fase 0 complementar aprovada; Fase 1 de `unit-registry` proposta em `SPEC-unit-registry.md`. Após aprovação específica, elaborar o plano técnico dessa capacidade. Não avançar para tarefas/código ou substituir o ciclo independente de `technical-catalog` nesta revisão documental.
+**Grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** Fase 1 aprovada; plano de Fase 2 proposto no caminho escolhido `tasks/unit-registry/plan.md`. Após aprovação, detalhar tarefas em `tasks/unit-registry/todo.md`. Não sobrescrever `tasks/plan.md` ou `tasks/todo.md` do catálogo nem iniciar código nesta fase.
+
+**Grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** Fases 0/1 aprovadas; plano técnico elaborado posteriormente em 91 para revisão. Não avançar para tarefas/código ou substituir o ciclo independente de `technical-catalog` antes de cumprir os gates correspondentes.
 
 **Evolução proposta — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** revisar responsabilidades de catálogo descritivo, composição/versionamento, inventário e CPC didático antes de especificações por módulo. Reaproveitar o grafo já compilado; validar dados por recorte/finalidade; preservar níveis MPNL e decisão oficial do instrutor. Não inicia implementação de grupamentos ou cálculo de eficácia real.
 

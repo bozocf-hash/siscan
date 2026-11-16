@@ -1,8 +1,8 @@
 # 89 — Grupamentos e dados descritivos: proposta de escopo do CPC
 
-**Atualização de gate:** escopo aprovado pelo responsável em 2026-11-16, por “pode seguir”. A Fase 1 proposta de `unit-registry` está em `SPEC-unit-registry.md`, com resumo em [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md). A aprovação do escopo não aprova automaticamente o contrato detalhado ou sua implementação.
+**Atualização de gates:** escopo aprovado pelo responsável em 2026-11-16, por “pode seguir”; especificação `SPEC-unit-registry.md` aprovada posteriormente por “sim”, conforme [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md). Plano de Fase 2 proposto no local escolhido pelo responsável, conforme [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md). Implementação não iniciada.
 
-**Data: 2026-11-16. Estado: complemento de escopo aprovado, com inventário descritivo efetuado.** Atende ao pedido de iniciativa analítica, composição de grupamentos com referências do catálogo e apoio explicável ao instrutor. A especificação detalhada posterior permanece proposta em 90. Este documento não é plano de implementação ou modelo calibrado de combate real. Não recomenda composição otimizada para derrotar forças reais.
+**Data: 2026-11-16. Estado: complemento de escopo aprovado, com inventário descritivo efetuado.** Atende ao pedido de iniciativa analítica, composição de grupamentos com referências do catálogo e apoio explicável ao instrutor. A especificação detalhada posterior está aprovada em 90; o plano proposto está em 91. Este documento não é modelo calibrado de combate real. Não recomenda composição otimizada para derrotar forças reais.
 
 ## Objetivo e premissas explícitas
 

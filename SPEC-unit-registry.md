@@ -1,6 +1,6 @@
 # Spec: unit-registry — composição versionada de grupamentos
 
-**Estado: Fase 1 proposta para revisão.** Complemento de escopo de [89](docs/recovery/89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md) e do [mapa de capacidades](CAPABILITY_MAP.md) aprovado pelo responsável em 2026-11-16, por “pode seguir”. Essa aprovação autoriza esta especificação, não o plano ou a implementação. Preservar a especificação/ciclo independente de `technical-catalog`.
+**Estado: Fase 1 aprovada pelo responsável em 2026-11-16, por “sim”.** Complemento de escopo de [89](docs/recovery/89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md) e do [mapa de capacidades](CAPABILITY_MAP.md) previamente aprovado por “pode seguir”. A aprovação permite o planejamento, não a implementação. Plano de Fase 2 proposto em [tasks/unit-registry/plan.md](tasks/unit-registry/plan.md), local escolhido pelo responsável na opção 1, preservando o trabalho aberto de `technical-catalog`.
 
 ## Objetivo
 
@@ -142,10 +142,10 @@ Fora desta primeira entrega: sensor físico, previsão operacional de eficácia,
 
 ## Questões para revisão
 
-1. Confirmar a primeira entrega de grupamentos diretos em memória, com navais/aéreos e sem persistência/API.
-2. Confirmar exclusividade de vínculo direto ativo por exercício/partido; não se aplica a hierarquia orgânica ou hospedagem.
-3. O vínculo MPNL de “esquadrilha” permanece não inferido; pode-se cadastrar a designação antes de fechar essa correspondência.
+1. **Confirmado pela aprovação:** primeira entrega de grupamentos diretos em memória, navais/aéreos e sem persistência/API.
+2. **Confirmado pela aprovação:** exclusividade de vínculo direto ativo por exercício/partido, sem alteração de hierarquia orgânica ou hospedagem, com liberação por revisão/arquivamento.
+3. **Limite confirmado:** vínculo MPNL de “esquadrilha” permanece não inferido; cadastrar a designação não decide essa correspondência futura.
 
 ## Gate de conclusão
 
-O responsável revisa o contrato, limites e critérios UG. Após aprovação desta especificação em nova interação será elaborado o plano técnico desse módulo. Não foram escritos plano, tarefas ou código nesta fase.
+Gate da Fase 1 satisfeito pela aprovação registrada acima. O plano técnico foi elaborado posteriormente como Fase 2 e aguarda sua própria revisão; lista detalhada e implementação ainda não iniciadas. A aprovação desta especificação não aprova automaticamente decisões de plano, tarefas ou código.

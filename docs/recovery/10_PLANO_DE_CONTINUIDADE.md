@@ -1,6 +1,6 @@
 # 10 — Plano de continuidade
 
-**Grupamentos no mapa — [99](99_ESPECIFICACAO_GRUPAMENTOS_NO_MAPA.md):** revisar o Recorte 2 de `SPEC-unit-registry.md`: compor/consultar/arquivar grupos no mapa definido, sem duplicar meios. Após aprovação, elaborar plano próprio preservando os planos existentes; não iniciar código nesta fase. Seleção gráfica não executa confronto nem altera posições ou recursos.
+**Grupamentos no mapa — [100](100_PLANO_GRUPAMENTOS_NO_MAPA.md):** especificação aprovada; revisar plano do Recorte 2 em `tasks/unit-registry/mapa/plan.md`. Depois, propor tarefas no mesmo diretório antes do código. Ordem: identidade/elegibilidade, rotas/registro, painel, realce e navegador isolado. Mantidos mapa definido, planos anteriores, ausência de persistência e autoridade do instrutor sobre resultados.
 
 **Preparação CPC entregue — [98](98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md):** GPREP-01–06 concluídas; dossiê de dois partidos com estados individuais, sem executar confronto. Próxima fatia sugerida: especificar seleção/consulta das composições no mesmo mapa ATLANTICADOR definido, conforme 97; resolver IDs/permissões/posições antes da integração. Reprodução temporal e adjudicação oficial são etapas próprias. Não reabrir gates concluídos nem substituir os planos abertos do catálogo.
 

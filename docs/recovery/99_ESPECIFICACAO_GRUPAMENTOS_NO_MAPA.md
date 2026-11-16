@@ -1,5 +1,7 @@
 # 99 — Especificação dos grupamentos no mapa definido
 
+**Atualização de gate:** especificação aprovada por “siga”; plano proposto em [100](100_PLANO_GRUPAMENTOS_NO_MAPA.md). O conteúdo abaixo registra a preparação histórica da Fase 1, sem implementação da extensão.
+
 **Data: 2026-11-16. Estado: Fase 1 do recorte gráfico proposta para revisão.** Após a entrega 98, o responsável orientou “siga”. A extensão está em [SPEC-unit-registry.md](../../SPEC-unit-registry.md), seção Recorte 2, preservando a primeira entrega e os IDs do mapa de capacidades.
 
 Fluxo proposto: criar, consultar e arquivar grupos no painel lateral do mesmo mapa ATLANTICADOR integrado ao SISCAN; selecionar grupo realça seus integrantes já plotados. Não cria segundo mapa, move meios ou executa confronto. O backend confere sessão/partido, adjudicação, vínculo unit_id/asset_id e snapshot/domínio antes de aceitar a composição.

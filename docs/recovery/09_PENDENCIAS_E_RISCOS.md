@@ -1,6 +1,6 @@
 # 09 — Pendências e riscos
 
-**Interface de grupos — [99](99_ESPECIFICACAO_GRUPAMENTOS_NO_MAPA.md):** proposta depende de ligar registro em memória ao servidor e resolver unit_id/asset_id/contexto por fonte autorizada. Instâncias atuais do motor são sintéticas; não confundir todo o catálogo com unidades elegíveis. Aviso de perda após reinício obrigatório neste recorte; migração/persistência e confronto integrado continuam fora dele. Não expor vínculos revogados ou outro partido ao operador.
+**Interface de grupos — [100](100_PLANO_GRUPAMENTOS_NO_MAPA.md):** especificação aprovada, plano aguarda revisão. Tratar identidade/domínio das instâncias existentes, resposta atrasada, revogação e projeção segura dos recibos; separar realce de consulta da seleção de plotagem. Registro temporário exige aviso; testes HTTP/navegador precisam isolar DATA_DIR/DB_PATH além da porta. Não houve implementação gráfica nesta etapa.
 
 **Preparação CPC — entrega [98](98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md):** dossiê em memória implementado e verificado; gates desta fatia concluídos. Autorizador interno não substitui autenticação real; provedor deve fornecer inventário consistente. Conferência final detecta alterações observadas, sem reserva futura/atomicidade entre fontes. Persistência, integração ao mapa existente, posições/tempo/visibilidade, execução por grupamentos e efeitos oficiais continuam pendentes de contratos próprios. Não inventar percentuais ou agregações.
 

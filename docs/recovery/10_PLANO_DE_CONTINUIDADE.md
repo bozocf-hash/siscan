@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Grupamentos no mapa — [99](99_ESPECIFICACAO_GRUPAMENTOS_NO_MAPA.md):** revisar o Recorte 2 de `SPEC-unit-registry.md`: compor/consultar/arquivar grupos no mapa definido, sem duplicar meios. Após aprovação, elaborar plano próprio preservando os planos existentes; não iniciar código nesta fase. Seleção gráfica não executa confronto nem altera posições ou recursos.
+
 **Preparação CPC entregue — [98](98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md):** GPREP-01–06 concluídas; dossiê de dois partidos com estados individuais, sem executar confronto. Próxima fatia sugerida: especificar seleção/consulta das composições no mesmo mapa ATLANTICADOR definido, conforme 97; resolver IDs/permissões/posições antes da integração. Reprodução temporal e adjudicação oficial são etapas próprias. Não reabrir gates concluídos nem substituir os planos abertos do catálogo.
 
 **Grupamentos — entrega [93](93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md):** ciclo aprovado e concluído em memória, com 29 testes do registro, 81 CPC e verificador de unidades passando. Checkpoints A/B e UGR-01–UGR-06 concluídos; não reabrir aprovações dadas. Uma próxima fatia de integração deve especificar o adaptador de membros/snapshots, permissões, persistência e vínculo com ensaio/adjudicação, sem consumir recursos na mera preparação da composição. Preservar os quatro níveis MPNL, as decisões do instrutor e os planos abertos do catálogo. Documentos 89–92 registram etapas históricas; não representam gates ainda pendentes desta entrega.

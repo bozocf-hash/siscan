@@ -63,3 +63,7 @@ Loop de um minuto solicitado e entregue em [86](docs/recovery/86_CPC_TURNOS_COMB
 Ratificação posterior em [87](docs/recovery/87_REGRA_ESGOTAMENTO_COMBUSTIVEL_POR_DOMINIO.md): consumo não aéreo constante e regra de combustível zerado por domínio, com 69 testes. Superfície/terrestre imobilizam; aéreo em voo tem perda no ensaio para adjudicação. Não altera os IDs das capacidades ou aplica efeitos oficiais.
 
 Logging e exportação pós-ação entregues em [88](docs/recovery/88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md), com 81 testes e 60 turnos/314 eventos demonstrativos. Artefatos locais são resultados propostos, sem adjudicação ou alteração das dependências entre capacidades.
+
+## Complemento proposto para revisão — grupamentos e dados descritivos
+
+[89](docs/recovery/89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md) registra o pedido e a inspeção descritiva de sensores. Manter os IDs existentes: `technical-catalog` fornece evidência/consulta; `unit-registry` define unidades/grupos/versionamento; `party-inventory` confere disponibilidade ao partido; `force-confrontation` consome composições/snapshots para apoio didático e adjudicação; `verification-recovery` verifica os contratos. Não inverter a dependência entre identidade e inventário nem introduzir ciclos. Recorte proposto para revisão de escopo antes de especificações próprias; não recomenda composição real otimizada ou modelo de eficácia operacional. O ciclo aprovado de `technical-catalog` permanece independente.

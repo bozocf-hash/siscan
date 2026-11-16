@@ -1,5 +1,7 @@
 # Recuperação documental do SISCAN
 
+**Grupamentos e sensores — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** complemento de escopo proposto para apoio didático ao instrutor. Inspeção local confirmou 6.747 sensores, 78 campos e 50.399 vínculos diretos nas quatro categorias examinadas, com chaves correspondentes. Não valida semântica/eficácia ou promove atributos. Composição versionada por partido e preservação MPNL propostas para revisão; nenhum código/banco alterado.
+
 **Pós-ação CPC — [88](88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md):** histórico estruturado, snapshots inicial/final e exportação TXT/CSV com balanço de sobreviventes, perdas propostas e recursos gastos. Execução de 60 turnos verificada: 314 eventos. 81 testes passaram. Arquivos existentes preservados; relatório não adjudica nem altera o exercício.
 
 **Ratificação por domínio — [87](87_REGRA_ESGOTAMENTO_COMBUSTIVEL_POR_DOMINIO.md):** combustível zerado causa perda aérea em voo no ensaio; superfície/terrestre ficam imobilizados, sem destruição automática. Acrescentado consumo não aéreo constante, movimento limitado até esgotamento e classe `MeioTerrestre`. 69 testes passaram. Resultado oficial permanece com o instrutor.

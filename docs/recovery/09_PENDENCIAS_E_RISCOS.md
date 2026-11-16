@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Grupamentos — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** fechar escopo, vínculo da designação “esquadrilha” com os níveis provisórios MPNL, versão/pertencimento e indicadores coletivos. Correspondência estrutural dos sensores não valida unidades, códigos, condições ou eficácia. Dados descritivos e regras didáticas devem manter identidades e finalidades distintas; não usar autonomia/pacotes fictícios como características reais.
+
 **Relatórios CPC — [88](88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md):** exportação local e balanço implementados. Histórico permanece em memória até exportar; faltam journal durável, autorização/adjudicação oficial e validação física. Não somar mísseis com pacotes defensivos ou converter imobilização em destruição. Os 60 turnos do exemplo incluem minutos sem combate após a perda aérea proposta no minuto 3.
 
 **Combustível por domínio — [87](87_REGRA_ESGOTAMENTO_COMBUSTIVEL_POR_DOMINIO.md):** regra ratificada e implementada: perda aérea em voo versus imobilização naval/terrestre. Consumo não aéreo agora existe no recorte constante controlado; ainda faltam perfis reais, suporte/reabastecimento e adjudicação oficial. Não confundir imobilização com destruição nem saldo desconhecido com tanque vazio.

@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Evolução proposta — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** revisar responsabilidades de catálogo descritivo, composição/versionamento, inventário e CPC didático antes de especificações por módulo. Reaproveitar o grafo já compilado; validar dados por recorte/finalidade; preservar níveis MPNL e decisão oficial do instrutor. Não inicia implementação de grupamentos ou cálculo de eficácia real.
+
 **Entrega CPC — [88](88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md):** logging e exportação pós-ação entregues, com 81 testes e execução de 60 turnos. Usar snapshots, schema, semente, versão do algoritmo e eventos para comparação; não equiparar reprodução a validação física. Integração com estado/revisões, decisão oficial e persistência continua como etapa própria, sem reabrir decisões ratificadas.
 
 **Regra por domínio — [87](87_REGRA_ESGOTAMENTO_COMBUSTIVEL_POR_DOMINIO.md):** preservar perda aérea em voo e imobilização de superfície/terrestre por combustível zerado. O consumo não aéreo constante já foi entregue; integração com perfis/snapshots, apoio logístico e decisão oficial do instrutor permanece pendente. Não generalizar a restrição de movimento para perda automática do meio.

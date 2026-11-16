@@ -1,12 +1,6 @@
 # 09 — Pendências e riscos
 
-**Tarefas de grupamentos — [92](92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md):** especificação/plano aprovados, lista de implementação em revisão. Os testes novos ainda não existem; cobertura dos critérios UG deverá ser demonstrada durante a execução. Sem persistência/API ou efeitos no exercício nesta primeira entrega.
-
-**Plano de grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** especificação e plano aprovados. Tratar idempotência em memória, inventário alterado após criação e conflitos no mesmo processo. Preservar o trabalho incompleto de `technical-catalog`; reinício não oferece recuperação de grupos/recibos.
-
-**Grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** especificação aprovada, incluindo exclusividade de vínculo direto ativo e arquivamento. Contexto/visão de inventário não substituem autenticação. Persistência, API e hierarquia completa ficam fora dessa primeira entrega; relação de “esquadrilha” com MPNL não será inferida.
-
-**Grupamentos — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** escopo e contrato inicial de composição aprovados conforme 90. Permanecem pendentes vínculo da designação “esquadrilha” com os níveis provisórios MPNL e indicadores coletivos. Correspondência estrutural dos sensores não valida unidades, códigos, condições ou eficácia. Dados descritivos e regras didáticas devem manter identidades e finalidades distintas; não usar autonomia/pacotes fictícios como características reais.
+**Grupamentos — entrega [93](93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md):** criação/revisão/arquivamento/preparação implementados e verificados; não resta gate de aprovação para esta fatia. Continuam fora dela persistência, autenticação/API, mapa e execução de confronto entre grupamentos. O provedor interno deve fornecer contexto autorizado e visão consistente do inventário; o lock protege somente o registro no mesmo processo. Reinício perde grupos/recibos. Disponibilidade de alocação não significa prontidão de combate. As fases preparatórias de 89–92 são históricas; 93 registra o estado atual. Mapeamentos descritivos não aprovam semântica, unidades ou eficácia dos dados Command. Permanecem pendentes indicadores coletivos e eventual relação organizacional de “esquadrilha”, sem inferir novo nível MPNL; o ciclo independente de `technical-catalog` está preservado.
 
 **Relatórios CPC — [88](88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md):** exportação local e balanço implementados. Histórico permanece em memória até exportar; faltam journal durável, autorização/adjudicação oficial e validação física. Não somar mísseis com pacotes defensivos ou converter imobilização em destruição. Os 60 turnos do exemplo incluem minutos sem combate após a perda aérea proposta no minuto 3.
 

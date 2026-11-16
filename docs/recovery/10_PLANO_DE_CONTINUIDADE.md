@@ -1,12 +1,6 @@
 # 10 — Plano de continuidade
 
-**Grupamentos — [92](92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md):** plano aprovado; lista detalhada proposta para aceite. Após aprovação, executar a Fase 4 em ordem e conferir checkpoints A/B, sem reabrir decisões aprovadas ou tocar tarefas abertas do catálogo. Não houve implementação nesta preparação documental.
-
-**Grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** Fases 1/2 aprovadas; lista de Fase 3 proposta em `tasks/unit-registry/todo.md`. Não sobrescrever `tasks/plan.md` ou `tasks/todo.md` do catálogo. A aprovação da lista antecede o código.
-
-**Grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** Fases 0/1 aprovadas; plano técnico elaborado posteriormente em 91 para revisão. Não avançar para tarefas/código ou substituir o ciclo independente de `technical-catalog` antes de cumprir os gates correspondentes.
-
-**Evolução proposta — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** revisar responsabilidades de catálogo descritivo, composição/versionamento, inventário e CPC didático antes de especificações por módulo. Reaproveitar o grafo já compilado; validar dados por recorte/finalidade; preservar níveis MPNL e decisão oficial do instrutor. Não inicia implementação de grupamentos ou cálculo de eficácia real.
+**Grupamentos — entrega [93](93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md):** ciclo aprovado e concluído em memória, com 29 testes do registro, 81 CPC e verificador de unidades passando. Checkpoints A/B e UGR-01–UGR-06 concluídos; não reabrir aprovações dadas. Uma próxima fatia de integração deve especificar o adaptador de membros/snapshots, permissões, persistência e vínculo com ensaio/adjudicação, sem consumir recursos na mera preparação da composição. Preservar os quatro níveis MPNL, as decisões do instrutor e os planos abertos do catálogo. Documentos 89–92 registram etapas históricas; não representam gates ainda pendentes desta entrega.
 
 **Entrega CPC — [88](88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md):** logging e exportação pós-ação entregues, com 81 testes e execução de 60 turnos. Usar snapshots, schema, semente, versão do algoritmo e eventos para comparação; não equiparar reprodução a validação física. Integração com estado/revisões, decisão oficial e persistência continua como etapa própria, sem reabrir decisões ratificadas.
 

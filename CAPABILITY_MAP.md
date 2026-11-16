@@ -46,11 +46,11 @@ Dependências indicam contratos de provedores. Implementação já disponível s
 
 A ordem é lógica de dependências, não calendário nem proibição de desenvolver ensaios sintéticos independentes. A Fase 0 foi concluída antes de escrever especificações de módulo. A primeira especificação, `SPEC-technical-catalog.md`, foi aprovada posteriormente, com recorte inicial de combustível/consumo aéreo.
 
-## Próximo gate
+## Gates do catálogo e evolução posterior
 
 Gates de Fase 0, especificação [SPEC-technical-catalog.md](SPEC-technical-catalog.md) e plano [tasks/plan.md](tasks/plan.md) satisfeitos por aprovações distintas do responsável. Tarefas propostas para revisão de Fase 3 em [tasks/todo.md](tasks/todo.md); implementação ainda não iniciada. As demais especificações serão produzidas por módulo em ordem de dependências.
 
-Nesta etapa não houve alteração de código, schema, dados, dependências ou servidor. Não foram executados testes de software por ser uma proposta documental.
+O mapa original foi produzido como proposta documental. Entregas posteriores e suas verificações são registradas abaixo; o status do catálogo não é uma afirmação de ausência de código nos ensaios autorizados depois.
 
 Pesquisa conceitual do CPC em [82](docs/recovery/82_PESQUISA_E_PROPOSTA_CONCEITUAL_CPC.md) e proposta de algoritmo em [83](docs/recovery/83_ALGORITMO_CONCEITUAL_CPC_REFERENCIA_COMMAND.md). O nome funcional CPC foi solicitado pelo responsável; o ID `force-confrontation` é preservado. Os estudos não são especificação/algoritmo aprovado nem alteram a autoridade do instrutor. Relação CPC/PRC/SIM deve ser esclarecida na especificação própria.
 
@@ -66,6 +66,6 @@ Logging e exportação pós-ação entregues em [88](docs/recovery/88_CPC_LOGGIN
 
 ## Complemento de escopo — grupamentos e dados descritivos
 
-**Escopo aprovado em 2026-11-16**, por “pode seguir” após 89. [SPEC-unit-registry.md](SPEC-unit-registry.md) aprovada posteriormente por “sim”, conforme [90](docs/recovery/90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md). [Plano de Fase 2](tasks/unit-registry/plan.md) aprovado por “aprovado”, conforme [91](docs/recovery/91_PLANO_PROPOSTO_GRUPAMENTOS.md). Lista de Fase 3 proposta em [tasks/unit-registry/todo.md](tasks/unit-registry/todo.md), conforme [92](docs/recovery/92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md), aguardando aceite antes da implementação. Preservar os arquivos abertos de `technical-catalog` em `tasks/plan.md`/`tasks/todo.md`. Não aprova valores técnicos reais.
+**Recorte implementado em 2026-11-16 — [93](docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md).** Escopo de [89](docs/recovery/89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md), [especificação](SPEC-unit-registry.md), [plano](tasks/unit-registry/plan.md) e [tarefas](tasks/unit-registry/todo.md) receberam aprovações distintas. UGR-01–UGR-06 concluídas: registro de grupos diretos navais/aéreos por exercício/partido, versões imutáveis, recibos, exclusividade de vínculo, arquivamento e preparação com disponibilidade atual. Passaram 29 testes do registro, 81 CPC e `check_engine_units.py`. Sem API, persistência ou confronto integrado entre grupos.
 
-[89](docs/recovery/89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md) registra o pedido e a inspeção descritiva de sensores. Manter os IDs existentes: `technical-catalog` fornece evidência/consulta; `unit-registry` define unidades/grupos/versionamento; `party-inventory` confere disponibilidade ao partido; `force-confrontation` consome composições/snapshots para apoio didático e adjudicação; `verification-recovery` verifica os contratos. Não inverter a dependência entre identidade e inventário nem introduzir ciclos. Escopo, especificação e plano aprovados; tarefas em revisão conforme 92. Não recomenda composição real otimizada ou modelo de eficácia operacional. O ciclo aprovado de `technical-catalog` permanece independente.
+Manter IDs/dependências: `technical-catalog` fornece evidência/consulta; `unit-registry` conserva identidades e composições; `party-inventory` fornece disponibilidade; `force-confrontation` poderá consumir os snapshots em uma integração própria, preservando o resultado oficial do instrutor. Não há inferência de escalão MPNL, aprovação de valores reais ou composição otimizada. Inspeção descritiva de sensores em 89 não valida semântica/eficácia. Documentos 89–92 são históricos; gates desta fatia concluídos conforme 93. O ciclo independente e os planos abertos de `technical-catalog` permanecem preservados.

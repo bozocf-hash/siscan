@@ -1,6 +1,6 @@
 # Plano técnico: unit-registry — grupamentos diretos
 
-**Estado: Fase 2 aprovada pelo responsável em 2026-11-16, por “aprovado”.** A [especificação](../../SPEC-unit-registry.md) foi aprovada em interação anterior, por “sim”. Local deste plano escolhido explicitamente pelo responsável na opção 1: `tasks/unit-registry/plan.md`. Lista de Fase 3 proposta em [todo.md](todo.md), sem código iniciado. Preservar `tasks/plan.md` e `tasks/todo.md`, referentes ao trabalho aberto de `technical-catalog`.
+**Estado: plano aprovado e recorte implementado em 2026-11-16.** O plano foi aprovado por “aprovado”, após a especificação; as [tarefas](todo.md) foram aprovadas posteriormente por “sim”. Local deste plano escolhido explicitamente pelo responsável na opção 1. Entrega em [93](../../docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md). Preservar `tasks/plan.md` e `tasks/todo.md`, referentes ao trabalho aberto de `technical-catalog`.
 
 ## Resultado pretendido
 
@@ -122,4 +122,4 @@ Não alterar originais ou promover dados; não selecionar composições otimizad
 
 ## Gate de conclusão da Fase 2
 
-Gate da Fase 2 satisfeito pela aprovação acima. A lista de Fase 3 está proposta para revisão e precisa de seu próprio aceite antes da implementação. Nenhum código foi iniciado por este plano.
+Gates da Fase 2 e da lista de Fase 3 satisfeitos por aprovações próprias. Recorte implementado e verificado em 93; mudanças futuras de escopo seguem revisão específica.

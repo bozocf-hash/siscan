@@ -1,8 +1,8 @@
 # Tarefas: unit-registry — grupamentos diretos
 
-**Estado: Fase 3 aprovada em 2026-11-16, por “sim”; Fase 4 em execução.** [Especificação](../../SPEC-unit-registry.md), [plano](plan.md) e esta lista foram aprovados em interações distintas. Preservar as tarefas abertas de `technical-catalog` em `tasks/plan.md` e `tasks/todo.md`.
+**Estado: Fase 3 aprovada em 2026-11-16, por “sim”; Fase 4 concluída; entrega em [93](../../docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md).** [Especificação](../../SPEC-unit-registry.md), [plano](plan.md) e esta lista foram aprovados em interações distintas. Preservar as tarefas abertas de `technical-catalog` em `tasks/plan.md` e `tasks/todo.md`.
 
-## Regras da execução futura
+## Regras da execução aprovada
 
 Executar na ordem abaixo, com testes de aceite/recusa antes de considerar cada tarefa concluída. Primeiro recorte em memória e com fixtures controladas. Nenhum endpoint, DDL, dependência ou integração física é autorizado por esta lista. Cada tarefa inclui o próprio registro de andamento em `todo.md`; os arquivos prováveis ficam dentro do limite de cinco por tarefa.
 
@@ -13,7 +13,7 @@ $pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\depende
 & $pythonCpc .\siscan-prototype\check_unit_groups.py
 ```
 
-O verificador ainda não existe. Seu comando só será executado depois da criação de testes na implementação; não substituir por descoberta de zero testes. Não há servidor/build/navegador para iniciar nesta fatia.
+O verificador foi criado e executou efetivamente 29 testes; não há descoberta vazia de testes. Não há servidor/build/navegador para iniciar nesta fatia.
 
 ## UGR-01 — Criar e consultar composição verificada
 
@@ -81,7 +81,7 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ## UGR-05 — Conferir preservação e documentar a entrega
 
-- [ ] Executar e registrar a verificação final.
+- [x] Executar e registrar a verificação final. Passaram 29 testes de grupamentos, 81 testes CPC e `check_engine_units.py`; entrega e cobertura em 93.
 - **Resultado:** evidência do recorte implementado, exemplos controlados e comandos reproduzíveis.
 - **Aceite:**
   - Verificador focado e regressões afetadas passam; não há modificação de bancos, originais ou recursos do exercício.
@@ -103,7 +103,7 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ## UGR-06 — Consolidar os controles do projeto
 
-- [ ] Atualizar e conferir a documentação final.
+- [x] Atualizar e conferir a documentação final: 00/09/10, mapa de capacidades e entrega 93; links, preservação e sincronização verificados.
 - **Resultado:** índices/pendências/continuidade refletem a entrega comprovada e distinguem o que ainda não foi integrado.
 - **Aceite:**
   - Referenciar a entrega e seus limites em 00, 09, 10 e no mapa de capacidades; manter IDs e o ciclo independente do catálogo.
@@ -116,6 +116,6 @@ O verificador ainda não existe. Seu comando só será executado depois da cria�
 
 ## Gate antes do código
 
-Gate da Fase 3 satisfeito pela aprovação acima; Fase 4 em andamento. Checkpoints são verificações do contrato aprovado, não aprovação de novo escopo; qualquer alteração material exige revisar a decisão afetada antes de implementá-la.
+Gate da Fase 3 satisfeito pela aprovação acima; Fase 4 concluída, com checkpoints A/B verificados. Checkpoints são verificações do contrato aprovado, não aprovação de novo escopo; qualquer alteração material exige revisar a decisão afetada antes de implementá-la.
 
-As tarefas marcadas acima foram implementadas e verificadas. As demais permanecem pendentes; não há alteração de banco ou estado do exercício.
+UGR-01–UGR-06 implementadas e verificadas. Não há alteração de banco ou estado do exercício; integração futura permanece fora desta fatia.

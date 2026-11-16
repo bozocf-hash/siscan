@@ -1,6 +1,6 @@
 # Spec: unit-registry — composição versionada de grupamentos
 
-**Estado: Fase 1 aprovada pelo responsável em 2026-11-16, por “sim”.** Complemento de escopo de [89](docs/recovery/89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md) e do [mapa de capacidades](CAPABILITY_MAP.md) previamente aprovado por “pode seguir”. Plano de Fase 2 aprovado posteriormente por “aprovado” em [tasks/unit-registry/plan.md](tasks/unit-registry/plan.md), local escolhido pelo responsável. Lista de Fase 3 proposta em [tasks/unit-registry/todo.md](tasks/unit-registry/todo.md), antes da implementação; preservar o trabalho aberto de `technical-catalog`.
+**Estado: especificação aprovada e recorte implementado em 2026-11-16.** Escopo, especificação, plano e tarefas foram aprovados em interações distintas; a lista de Fase 3 recebeu “sim”. [Plano](tasks/unit-registry/plan.md) e [tarefas](tasks/unit-registry/todo.md) preservam o trabalho aberto de `technical-catalog`. Entrega e evidências em [93](docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md), sem API/banco ou integração física.
 
 ## Objetivo
 
@@ -148,4 +148,4 @@ Fora desta primeira entrega: sensor físico, previsão operacional de eficácia,
 
 ## Gate de conclusão
 
-Gates de Fase 1 e do plano de Fase 2 satisfeitos por aprovações distintas. Lista detalhada de Fase 3 proposta para revisão; implementação não iniciada. Aprovações anteriores não aprovam automaticamente tarefas ou código.
+Gates de escopo, especificação, plano e tarefas satisfeitos por aprovações distintas. Implementação deste recorte verificada em 93, sem ampliar as autorizações para integração/API, persistência ou modelos físicos.

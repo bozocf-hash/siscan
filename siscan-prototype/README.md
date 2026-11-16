@@ -1,5 +1,34 @@
 # Protótipo didático SISCAN
 
+**Grupamentos em memória:** `unit_groups.RegistroGrupamentos` implementa criação, consulta por revisão, revisão, arquivamento e preparação de composições diretas navais/aéreas. Recebe contexto e visão de inventário de um provedor interno confiável; não autentica usuários nem consulta bancos. Preserva IDs/configurações/snapshots, recusa integrantes indisponíveis ou duplicados e mantém um único vínculo operativo direto ativo por unidade/contexto. Versão/recibo/vínculos são publicados juntos sob lock no mesmo processo. Reenvio retorna o resultado histórico; `preparar_composicao` revalida disponibilidade e não inicia simulação ou promove dados. Ver [93 — Entrega](../docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md).
+
+Na pasta `prototype`, execute o verificador com o Python disponível nesta máquina:
+
+```powershell
+$pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+& $pythonCpc check_unit_groups.py
+```
+
+São 29 testes do registro. O arquivo contém fixtures sintéticas reutilizáveis para examinar os exemplos; o módulo de produção não importa testes. Exemplo de chamadas, após obter `contexto` e `inventario` do provedor:
+
+```python
+from unit_groups import RegistroGrupamentos
+import uuid
+
+registro = RegistroGrupamentos()
+grupo = registro.criar_grupamento(contexto, inventario, {
+    "command_id": str(uuid.uuid4()),
+    "designation": "Grupo de demonstração",
+    "domain": "naval",
+    "member_unit_ids": ["id-da-unidade-1", "id-da-unidade-2"],
+})
+composicao = registro.preparar_composicao(
+    contexto, inventario, grupo["group_id"], grupo["composition_revision"]
+)
+```
+
+O domínio `naval`/`aereo` não determina a Força organizacional; vínculo MPNL só é registrado quando informado e válido. “Esquadrilha” não cria escalão. Sem persistência, os grupos/recibos se perdem ao encerrar a instância. Não há API, tela ou enfrentamento de grupamentos integrado ao mapa nesta entrega.
+
 **Logging e pós-ação:** `simulacao.eventos` fornece a lista estruturada completa dos turnos publicados: movimento, combustível, detecção, disparo, estoques, interceptação/erro/acerto, dano, mudanças de estado e perdas propostas. `simulacao.exportar_relatorio_pos_acao("caminho.txt")` ou `.csv` salva estado inicial, eventos e balanço final sem sobrescrever arquivos existentes. Código consolidado em `cpc_reporting.py`; contrato e exemplo de 60 turnos em [88](../docs/recovery/88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md). O TXT é legível; o CSV usa UTF-8 com BOM, `;`, decimais com ponto, colunas numéricas e `dados_json` completo. Não classifica falta de combustível naval/terrestre como destruição; mísseis e recursos defensivos são contabilizados separadamente.
 
 Para executar uma hora simulada e exportar ambos os formatos no PowerShell, use nomes novos:

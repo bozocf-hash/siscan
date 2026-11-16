@@ -1,12 +1,6 @@
 # Recuperação documental do SISCAN
 
-**Tarefas de grupamentos — [92](92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md):** plano aprovado; seis tarefas de Fase 3 propostas em `tasks/unit-registry/todo.md`, com aceites, dependências e verificações. Lista aguarda revisão antes do código; os arquivos abertos do catálogo foram preservados.
-
-**Plano de grupamentos — [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md):** plano de Fase 2 aprovado em `tasks/unit-registry/plan.md`, local escolhido pelo responsável. Criação/consulta, revisão, arquivamento, preparação e verificação final, sem alterar os planos abertos do catálogo. Tarefas propostas posteriormente em 92; código não iniciado.
-
-**Especificação de grupamentos — [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md):** escopo de 89 e `SPEC-unit-registry.md` aprovados. Composição direta naval/aérea em memória, versões, disponibilidade por partido e arquivamento, com 15 critérios de aceite. Plano proposto posteriormente em 91; código não iniciado.
-
-**Grupamentos e sensores — [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md):** complemento de escopo proposto para apoio didático ao instrutor. Inspeção local confirmou 6.747 sensores, 78 campos e 50.399 vínculos diretos nas quatro categorias examinadas, com chaves correspondentes. Não valida semântica/eficácia ou promove atributos. Composição versionada por partido e preservação MPNL propostas para revisão; nenhum código/banco alterado.
+**Grupamentos entregues — [93](93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md):** escopo, especificação, plano e tarefas aprovados; UGR-01–UGR-06 concluídas. Registro em memória com criação, consulta, revisão, arquivamento e preparação revalidada por exercício/partido. Passaram 29 testes novos, 81 CPC e o verificador de unidades. Sem API, persistência ou confronto de grupamentos integrado. Os documentos [89](89_ESCOPO_GRUPAMENTOS_E_DADOS_DESCRITIVOS_CPC.md), [90](90_ESPECIFICACAO_PROPOSTA_GRUPAMENTOS.md), [91](91_PLANO_PROPOSTO_GRUPAMENTOS.md) e [92](92_TAREFAS_PROPOSTAS_GRUPAMENTOS.md) são registros históricos das aprovações/preparação; suas pendências de gates desta fatia foram superadas pela entrega 93. Planos antigos do catálogo preservados.
 
 **Pós-ação CPC — [88](88_CPC_LOGGING_E_RELATORIO_POS_ACAO.md):** histórico estruturado, snapshots inicial/final e exportação TXT/CSV com balanço de sobreviventes, perdas propostas e recursos gastos. Execução de 60 turnos verificada: 314 eventos. 81 testes passaram. Arquivos existentes preservados; relatório não adjudica nem altera o exercício.
 

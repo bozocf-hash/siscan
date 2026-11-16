@@ -8,7 +8,7 @@ from collections.abc import Callable
 from copy import deepcopy
 import uuid
 
-from unit_groups import RegistroGrupamentos
+from unit_groups import GroupConflict, RegistroGrupamentos
 
 
 def preparar_dossie_grupamentos(
@@ -49,6 +49,16 @@ def preparar_dossie_grupamentos(
         snapshots = {member['unit_id']: deepcopy(inventory[team][member['unit_id']]['snapshot'])
                      for member in composition['members']}
         parties.append(dict(team=team, composition=composition, snapshots=snapshots))
+
+    # Cada consulta tem seu lock; o dossiê não reserva disponibilidade futura.
+    for party in parties:
+        composition = party['composition']
+        current = registro.consultar_grupamento(
+            dict(exercise_id=exercise_id, team=party['team']), composition['group_id'])
+        if (not current['active']
+                or current['composition_revision'] != composition['composition_revision']
+                or current['composition_sha256'] != composition['composition_sha256']):
+            raise GroupConflict('Composição alterada durante a preparação.')
 
     return dict(schema_version='siscan-cpc-group-preparation-01', exercise_id=exercise_id,
                 parties=parties, status='requires_instructor_review',

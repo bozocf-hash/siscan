@@ -23,7 +23,7 @@ O verificador ainda não existe. Não houve execução de testes nesta fase docu
 
 ## GPREP-02 — Recusar alteração observada sem preparação parcial
 
-- [ ] Implementar e verificar falha integral e conferência final de revisão.
+- [x] Implementar e verificar falha integral e conferência final de revisão. Treze testes focados passaram, incluindo revisão/arquivamento provocados durante a preparação.
 - **Aceite:** falha no segundo partido não retorna dossiê parcial; revisão/arquivamento observado entre preparação e conferência final gera `GroupConflict`; nenhuma falha cria grupo, recibo, reserva, consumo ou relógio. Não usar estado/lock privado do registro nem repetir automaticamente em caso de conflito.
 - **Verificar:** comando focado; mudança controlada durante chamadas públicas, sem sleeps, e comparação de inventários/consultas antes/depois. Separar alteração provocada pelo teste de qualquer efeito do preparador. GP-04–07, GP-11. Não alegar instantâneo atômico dos dois grupos.
 - **Dependência:** GPREP-01.
@@ -31,9 +31,9 @@ O verificador ainda não existe. Não houve execução de testes nesta fase docu
 
 ### Checkpoint A — Contexto e preservação
 
-- [ ] Fluxo válido e recusas passam; sem acesso não autorizado ou preparação parcial.
-- [ ] Revisões observadas são conferidas; limite da vista consistente e ausência de reserva futura explícitos.
-- [ ] Inventário, grupos, recursos e fontes preservados nos caminhos que não incluem mutação provocada pelo teste.
+- [x] Fluxo válido e recusas passam; sem acesso não autorizado ou preparação parcial.
+- [x] Revisões observadas são conferidas; limite da vista consistente e ausência de reserva futura explícitos.
+- [x] Inventário, grupos, recursos e fontes preservados nos caminhos que não incluem mutação provocada pelo teste.
 
 ## GPREP-03 — Congelar conteúdo e identificar o dossiê
 

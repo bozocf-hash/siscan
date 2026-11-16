@@ -5,7 +5,7 @@ import hashlib
 import json
 import unittest
 import uuid
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from unit_groups import GroupConflict, RegistroGrupamentos
 from cpc_group_preparation import preparar_dossie_grupamentos
@@ -146,6 +146,54 @@ class PreparacaoTests(unittest.TestCase):
                 self.assertEqual(len(self.preparar()['parties']), 2)
                 for grupo in self.grupos().values():
                     self.assertIsNone(grupo['mpnl_binding'])
+
+    def test_falha_no_segundo_partido_preserva_todo_estado(self):
+        del self.inventarios['VERMELHO']['VERMELHO-0']
+        antes, grupos = deepcopy(self.inventarios), self.grupos()
+        with self.assertRaises(PermissionError):
+            self.preparar()
+        self.assertEqual(self.inventarios, antes)
+        self.assertEqual(self.grupos(), grupos)
+
+    def test_grupo_arquivado_recusa_preparacao(self):
+        self.registro.arquivar_grupamento(self.contexto('AZUL'),
+            dict(command_id=str(uuid.uuid4()), **self.selecao['AZUL']))
+        grupos = self.grupos()
+        with self.assertRaises(GroupConflict):
+            self.preparar()
+        self.assertEqual(self.grupos(), grupos)
+
+    def test_revisao_alterada_durante_preparacao_e_recusada(self):
+        self.conflito_observado(arquivar=False)
+
+    def test_arquivamento_durante_preparacao_e_recusado(self):
+        self.conflito_observado(arquivar=True)
+
+    def conflito_observado(self, *, arquivar):
+        original = self.registro.preparar_composicao
+        antes = deepcopy(self.inventarios)
+        alterado = []
+
+        def preparar_e_mudar(contexto, inventario, **selection):
+            result = original(contexto, inventario, **selection)
+            if contexto['team'] == 'VERMELHO':
+                if arquivar:
+                    pedido = dict(command_id=str(uuid.uuid4()), **self.selecao['AZUL'])
+                    grupo = self.registro.arquivar_grupamento(self.contexto('AZUL'), pedido)
+                else:
+                    pedido = self.pedido('AZUL')
+                    pedido.update(self.selecao['AZUL'])
+                    grupo = self.registro.revisar_grupamento(self.contexto('AZUL'),
+                                                           self.inventarios['AZUL'], pedido)
+                alterado.append(grupo)
+            return result
+
+        with patch.object(self.registro, 'preparar_composicao', side_effect=preparar_e_mudar):
+            with self.assertRaises(GroupConflict):
+                self.preparar()
+        self.assertEqual(self.inventarios, antes)
+        self.assertEqual(self.grupos()['AZUL'], alterado[0])
+        self.assertEqual(self.grupos()['VERMELHO']['composition_revision'], 1)
 
 
 if __name__ == '__main__':

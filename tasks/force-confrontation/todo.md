@@ -37,7 +37,7 @@ O verificador ainda não existe. Não houve execução de testes nesta fase docu
 
 ## GPREP-03 — Congelar conteúdo e identificar o dossiê
 
-- [ ] Implementar e verificar cópias independentes e hash canônico.
+- [x] Implementar e verificar cópias independentes e hash canônico. Vinte e um testes focados passaram, incluindo determinismo, referências atualizadas e preservação de valores desconhecidos.
 - **Aceite:** snapshots integrais e referências preservados, inclusive valores desconhecidos, origem e classificação; entradas/retorno não compartilham estruturas mutáveis. Ordem de mapas não altera hash; nova versão/snapshot válida altera o conteúdo identificado. Envelope segue a especificação, exige revisão do instrutor, informa simulação não iniciada e aptidão global falsa, sem alterar classificação individual.
 - **Verificar:** comando focado; editar retorno e entradas após preparação, permutar mapas, revisar composição sobre snapshot novo e conferir SHA-256 sem o próprio hash. Recusar JSON não finito/não serializável. GP-08–12; nenhuma chamada ao motor de combate ou soma de recursos heterogêneos.
 - **Dependência:** GPREP-02 e Checkpoint A verificado.

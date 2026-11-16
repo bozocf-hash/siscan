@@ -195,6 +195,88 @@ class PreparacaoTests(unittest.TestCase):
         self.assertEqual(self.grupos()['AZUL'], alterado[0])
         self.assertEqual(self.grupos()['VERMELHO']['composition_revision'], 1)
 
+    def revisar(self, team):
+        pedido = self.pedido(team)
+        pedido.update(self.selecao[team])
+        grupo = self.registro.revisar_grupamento(self.contexto(team), self.inventarios[team], pedido)
+        self.selecao[team]['expected_revision'] = grupo['composition_revision']
+
+    def test_hash_do_envelope_completo_sem_o_proprio_hash(self):
+        result = self.preparar()
+        sha = result.pop('preparation_sha256')
+        self.assertEqual(sha, digest(result))
+        self.assertEqual(result['schema_version'], 'siscan-cpc-group-preparation-01')
+
+    def test_ordem_de_mapas_nao_altera_conteudo_ou_hash(self):
+        expected = self.preparar()
+        reversed_inventory = {team: dict(reversed(list(inv.items())))
+                              for team, inv in reversed(list(self.inventarios.items()))}
+        for inv in reversed_inventory.values():
+            for record in inv.values():
+                record['snapshot'] = dict(reversed(list(record['snapshot'].items())))
+        result = self.preparar(inventarios=reversed_inventory,
+                              selecao=dict(reversed(list(self.selecao.items()))))
+        self.assertEqual(result, expected)
+
+    def test_nova_revisao_e_snapshot_produzem_outro_hash(self):
+        original = self.preparar()
+        record = self.inventarios['AZUL']['AZUL-0']
+        record['snapshot']['combustivel_kg'] = 9
+        record['snapshot_sha256'] = digest(record['snapshot'])
+        with self.assertRaises(GroupConflict):
+            self.preparar()
+        self.revisar('AZUL')
+        current = self.preparar()
+        self.assertNotEqual(original['preparation_sha256'], current['preparation_sha256'])
+        self.assertEqual(original['parties'][0]['snapshots']['AZUL-0']['combustivel_kg'], 10)
+        self.assertEqual(current['parties'][0]['snapshots']['AZUL-0']['combustivel_kg'], 9)
+
+    def test_retorno_e_entradas_independentes_em_ambos_os_sentidos(self):
+        before = deepcopy(self.inventarios)
+        result = self.preparar()
+        frozen = deepcopy(result)
+        self.inventarios['AZUL']['AZUL-0']['snapshot']['municao']['estoque-ficticio'] = 0
+        self.assertEqual(result, frozen)
+        result['parties'][1]['snapshots']['VERMELHO-0']['municao'].clear()
+        result['parties'][1]['composition']['members'].clear()
+        self.assertEqual(self.inventarios['VERMELHO'], before['VERMELHO'])
+        self.assertEqual(len(self.grupos()['VERMELHO']['members']), 2)
+
+    def test_preserva_desconhecidos_origem_e_flags_individuais(self):
+        record = self.inventarios['AZUL']['AZUL-0']
+        record['snapshot'].update(source_kind='referencia_descritiva', official_calculation_ready=True,
+                                 extra={'texto': 'Dado adicional; não executar', 'peso': None})
+        record['snapshot_sha256'] = digest(record['snapshot'])
+        self.revisar('AZUL')
+        result = self.preparar()
+        snapshot = result['parties'][0]['snapshots']['AZUL-0']
+        self.assertEqual(snapshot, record['snapshot'])
+        self.assertIsNone(snapshot['desconhecido'])
+        self.assertIs(snapshot['official_calculation_ready'], True)
+        self.assertIs(result['official_calculation_ready'], False)
+
+    def test_json_invalido_recusa_sem_efeitos(self):
+        for value in (float('nan'), float('inf'), object()):
+            with self.subTest(value=value):
+                self.setUp()
+                grupos = self.grupos()
+                self.inventarios['AZUL']['AZUL-0']['snapshot']['extra'] = value
+                with self.assertRaises(ValueError):
+                    self.preparar()
+                self.assertEqual(self.grupos(), grupos)
+
+    def test_unidade_nao_participante_nao_entra_no_hash(self):
+        expected = self.preparar()
+        self.inventarios['AZUL']['AZUL-2']['snapshot']['combustivel_kg'] = 1
+        self.assertEqual(self.preparar(), expected)
+
+    def test_cada_chamada_exige_nova_autorizacao(self):
+        self.preparar()
+        self.autorizar.return_value = False
+        with self.assertRaises(PermissionError):
+            self.preparar()
+        self.assertEqual(self.autorizar.call_count, 2)
+
 
 if __name__ == '__main__':
     unittest.main()

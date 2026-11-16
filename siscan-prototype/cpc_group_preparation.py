@@ -6,6 +6,8 @@ inventário. Preparar não reserva disponibilidade futura ou autentica usuários
 
 from collections.abc import Callable
 from copy import deepcopy
+import hashlib
+import json
 import uuid
 
 from unit_groups import GroupConflict, RegistroGrupamentos
@@ -60,6 +62,13 @@ def preparar_dossie_grupamentos(
                 or current['composition_sha256'] != composition['composition_sha256']):
             raise GroupConflict('Composição alterada durante a preparação.')
 
-    return dict(schema_version='siscan-cpc-group-preparation-01', exercise_id=exercise_id,
-                parties=parties, status='requires_instructor_review',
-                simulation_started=False, official_calculation_ready=False)
+    result = dict(schema_version='siscan-cpc-group-preparation-01', exercise_id=exercise_id,
+                  parties=parties, status='requires_instructor_review',
+                  simulation_started=False, official_calculation_ready=False)
+    try:
+        encoded = json.dumps(result, sort_keys=True, ensure_ascii=False,
+                             separators=(',', ':'), allow_nan=False)
+    except (TypeError, ValueError) as exc:
+        raise ValueError('Dossiê deve conter somente JSON finito e serializável.') from exc
+    result['preparation_sha256'] = hashlib.sha256(encoded.encode('utf-8')).hexdigest()
+    return result

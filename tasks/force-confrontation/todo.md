@@ -1,6 +1,6 @@
 # Tarefas: force-confrontation — preparação dos grupamentos
 
-**Data: 2026-11-16. Estado: especificação e plano aprovados por “siga” e “seguimos”; Fase 3 proposta para revisão.** Referências: [especificação](../../SPEC-force-confrontation.md), [plano](plan.md) e [96](../../docs/recovery/96_TAREFAS_PREPARACAO_CPC_GRUPAMENTOS.md). As ideias gráficas de [97](../../docs/recovery/97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md) são frente futura, não ampliação destas tarefas.
+**Data: 2026-11-16. Estado: especificação e plano aprovados por “siga” e “seguimos”; Fase 3 aprovada por “siga”; Fase 4 em execução.** Referências: [especificação](../../SPEC-force-confrontation.md), [plano](plan.md) e [96](../../docs/recovery/96_TAREFAS_PREPARACAO_CPC_GRUPAMENTOS.md). As ideias gráficas de [97](../../docs/recovery/97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md) são frente futura, não ampliação destas tarefas.
 
 Executar sequencialmente após aprovação desta lista, com testes de comportamento antes da implementação correspondente. Preservar `tasks/plan.md`, `tasks/todo.md` e a entrega `unit-registry` concluída. Checkpoints verificam o contrato aprovado; alteração material exige revisar a decisão afetada.
 
@@ -15,7 +15,7 @@ O verificador ainda não existe. Não houve execução de testes nesta fase docu
 
 ## GPREP-01 — Preparar dois partidos com autorização
 
-- [ ] Implementar e verificar o fluxo válido e suas recusas de entrada.
+- [x] Implementar e verificar o fluxo válido e suas recusas de entrada. Nove testes focados passaram.
 - **Aceite:** autorização pelo provedor ocorre antes de ler grupos/inventários; somente `True` estrito autoriza. Exercício/seleção inválidos, grupo de outro contexto, arquivado, revisão desatualizada ou integrante incompatível são recusados. Fluxo válido usa as operações públicas do registro e reúne somente membros selecionados de AZUL/VERMELHO, incluindo combinações naval/aéreo.
 - **Verificar:** comando focado; provedor/registro instrumentados demonstram zero leitura de grupos quando não autorizado. Fixtures sintéticas usam o registro real em memória; GP-01–05, GP-11–12. Exceção do autorizador não libera consulta.
 - **Dependência:** aprovação desta lista.
@@ -84,4 +84,4 @@ O verificador ainda não existe. Não houve execução de testes nesta fase docu
 
 ## Gate
 
-Lista de Fase 3 aguarda aprovação. Não iniciar implementação antes desse gate. A solicitação de pensar na interface foi registrada em 97; não cria dependência que bloqueie esta fatia de backend e não autoriza mudanças silenciosas de mapa ou visibilidade.
+Lista de Fase 3 aprovada por “siga”; implementação em execução, sem reabrir gates anteriores. A solicitação de pensar na interface foi registrada em 97; não cria dependência que bloqueie esta fatia de backend e não autoriza mudanças silenciosas de mapa ou visibilidade.

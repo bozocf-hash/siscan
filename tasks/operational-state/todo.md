@@ -44,7 +44,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-03 — Consultar estado autorizado sem criar avaliação
 
-- [ ] Implementar `consultar` e a projeção autorizada do histórico confirmado.
+- [x] Consulta autorizada/estado ausente implementados; nove testes de validação e leitura passaram.
 - **Aceite:** autorização precede leitura sensível; unidade deve pertencer ao exercício/partido permitido e ter identidade verificável. Sem efeito confirmado retorna revisão 0/estado não avaliado, sem INSERT. Com histórico, derivar estado da cadeia íntegra e não de recurso/snapshot; operador recebe somente estado/histórico oficial permitido, sem proposta privada ou adversário.
 - **Verificar:** `check_operational_state.py` com instrutor, operador Azul/Vermelho, não participante, exercício distinto, identidade ausente/referências divergentes e revogação. Instrumentar acesso à fonte para comprovar fronteira; comparar SQL antes/depois das leituras. Schema não instalado deve ser erro explícito, não estado vazio válido. OS-01/03/09.
 - **Dependências:** OST-01/02 e Checkpoint A.

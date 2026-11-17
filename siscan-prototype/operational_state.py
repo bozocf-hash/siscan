@@ -143,15 +143,41 @@ def decidir_proposta(db,user,payload):
         exercise,replay=_command(db,user,payload,'decide',
             {'proposal_id','expected_revision','expected_sha256','action','reason'})
         if replay is not None:return replay
-        if payload['action']!='reject':raise ValueError('Ação de decisão inválida.')
+        if payload['action'] not in ('confirm','reject'):raise ValueError('Ação de decisão inválida.')
         _reason(payload['reason']);root,revision,body=_proposal(db,exercise,payload)
+        if payload['action']=='confirm':
+            if body['scenario_version']!=exercise['scenario_version']:raise Conflict('Cenário alterado; revise a proposta.')
+            source=[dict(unit_id=e['refs']['unit_id'],expected_state_revision=e['expected_state_revision'],
+                         **{k:e['refs'][k] for k in ('snapshot_id','snapshot_sha256','configuration_version_id')},
+                         changes=e['changes']) for e in body['effects']]
+            if _effects(db,user,source,exercise)!=body['effects']:raise Conflict('Fonte da proposta alterada.')
         decision_id=str(uuid.uuid4())
         db.execute('INSERT INTO operational_decisions VALUES(?,?,?,?,?,?,?,?,?)',
             (decision_id,root['proposal_id'],revision['revision'],revision['body_sha256'],payload['action'],
              payload['reason'],user['uid'],datetime.now(timezone.utc).isoformat(),payload['command_id']))
+        effects=_apply(db,user,exercise,root,body,decision_id) if payload['action']=='confirm' else []
         result=dict(proposal_id=root['proposal_id'],revision=revision['revision'],body_sha256=revision['body_sha256'],
-                    decision_id=decision_id,action=payload['action'],effects=[])
+                    decision_id=decision_id,action=payload['action'],effects=effects)
         return _receipt(db,user,exercise,payload,'decide',result)
+
+
+def _apply(db,user,exercise,root,body,decision_id):
+    results=[]
+    for effect in body['effects']:
+        refs=effect['refs'];unit=_unit(db,user,refs['unit_id']);history=_chain(db,unit)
+        before=history[-1]['after'] if history else _initial(db,unit)
+        changes=effect['changes']
+        if before['lost'] is True and changes.get('lost') is False:
+            if root['correction_decision_id']!=history[-1]['decision_id']:
+                raise Conflict('Recuperação exige referência à decisão do estado atual.')
+        evidence=refs['domain_evidence']
+        after=dict(before,**changes);after.update(revision=before['revision']+1,domain=evidence['domain'] if evidence else None)
+        db.execute('INSERT INTO operational_effects VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            (decision_id,unit['unit_id'],exercise['id'],unit['team'],after['revision'],before['revision'],refs['snapshot_id'],
+             engine_units.encoded(refs),_digest(refs),engine_units.encoded(before),_digest(before),
+             engine_units.encoded(after),_digest(after)))
+        results.append(dict(unit_id=unit['unit_id'],before=before,after=after))
+    return results
 
 
 def _digest(value):return hashlib.sha256(engine_units.encoded(value).encode('utf-8')).hexdigest()

@@ -73,7 +73,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-06 — Confirmar lote oficial e corrigir por nova decisão
 
-- [ ] Implementar confirmação transacional de todos os efeitos e sua consulta.
+- [x] Confirmação integral/correção implementadas; 27 testes passaram, incluindo falha entre integrantes e preservação das demais tabelas.
 - **Aceite:** autorização/contexto/cenário, última revisão/hash da proposta, identidade/adjudicação/snapshots e revisão própria de cada unidade reconferidos dentro da transação. Decisão confirmada, efeitos antes/depois e recibo são publicados juntos, sem estado confirmado sem efeito correspondente ou aplicação parcial. Correção posterior cria nova proposta/decisão referenciada; recuperar perda exige referência explícita e não decorre de aumentar índice.
 - **Verificar:** `check_operational_state.py` com lote válido, unidade/revisão incompatível, alteração de fonte, cenário/exercício fechado, revisão antiga, índice retirado, declaração explícita de perda e correção. Provocar falha entre integrantes e conferir rollback integral de estado/decisão/recibo. Operador nunca confirma. Nada altera recursos/mapa/tempo/configuração técnica. OS-02/03/04/05/09.
 - **Dependências:** OST-05 e Checkpoint B.

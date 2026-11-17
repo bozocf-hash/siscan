@@ -27,6 +27,77 @@ def decision(result,action='reject'):
                 expected_sha256=result['body_sha256'],action=action,reason='Decisão do instrutor')
 
 
+class ConfirmationTests(unittest.TestCase):
+    setUp=lambda self:ReadTests.setUp(self)
+
+    def confirm(self,body=None):
+        result=state.registrar_proposta(self.db,TEACHER,body or proposal(self.db))
+        command=decision(result,'confirm')
+        return state.decidir_proposta(self.db,TEACHER,command),command
+
+    def test_confirma_lote_e_replay(self):
+        result,command=self.confirm()
+        self.assertEqual(result['action'],'confirm');self.assertEqual(len(result['effects']),2)
+        before=list(self.db.iterdump());self.assertEqual(result,state.decidir_proposta(self.db,TEACHER,command))
+        self.assertEqual(list(self.db.iterdump()),before)
+        for u in self.units:
+            current=state.consultar(self.db,TEACHER,u['unit_id']);self.assertEqual(current['state']['index_percent'],80)
+            self.assertEqual(current['state']['revision'],1);self.assertIsNone(current['condition'])
+
+    def test_perda_independente_e_correcao_referenciada(self):
+        first,_=self.confirm(proposal(self.db,{'index_percent':0,'lost':True}))
+        self.assertTrue(state.consultar(self.db,TEACHER,self.blue)['state']['lost'])
+        second,_=self.confirm(proposal(self.db,{'index_percent':90}))
+        self.assertTrue(state.consultar(self.db,TEACHER,self.blue)['state']['lost'])
+        self.assertIsNone(state.consultar(self.db,TEACHER,self.blue)['condition'])
+        body=proposal(self.db,{'lost':False})
+        with self.assertRaises(state.Conflict):self.confirm(body)
+        body=proposal(self.db,{'lost':False});body['correction_decision_id']=second['decision_id']
+        self.confirm(body)
+        self.assertFalse(state.consultar(self.db,TEACHER,self.blue)['state']['lost'])
+        self.assertEqual(len(state.historico(self.db,TEACHER,self.blue)),3)
+
+    def test_retirar_avaliacao_e_preservar_campo_omitido(self):
+        self.confirm();self.confirm(proposal(self.db,{'index_percent':None}))
+        current=state.consultar(self.db,TEACHER,self.blue)['state']
+        self.assertIsNone(current['index_percent']);self.assertIsNone(current['lost'])
+
+    def test_rollback_entre_integrantes(self):
+        first=state.registrar_proposta(self.db,TEACHER,proposal(self.db));before=list(self.db.iterdump())
+        self.db.execute("""CREATE TRIGGER fail_second_effect BEFORE INSERT ON operational_effects
+          WHEN (SELECT count(*) FROM operational_effects)>0 BEGIN SELECT RAISE(ABORT,'falha'); END""")
+        self.db.commit()
+        with self.assertRaises(sqlite3.IntegrityError):state.decidir_proposta(self.db,TEACHER,decision(first,'confirm'))
+        self.db.execute('DROP TRIGGER fail_second_effect');self.db.commit()
+        self.assertEqual(list(self.db.iterdump()),before)
+
+    def test_reconferencia_adjudicacao_e_cenario(self):
+        first=state.registrar_proposta(self.db,TEACHER,proposal(self.db))
+        self.db.execute("UPDATE party_allocations SET active=0 WHERE team='AZUL'");self.db.commit()
+        with self.assertRaises(PermissionError):state.decidir_proposta(self.db,TEACHER,decision(first,'confirm'))
+        self.db.execute('UPDATE party_allocations SET active=1');self.db.execute("UPDATE exercises SET scenario_version=2");self.db.commit()
+        with self.assertRaises(state.Conflict):state.decidir_proposta(self.db,TEACHER,decision(first,'confirm'))
+        self.assertEqual(self.db.execute('SELECT count(*) FROM operational_decisions').fetchone()[0],0)
+
+    def test_nao_interfere_no_resto_do_banco(self):
+        before=[s for s in self.db.iterdump() if s.startswith('INSERT INTO') and '"operational_' not in s]
+        self.confirm()
+        self.assertEqual(before,[s for s in self.db.iterdump() if s.startswith('INSERT INTO') and '"operational_' not in s])
+
+    def test_historico_do_operador_nao_contem_motivo_privado(self):
+        self.confirm()
+        self.assertNotIn('reason',state.historico(self.db,BLUE,self.blue)[0])
+        self.assertIn('reason',state.historico(self.db,TEACHER,self.blue)[0])
+        with self.assertRaises(PermissionError):state.historico(self.db,BLUE,self.red)
+
+    def test_faixas_confirmadas_com_provedor_controlado_de_superficie(self):
+        evidence=dict(domain='superficie',basis='fixture_only',reference='teste')
+        with patch.object(engine_units,'configuration_domain',return_value=evidence):
+            self.confirm(proposal(self.db,{'index_percent':60}))
+            self.assertEqual(state.consultar(self.db,TEACHER,self.blue)['condition'],'navegar')
+        self.assertEqual(state.consultar(self.db,TEACHER,self.blue)['state']['domain'],'superficie')
+
+
 class RevisionTests(unittest.TestCase):
     setUp=lambda self:ReadTests.setUp(self)
 

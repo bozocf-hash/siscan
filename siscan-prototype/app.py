@@ -28,6 +28,8 @@ import engine_continuity
 import engine_profiles
 import fuel_limits
 import map_units
+import map_groups
+from unit_groups import GroupConflict, RegistroGrupamentos
 import mimetypes
 
 
@@ -400,6 +402,18 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path == '/api/map-unit-groups':
+                current = self.require_user(db)
+                if current:
+                    try:
+                        query = parse_qs(urlparse(self.path).query, keep_blank_values=True)
+                        if set(query) != {'team'} or len(query['team']) != 1:
+                            raise ValueError('Informe um partido.')
+                        self.send_json(200, map_groups.listing(db, current[1], query['team'][0], self.server.unit_group_registry))
+                    except PermissionError as exc: self.send_json(403, {'error': str(exc)})
+                    except ValueError as exc: self.send_json(400, {'error': str(exc)})
+                    except sqlite3.Error: self.send_json(503, {'error': 'Não foi possível conferir as identidades dos meios.'})
+                return
             if path=='/api/map-units':
                 current=self.require_user(db)
                 if current:
@@ -529,6 +543,19 @@ class Handler(BaseHTTPRequestHandler):
                 self.engine_runtime_action(db,user,path.rsplit('/',1)[1],payload)
             elif path == '/api/engine-profile-preview':
                 self.engine_profile_action(db,user,payload)
+            elif path == '/api/map-unit-groups' or (path.startswith('/api/map-unit-groups/') and path.endswith('/archive')):
+                try:
+                    group_id = None
+                    if path != '/api/map-unit-groups':
+                        parts = path.split('/')
+                        if len(parts) != 5: raise ValueError('Caminho de arquivamento inválido.')
+                        group_id = parts[3]
+                    self.send_json(200, map_groups.command(db, user, self.server.unit_group_registry, payload, group_id=group_id))
+                except PermissionError as exc: self.send_json(403, {'error': str(exc)})
+                except GroupConflict as exc: self.send_json(409, {'error': str(exc)})
+                except KeyError: self.send_json(404, {'error': 'Grupamento não encontrado neste contexto.'})
+                except ValueError as exc: self.send_json(400, {'error': str(exc)})
+                except sqlite3.Error: self.send_json(503, {'error': 'Não foi possível conferir as identidades dos meios.'})
             elif path=='/api/map-units':
                 try:self.send_json(200,map_units.plot(db,user,payload))
                 except PermissionError as exc:self.send_json(403,{'error':str(exc)})
@@ -1195,9 +1222,16 @@ class Handler(BaseHTTPRequestHandler):
         self.send_json(HTTPStatus.OK, {"ok": True, "scenario_version": new_version})
 
 
+class SiscanServer(ThreadingHTTPServer):
+    """Registro temporário único compartilhado pelas threads deste servidor."""
+    def __init__(self, *args, **kwargs):
+        self.unit_group_registry = RegistroGrupamentos()
+        super().__init__(*args, **kwargs)
+
+
 def main() -> None:
     initialize()
-    server = ThreadingHTTPServer((HOST, PORT), Handler)
+    server = SiscanServer((HOST, PORT), Handler)
     print(f"Protótipo SISCAN em http://{HOST}:{PORT} (somente este computador)")
     print("Dados sintéticos locais. Ctrl+C encerra o servidor.")
     try:

@@ -38,7 +38,7 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ## GMAP-03 — Integrar rotas e registro compartilhado ao servidor
 
-- [ ] Implementar e verificar criar/consultar/arquivar por HTTP.
+- [x] Implementar e verificar criar/consultar/arquivar por HTTP. Sete testes de HTTP real passaram em loopback com banco temporário.
 - **Aceite:** três rotas de 99, corpos/consulta/URL estritos, sessão/CSRF, exercício aberto na escrita e respostas 400/403/404/409 coerentes. Uma instância por servidor atende threads; reenvio/conflito preservam publicação única, e todas as respostas passam por projeção autorizada atual, inclusive recibos após revogação. Arquivo preserva unidades/posições e libera vínculos; reinício tem lista vazia e aviso de armazenamento em memória.
 - **Verificar:** `check_map_groups_http.py`, base temporária com caminhos `DATA_DIR`/`DB_PATH` isolados e porta livre; sessões de instrutor/operadores; escrita sem CSRF, outro partido/exercício, conflito/reenvio, comandos concorrentes e vínculo revogado. Comparar dados SQL e confirmar que nenhuma rota cria meios ou consome recursos. GM-04–05, GM-07, GM-09, GM-11–12.
 - **Dependências:** GMAP-01/02.
@@ -46,9 +46,9 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ### Checkpoint A — Backend da interface
 
-- [ ] Provedor/registro/HTTP passam com recusas e preservação de dados.
-- [ ] Respostas não vazam integrantes revogados ou partido não autorizado; recibo não substitui autorização atual.
-- [ ] A API diferencia vazio, pendência e erro; memória temporária é declarada. Resultados comunicados antes do gráfico.
+- [x] Provedor/registro/HTTP passam com recusas e preservação de dados.
+- [x] Respostas não vazam integrantes revogados ou partido não autorizado; recibo não substitui autorização atual.
+- [x] A API diferencia vazio, pendência e erro; memória temporária é declarada. Resultados comunicados antes do gráfico.
 
 ## GMAP-04 — Acrescentar aba e fluxo de composição
 

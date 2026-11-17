@@ -33,7 +33,7 @@ Verificadores novos ainda não existem e nenhum teste foi executado nesta fase d
 
 ## CPMAP-02 — Conferir a captura e separar os manifestos
 
-- [ ] Implementar e verificar revalidação observada, cópias e hashes.
+- [x] Implementar e verificar revalidação observada, cópias e hashes. Quatorze testes focados passaram, incluindo mudanças provocadas durante a captura e manifesto geográfico separado.
 - **Aceite:** dossiê técnico mantém o contrato/hash de 98; manifesto geográfico e hash de vista são distintos, canônicos e restritos ao par. Mudança observada de grupo/contexto/snapshot/adjudicação/posição recusa o lote sem resposta parcial; retorno e entradas independentes. Não alegar reserva futura ou transação distribuída.
 - **Verificar:** `check_cpc_map.py` com alterações controladas entre chamadas, sem sleeps nem acesso privado ao registro. Mesmas entradas/ordens produzem os mesmos hashes; posição nova altera geográfico/vista e preserva o técnico; unidade não participante não muda manifestos. Campo desconhecido/posição ausente não vira zero/100%/coordenada. CP-03–06, CP-10–11.
 - **Dependência:** CPMAP-01.

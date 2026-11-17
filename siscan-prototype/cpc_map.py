@@ -115,4 +115,10 @@ def prepare(db, user, registro, selection):
     dossier = preparar_dossie_grupamentos(exercise_id=context['exercise_id'],
         autorizar_instrutor=lambda exercise_id: exercise_id == context['exercise_id'],
         registro=registro, inventarios={team: views[team]['inventory'] for team in TEAMS}, selecao=selection)
-    return _project(context, views, dossier, _metadata(registro, context, dossier))
+    result = _project(context, views, dossier, _metadata(registro, context, dossier))
+    # Fontes têm transações/locks próprios; esta conferência não reserva estado.
+    fresh_context, fresh_views = _capture(db, user)
+    fresh = _project(fresh_context, fresh_views, dossier, _metadata(registro, fresh_context, dossier))
+    if result != fresh:
+        raise GroupConflict('Dados ou posições alterados; prepare novamente o par.')
+    return result

@@ -50,7 +50,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-03 — Capturar base de julgamento e prévia sem escrita
 
-- [ ] Implementar contexto e preview no novo adaptador CPC.
+- [x] Base/prévia implementadas; quatro testes passaram, sem escrita e com invalidação de referências.
 - **Aceite:** autorização antes de ler adversário; preparar par por 108, acrescentar estados oficiais/revisões e hash de base separado. Efeitos só em membros explícitos do par, com omissão preservada e motivo; origem/ref/snapshot/domínio obtidos pelo servidor. Mudança da base recusa prévia antiga, sem reconstruir força ou substituir desconhecido por zero.
 - **Verificar:** novo `check_cpc_judgment.py` com grupo/snapshot/adjudicação/posição/estado/cenário alterados, duplicação/unidade externa/campos injetados, ausência e schema indisponível. Comparar SQL e registro antes/depois de contexto/prévia; nenhum recibo fictício. JMAP-01/02/03/07/10.
 - **Dependências:** JUD-01/02.

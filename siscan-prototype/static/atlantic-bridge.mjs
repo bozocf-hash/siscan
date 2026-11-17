@@ -1,6 +1,8 @@
 import {kinds,classify,silhouette} from '/unit-silhouettes.mjs';
-import {installGroupPanel} from '/map-groups.mjs';
 export async function install(map){
+ let installGroupPanel=null;
+ try{({installGroupPanel}=await import('/map-groups.mjs'));}
+ catch(error){console.warn('Grupamentos indisponíveis nesta instância; atualize o servidor.',error);}
  let activeTab='units',groupsController=null,loadGeneration=0;
  const element=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
  const me=await(await fetch('/api/me')).json();if(!me.user)throw Error('Entre no SISCAN para plotar meios.');
@@ -10,6 +12,7 @@ export async function install(map){
  dock.append(original);const panel=element('section');panel.setAttribute('aria-label','Inserir meios adjudicados');Object.assign(panel.style,{padding:'12px',overflow:'auto',minHeight:'0',background:'#102338',color:'white'});dock.append(panel);
  const groupsPanel=element('section');groupsPanel.setAttribute('aria-label','Grupamentos');groupsPanel.className='siscan-groups-panel';dock.append(groupsPanel);
  const tabs=element('nav'),layersTab=element('button','Camadas'),unitsTab=element('button','Meios'),groupsTab=element('button','Grupos');unitsTab.setAttribute('aria-label','Meios adjudicados');groupsTab.setAttribute('aria-label','Grupamentos');tabs.setAttribute('aria-label','Conteúdo do painel lateral');tabs.append(layersTab,unitsTab,groupsTab);dock.querySelector('.panel-heading').after(tabs);
+ groupsTab.disabled=!installGroupPanel;if(!installGroupPanel)groupsTab.title='Grupamentos indisponíveis nesta instância. Atualize o servidor.';
  const show=which=>{activeTab=which;dock.querySelector('.panel-heading h2').textContent=({layers:'Camadas',units:'Meios adjudicados',groups:'Grupamentos'})[which];original.hidden=which!=='layers';panel.hidden=which!=='units';groupsPanel.hidden=which!=='groups';layersTab.setAttribute('aria-pressed',String(which==='layers'));unitsTab.setAttribute('aria-pressed',String(which==='units'));groupsTab.setAttribute('aria-pressed',String(which==='groups'));if(which==='groups'){cancelPlot();groupsController?.load(team.value);load().catch(e=>message.textContent=e.message);}else if(groupsController)highlightAssets([]);};layersTab.onclick=()=>show('layers');unitsTab.onclick=()=>show('units');groupsTab.onclick=()=>show('groups');show('units');
  document.querySelector('#toggle-layers').addEventListener('click',()=>show('layers'));
  const opener=element('button','Meios');opener.title='Abrir meios adjudicados';opener.onclick=()=>{dock.hidden=false;show('units');};document.querySelector('#tools').append(opener);
@@ -31,7 +34,7 @@ export async function install(map){
  function cancelPlot(){moveId=null;pending=null;selecting=false;start=null;if(box){map.removeLayer(box);box=null;}area.textContent='Selecionar área';map.dragging.enable();map.getContainer().style.cursor='';for(const marker of markerIndex.values())marker.getElement()?.style.setProperty('pointer-events','');map.closePopup();}
  function highlightAssets(ids){const chosen=new Set(activeTab==='groups'?ids:[]);for(const [id,marker] of markerIndex)marker.getElement()?.querySelector('.siscan-unit-icon')?.classList.toggle('group-selected',chosen.has(id));}
  function focusAssets(ids){const points=ids.map(id=>markerIndex.get(id)?.getLatLng()).filter(Boolean);if(points.length)map.fitBounds(L.latLngBounds(points),{paddingTopLeft:[Math.min(dock.hidden?20:dock.getBoundingClientRect().width+20,map.getSize().x-100),35],paddingBottomRight:[60,35],maxZoom:12});}
- groupsController=installGroupPanel({container:groupsPanel,csrf:me.csrf,highlight:highlightAssets,focus:focusAssets});
+ if(installGroupPanel)groupsController=installGroupPanel({container:groupsPanel,csrf:me.csrf,highlight:highlightAssets,focus:focusAssets});
  // The original editor captures contextmenu on its container: handle our markers first.
  document.addEventListener('contextmenu',event=>{const icon=event.target.closest?.('.siscan-unit-marker');if(!icon)return;if(activeTab==='groups'){event.preventDefault();event.stopImmediatePropagation();return;}const marker=markerIndex.get(Number(icon.dataset.siscanUnit));if(marker){event.preventDefault();event.stopImmediatePropagation();marker.openPopup();}},true);
  const preferenceKey=u=>'siscan.map.silhouette.'+me.user.id+'.'+team.value+'.'+u.id;
@@ -55,8 +58,8 @@ export async function install(map){
    }
   }message.textContent=`${units.length} meios adjudicados · ${selected.size} selecionados.`+(fallbacks.size?' Sem símbolo compatível para '+[...fallbacks].join(', ')+': usando silhueta ilustrativa.':'');
  }
- async function load(){const token=++loadGeneration,requestedTeam=team.value;const response=await fetch('/api/map-units?team='+requestedTeam);const data=await response.json();if(token!==loadGeneration||requestedTeam!==team.value)return;if(!response.ok)throw Error(data.error);units=data.units;selected=new Set([...selected].filter(id=>units.some(u=>u.id===id)));draw();groupsController.reapplyHighlight();}
- refresh.onclick=()=>load().catch(e=>message.textContent=e.message);team.onchange=()=>{selected.clear();cancelPlot();units=[];draw();groupsController.load(team.value);load().catch(e=>message.textContent=e.message);};reference.onchange=()=>{const unit=units.find(u=>String(u.id)===reference.value);if(unit){lat.value=unit.latitude;lon.value=unit.longitude;map.panTo([unit.latitude,unit.longitude]);pending=null;}};
+ async function load(){const token=++loadGeneration,requestedTeam=team.value;const response=await fetch('/api/map-units?team='+requestedTeam);const data=await response.json();if(token!==loadGeneration||requestedTeam!==team.value)return;if(!response.ok)throw Error(data.error);units=data.units;selected=new Set([...selected].filter(id=>units.some(u=>u.id===id)));draw();groupsController?.reapplyHighlight();}
+ refresh.onclick=()=>load().catch(e=>message.textContent=e.message);team.onchange=()=>{selected.clear();cancelPlot();units=[];draw();groupsController?.load(team.value);load().catch(e=>message.textContent=e.message);};reference.onchange=()=>{const unit=units.find(u=>String(u.id)===reference.value);if(unit){lat.value=unit.latitude;lon.value=unit.longitude;map.panTo([unit.latitude,unit.longitude]);pending=null;}};
  map.on('click',e=>{if(activeTab!=='units'||selecting||save.disabled)return;lat.value=e.latlng.lat.toFixed(6);lon.value=e.latlng.lng.toFixed(6);pending=null;if(moveId!==null){moveId=null;map.getContainer().style.cursor='';form.requestSubmit();}});
  for(const field of [lat,lon])field.addEventListener('input',()=>{pending=null;});
  area.onclick=()=>{moveId=null;map.getContainer().style.cursor='';selecting=!selecting;area.textContent=selecting?'Concluir seleção de área':'Selecionar área';if(selecting)map.dragging.disable();else map.dragging.enable();};

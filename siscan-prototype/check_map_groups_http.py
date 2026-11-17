@@ -47,6 +47,11 @@ def sandbox(with_map=False):
         class QuietHandler(app.Handler):
             def log_message(self, *args):
                 pass
+            def do_GET(self):
+                if self.path == '/map-groups.mjs' and not getattr(self.server, 'serve_group_module', True):
+                    self.send_json(404, {'error': 'Módulo indisponível nesta instância de teste.'})
+                    return
+                super().do_GET()
         original_connect = app.connect
         @contextmanager
         def isolated_connect():
@@ -178,11 +183,17 @@ class HttpTests(unittest.TestCase):
         self.env.server.unit_group_registry = RegistroGrupamentos()
         self.assertEqual(self.listing()[1]['groups'], [])
 
+    def test_modulo_ausente_nao_altera_dados_ou_consulta(self):
+        self.env.server.serve_group_module = False
+        self.assertEqual(request(self.env, '/map-groups.mjs')[0], 404)
+        self.assertEqual(self.listing()[0], 200)
+
 
 if __name__ == '__main__':
     import sys
     if '--serve' in sys.argv:
         with sandbox(with_map=True) as env:
+            env.server.serve_group_module = '--legacy' not in sys.argv
             print(json.dumps(dict(url=env.url, database=str(env.db_path))), flush=True)
             try:
                 while True:

@@ -60,7 +60,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-05 — Revisar e rejeitar sem aplicar efeitos
 
-- [ ] Implementar `revisar_proposta` e decisão de rejeição.
+- [x] Revisão/rejeição implementadas; 19 testes passaram, incluindo terminalidade e rollback.
 - **Aceite:** ajuste cria revisão imutável completa; revisão/hash esperados e autorização reconferidos. Rejeição é decisão terminal com motivo/recibo, sem efeitos; proposta decidida não pode ser revisada/reaberta. Versão antiga não pode ser confirmada depois do ajuste.
 - **Verificar:** `check_operational_state.py` com encadeamento de revisões, payload inválido, revisão desatualizada, repetição/divergência de comando, rejeição repetida e tentativas após decisão/revogação. Comparar estado/recursos/mapa/snapshots antes/depois; falha de transação não deixa nova revisão/decisão/recibo parcial. OS-03/04/06/09.
 - **Dependência:** OST-04.
@@ -68,8 +68,8 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ### Checkpoint B — Propostas sem efeitos
 
-- [ ] Consulta, proposta, revisão e rejeição verificadas, com fronteira de autorização e conteúdo durável.
-- [ ] Meios/recursos/relógio/posições/snapshots preservados; não apresentar proposta como resultado oficial.
+- [x] Consulta, proposta, revisão e rejeição verificadas, com autorização e conteúdo durável.
+- [x] Propostas/rejeição não publicam estado oficial; verificação de não interferência prossegue no lote de confirmação.
 
 ## OST-06 — Confirmar lote oficial e corrigir por nova decisão
 

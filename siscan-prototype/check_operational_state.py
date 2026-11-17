@@ -22,6 +22,45 @@ def proposal(db,changes=None):
                 origin={'reference':'Aula controlada'},effects=effects)
 
 
+def decision(result,action='reject'):
+    return dict(command_id=str(uuid.uuid4()),proposal_id=result['proposal_id'],expected_revision=result['revision'],
+                expected_sha256=result['body_sha256'],action=action,reason='Decisão do instrutor')
+
+
+class RevisionTests(unittest.TestCase):
+    setUp=lambda self:ReadTests.setUp(self)
+
+    def test_revisao_cria_versao_e_rejeicao_terminal_sem_efeito(self):
+        first=state.registrar_proposta(self.db,TEACHER,proposal(self.db))
+        edit=dict(proposal(self.db),proposal_id=first['proposal_id'],expected_revision=1,expected_sha256=first['body_sha256'])
+        edit['effects'][0]['changes']={'index_percent':40}
+        second=state.revisar_proposta(self.db,TEACHER,edit)
+        self.assertEqual(second,state.revisar_proposta(self.db,TEACHER,edit));self.assertEqual(second['revision'],2)
+        with self.assertRaises(state.Conflict):state.decidir_proposta(self.db,TEACHER,decision(first))
+        command=decision(second);result=state.decidir_proposta(self.db,TEACHER,command)
+        self.assertEqual(result['action'],'reject');self.assertEqual(result,state.decidir_proposta(self.db,TEACHER,command))
+        self.assertEqual(self.db.execute('SELECT count(*) FROM operational_effects').fetchone()[0],0)
+        with self.assertRaises(state.Conflict):state.revisar_proposta(self.db,TEACHER,dict(edit,command_id=str(uuid.uuid4())))
+        with self.assertRaises(state.Conflict):state.decidir_proposta(self.db,TEACHER,decision(second))
+
+    def test_operador_nao_revisa_ou_rejeita(self):
+        first=state.registrar_proposta(self.db,TEACHER,proposal(self.db))
+        for operation,payload in [(state.decidir_proposta,decision(first)),(state.revisar_proposta,dict(
+                proposal(self.db),proposal_id=first['proposal_id'],expected_revision=1,expected_sha256=first['body_sha256']))]:
+            with self.assertRaises(PermissionError):operation(self.db,BLUE,payload)
+
+    def test_hash_e_payload_invalidos(self):
+        first=state.registrar_proposta(self.db,TEACHER,proposal(self.db))
+        for bad in (dict(decision(first),expected_sha256='x'),dict(decision(first),expected_revision=True)):
+            with self.assertRaises((ValueError,state.Conflict)):state.decidir_proposta(self.db,TEACHER,bad)
+
+    def test_rejeicao_falha_reverte_decisao(self):
+        first=state.registrar_proposta(self.db,TEACHER,proposal(self.db));before=list(self.db.iterdump())
+        with patch.object(state,'_receipt',side_effect=RuntimeError('falha')):
+            with self.assertRaises(RuntimeError):state.decidir_proposta(self.db,TEACHER,decision(first))
+        self.assertEqual(list(self.db.iterdump()),before)
+
+
 class ProposalTests(unittest.TestCase):
     setUp=lambda self:ReadTests.setUp(self)
 

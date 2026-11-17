@@ -107,6 +107,53 @@ def registrar_proposta(db,user,payload):
         return _receipt(db,user,exercise,payload,'register',result)
 
 
+def _proposal(db,exercise,payload):
+    _uuid(payload['proposal_id'])
+    if type(payload['expected_revision']) is not int or payload['expected_revision']<1:
+        raise ValueError('Revisão de proposta inválida.')
+    root=db.execute('SELECT * FROM operational_proposals WHERE proposal_id=? AND exercise_id=?',
+                    (payload['proposal_id'],exercise['id'])).fetchone()
+    if root is None:raise PermissionError('Proposta não disponível neste contexto.')
+    if db.execute('SELECT 1 FROM operational_decisions WHERE proposal_id=?',(root['proposal_id'],)).fetchone():
+        raise Conflict('Proposta já decidida.')
+    revision=db.execute('SELECT * FROM operational_proposal_revisions WHERE proposal_id=? ORDER BY revision DESC LIMIT 1',
+                        (root['proposal_id'],)).fetchone()
+    if revision is None:raise sqlite3.DatabaseError('Missing proposal revision.')
+    body=_checked_json(revision['body_json'],revision['body_sha256'])
+    if revision['revision']!=payload['expected_revision'] or revision['body_sha256']!=payload['expected_sha256']:
+        raise Conflict('Revisão/hash da proposta alterados.')
+    return root,revision,body
+
+
+def revisar_proposta(db,user,payload):
+    _context(db,user,write=True)
+    with atomic(db):
+        exercise,replay=_command(db,user,payload,'revise',
+            {'proposal_id','expected_revision','expected_sha256','source','reason','origin','effects'})
+        if replay is not None:return replay
+        root,revision,old_body=_proposal(db,exercise,payload)
+        body=_body(db,user,payload,exercise)
+        result=_save_revision(db,user,exercise,root['proposal_id'],revision['revision']+1,body)
+        return _receipt(db,user,exercise,payload,'revise',result)
+
+
+def decidir_proposta(db,user,payload):
+    _context(db,user,write=True)
+    with atomic(db):
+        exercise,replay=_command(db,user,payload,'decide',
+            {'proposal_id','expected_revision','expected_sha256','action','reason'})
+        if replay is not None:return replay
+        if payload['action']!='reject':raise ValueError('Ação de decisão inválida.')
+        _reason(payload['reason']);root,revision,body=_proposal(db,exercise,payload)
+        decision_id=str(uuid.uuid4())
+        db.execute('INSERT INTO operational_decisions VALUES(?,?,?,?,?,?,?,?,?)',
+            (decision_id,root['proposal_id'],revision['revision'],revision['body_sha256'],payload['action'],
+             payload['reason'],user['uid'],datetime.now(timezone.utc).isoformat(),payload['command_id']))
+        result=dict(proposal_id=root['proposal_id'],revision=revision['revision'],body_sha256=revision['body_sha256'],
+                    decision_id=decision_id,action=payload['action'],effects=[])
+        return _receipt(db,user,exercise,payload,'decide',result)
+
+
 def _digest(value):return hashlib.sha256(engine_units.encoded(value).encode('utf-8')).hexdigest()
 
 

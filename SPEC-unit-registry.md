@@ -2,7 +2,7 @@
 
 **Estado: especificação aprovada e recorte implementado em 2026-11-16.** Escopo, especificação, plano e tarefas foram aprovados em interações distintas; a lista de Fase 3 recebeu “sim”. [Plano](tasks/unit-registry/plan.md) e [tarefas](tasks/unit-registry/todo.md) preservam o trabalho aberto de `technical-catalog`. Entrega e evidências em [93](docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md), sem API/banco ou integração física.
 
-**Recorte 2 proposto em 2026-11-16:** composição/consulta gráfica no mapa ATLANTICADOR já definido, descrita ao final desta especificação e em [99](docs/recovery/99_ESPECIFICACAO_GRUPAMENTOS_NO_MAPA.md). Fase 1 desta extensão aprovada por “siga”; [plano de Fase 2](tasks/unit-registry/mapa/plan.md) aprovado por “siga”; [tarefas de Fase 3](tasks/unit-registry/mapa/todo.md) propostas conforme [101](docs/recovery/101_TAREFAS_GRUPAMENTOS_NO_MAPA.md). A entrega 93 permanece concluída e não será reaberta.
+**Recorte 2 implementado e verificado em 2026-11-16:** especificação, plano e tarefas aprovados; entrega em [102](docs/recovery/102_ENTREGA_GRUPAMENTOS_NO_MAPA.md). Composição/consulta gráfica no mapa ATLANTICADOR já definido, sem confronto integrado. Roteiro do instrutor em [103](docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md). Entrega 93 preservada.
 
 ## Objetivo
 
@@ -204,7 +204,7 @@ Alternativa por lista/teclado, foco visível, rótulos textuais, estados de carr
 
 ### Arquivos e verificações futuras
 
-Backend: adaptador de grupos/identidades e rotas no servidor; nova consulta pública contextual no registro, caso necessária, sem acessar `_state`/`_lock` de fora. Frontend: adaptador `static/atlantic-bridge.mjs` e eventual módulo específico importado por ele, preservando o mapa preparado. A divisão exata e os nomes dos verificadores serão fechados no plano após aprovação.
+Backend: adaptador de grupos/identidades e rotas no servidor; nova consulta pública contextual no registro, caso necessária, sem acessar `_state`/`_lock` de fora. Frontend: adaptador `static/atlantic-bridge.mjs` e eventual módulo específico importado por ele, preservando o mapa preparado. Implementados `map_groups.py`, `check_map_groups.py`, `check_map_groups_http.py`, `static/map-groups.mjs` e `check_map_groups.mjs`, conforme 102.
 
 Padrão Python/JavaScript existente, type hints nas novas fronteiras Python, módulos JS nativos e manipulação por `textContent`. Testes Python com SQLite de teste isolado e registro real; testes de seleção com módulos nativos JS; teste de integração HTTP com sessão/CSRF; verificação de navegador real antes de declarar interface entregue. Não usar a instância/dados do usuário para mover, criar ou arquivar grupos de teste.
 
@@ -217,7 +217,7 @@ $pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\depende
 node check_map_visuals.mjs
 ```
 
-Os comandos novos focados/HTTP e a ferramenta de navegador disponível serão registrados no plano; ainda não existem verificadores desta extensão. Os testes existentes acima não foram repetidos por esta edição documental. Sem build adicional ou reextração do ATLANTICADOR. Não declarar validação visual por leitura do código.
+Verificadores desta extensão e regressões afetadas foram executados conforme 102: 53 testes nomeados e dois verificadores assertivos passaram. A interface foi inspecionada no navegador real, em base temporária. Sem build adicional ou reextração do ATLANTICADOR. Não declarar validação visual por leitura do código.
 
 ### Critérios de aceite da extensão
 
@@ -240,4 +240,4 @@ Os comandos novos focados/HTTP e a ferramenta de navegador disponível serão re
 
 Não inclui persistência/DDL, migração de todos os meios reais para instâncias, revisão gráfica da composição, execução/replay, eficácia militar, indicadores coletivos ou publicação de resultados. A falta dessas integrações deve aparecer com clareza; não apresentar a tela como motor de confronto pronto.
 
-Fase 1 do recorte 2 aprovada por “siga”, incluindo armazenamento explicitamente temporário e elegibilidade limitada às instâncias/snapshots realmente disponíveis. [Plano de Fase 2](tasks/unit-registry/mapa/plan.md) aprovado por “siga”; [tarefas de Fase 3](tasks/unit-registry/mapa/todo.md) propostas conforme 101, aguardando revisão antes do código. Não reabrir gates concluídos das entregas 93 e 98.
+Gates de especificação, plano e tarefas do Recorte 2 satisfeitos por aprovações distintas. GMAP-01–09 concluídas conforme [102](docs/recovery/102_ENTREGA_GRUPAMENTOS_NO_MAPA.md). Não reabrir os gates desta fatia nem das entregas 93/98. Executar confronto, selecionar par e publicar efeitos na tela ainda depende de recorte próprio; o roteiro 103 distingue etapas atuais e futuras.

@@ -1,6 +1,6 @@
 # Plano técnico: unit-registry — grupamentos no mapa
 
-**Data: 2026-11-16. Estado: especificação do Recorte 2 aprovada por “siga”; Fase 2 aprovada por “siga”; lista de Fase 3 proposta para revisão.** Base: [SPEC-unit-registry.md](../../../SPEC-unit-registry.md), extensão de 99. Este local preserva os planos antigos do catálogo e os recortes concluídos de composição/dossiê 93/98. Não há implementação nesta etapa.
+**Data: 2026-11-16. Estado: especificação do Recorte 2 aprovada por “siga”; Fase 2 e lista de Fase 3 aprovadas; implementação verificada em 102.** Base: [SPEC-unit-registry.md](../../../SPEC-unit-registry.md), extensão de 99. Este local preserva os planos antigos do catálogo e os recortes concluídos de composição/dossiê 93/98. Recorte entregue conforme [102](../../../docs/recovery/102_ENTREGA_GRUPAMENTOS_NO_MAPA.md).
 
 ## Resultado
 
@@ -95,7 +95,7 @@ Renderizar nomes/designações como texto. Mostrar carregamento, vazio verdadeir
 | Checkpoint B | Fluxo completo no mapa definido sem alterar meios/recursos do usuário | GM-01–12 |
 | 5 | Documentar limites/evidências, atualizar controles, sincronizar e versionar | GM-01–12 e preservação |
 
-Construção sequencial por compartilhar contratos/arquivos; não requer agentes paralelos. A lista detalhada de Fase 3 será salva em `tasks/unit-registry/mapa/todo.md` após aprovação deste plano. Dividir integração de servidor, gráfico e controles em tarefas de até cerca de cinco arquivos. Os checkpoints são verificações técnicas; não reabrem gates de escopo já aprovados.
+Construção sequencial por compartilhar contratos/arquivos; não requer agentes paralelos. A lista detalhada de Fase 3 em `tasks/unit-registry/mapa/todo.md` foi aprovada e executada. Dividir integração de servidor, gráfico e controles em tarefas de até cerca de cinco arquivos. Os checkpoints são verificações técnicas; não reabrem gates de escopo já aprovados.
 
 ## Verificação planejada
 
@@ -115,7 +115,7 @@ node check_map_groups.mjs
 node check_map_visuals.mjs
 ```
 
-Os novos arquivos não existem nesta fase; comandos não foram executados e não representam testes aprovados. Após os testes pertinentes, `git diff --check`. Regressões adicionais somente quando alteração/falha justificar; não repetir software por edição apenas documental.
+Novos arquivos implementados e verificações executadas: 53 testes nomeados, dois verificadores assertivos e inspeção de navegador, conforme 102. Após os testes pertinentes, `git diff --check`. Regressões adicionais somente quando alteração/falha justificar; não repetir software por edição apenas documental.
 
 Antes de declarar a interface entregue, conferir navegador real com mapa preparado em cópia de teste, sessões/CSRF isolados e porta própria: criar/selecionar/enquadrar/arquivar, recusa de outro partido, zero painel sobreposto, foco/teclado, viewport estreita, ferramentas anteriores preservadas e ausência de console/network errors pertinentes. Não mover os meios do usuário. A seleção de controles/ferramenta de teste será feita entre os recursos disponíveis na implementação; não há ferramenta Chrome DevTools configurada nesta sessão, nem instalação autorizada por este plano.
 
@@ -132,6 +132,6 @@ Antes de declarar a interface entregue, conferir navegador real com mapa prepara
 | Teste atinge banco em uso | Harness isola DATA_DIR/DB_PATH e porta antes de iniciar servidor |
 | Promessa de combate pronto | Interface apenas compõe/consulta/arquiva; sem relógio, tiros, replay ou resultado oficial |
 
-## Gate da Fase 2
+## Conclusão
 
-Especificação e plano do Recorte 2 aprovados pelo responsável em respostas distintas. [Lista de Fase 3](todo.md) proposta conforme [101](../../../docs/recovery/101_TAREFAS_GRUPAMENTOS_NO_MAPA.md), aguardando revisão antes do código. Sem implementação ou teste de software executado nesta preparação documental.
+Especificação, plano e tarefas aprovados em interações distintas; GMAP-01–09 verificadas em [102](../../../docs/recovery/102_ENTREGA_GRUPAMENTOS_NO_MAPA.md). Código sincronizado/versionado; servidor principal não reiniciado. Guia de uso e limites do confronto em [103](../../../docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md).

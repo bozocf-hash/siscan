@@ -1,5 +1,18 @@
 # Protótipo didático SISCAN
 
+**Grupamentos no mapa:** no editor ATLANTICADOR existente, a aba “Grupos” permite compor, consultar, realçar, enquadrar e arquivar unidades elegíveis do partido. O registro é temporário e se perde ao reiniciar o servidor; configurações sem identidade/snapshot/domínio demonstrados aparecem pendentes. A tela ainda não executa confronto. Ver [102 — Entrega](../docs/recovery/102_ENTREGA_GRUPAMENTOS_NO_MAPA.md) e [103 — Passo a passo do instrutor](../docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md).
+
+Para uma prévia isolada, na pasta `prototype`, execute com o Python disponível nesta máquina:
+
+```powershell
+$pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+& $pythonCpc check_map_groups_http.py --serve
+```
+
+O harness informa porta livre e cria dados/cookie próprios de teste, com cópia do mapa já preparado. As contas descartáveis são 1 (instrutor), 2 (Azul) e 3 (Vermelho), senha `somente-teste-local`; não são contas do exercício principal. Entre na raiz da URL informada, depois abra `/atlanticador/editor.html`. Nenhum grupo real é importado. Ctrl+C encerra essa prévia e elimina seus dados temporários.
+
+Publicar/copiar arquivos não atualiza o Python de um servidor já em execução. O processo principal não foi reiniciado nesta entrega; confirme a instância antes de testar novas rotas. Se a instância antiga não servir o novo módulo, Grupos fica desabilitado com aviso e as ferramentas anteriores continuam disponíveis. Reiniciar uma instância com grupos em memória perde essas composições.
+
 **Dossiê inicial dos grupamentos:** `cpc_group_preparation.preparar_dossie_grupamentos` confere autorização interna do instrutor e prepara AZUL/VERMELHO com as revisões e snapshots integrais dos membros selecionados. Preserva os estados individuais, não consome recursos e não inicia confronto. A saída exige revisão do instrutor e inclui hash canônico; não reserva disponibilidade futura. São 21 testes novos; detalhes e exemplo em [98 — Entrega](../docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md). A interface futura permanece no mesmo mapa ATLANTICADOR definido, conforme [97](../docs/recovery/97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md); ainda não há botão gráfico integrado ao dossiê.
 
 Na pasta `prototype`, verificação focada:

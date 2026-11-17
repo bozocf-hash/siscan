@@ -1,6 +1,6 @@
 # Recuperação documental do SISCAN
 
-**Grupamentos no mapa — [101](101_TAREFAS_GRUPAMENTOS_NO_MAPA.md):** especificação e plano aprovados; GMAP-01–09 propostas para revisão. A lista cobre identidade/elegibilidade, rotas, painel, realce, navegador isolado e entrega. Mapa ATLANTICADOR definido preservado; nenhuma implementação desta extensão ainda. Entregas 93/98 e planos antigos mantidos.
+**Grupamentos no mapa entregues — [102](102_ENTREGA_GRUPAMENTOS_NO_MAPA.md):** GMAP-01–09 aprovadas e concluídas; criar/consultar/realçar/enquadrar/arquivar no mapa ATLANTICADOR existente. Passaram 54 testes nomeados, verificadores de mapa/silhuetas e inspeção visual isolada. [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md) traz o passo a passo, distinguindo composição atual de confronto ainda não integrado. Registro temporário e elegibilidade limitada explícitos; principal em 8787 não reiniciado.
 
 **Preparação CPC entregue — [98](98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md):** especificação, plano e tarefas aprovados; GPREP-01–06 concluídas. Dossiê AZUL/VERMELHO em memória, autorização interna, revisões conferidas e snapshots integrais/hash. Passaram 131 testes distintos. [97](97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md) preserva o mapa ATLANTICADOR definido para futura integração gráfica; execução e interface ainda não integradas. Preparação histórica em 94–96 não representa gates pendentes.
 

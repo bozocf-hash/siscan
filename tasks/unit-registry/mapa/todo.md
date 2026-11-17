@@ -1,6 +1,6 @@
 # Tarefas: unit-registry — grupamentos no mapa
 
-**Data: 2026-11-16. Estado: especificação e plano aprovados por respostas distintas “siga”; Fase 3 aprovada por “siga”; Fase 4 em execução.** Referências: [especificação](../../../SPEC-unit-registry.md), [plano](plan.md), [101](../../../docs/recovery/101_TAREFAS_GRUPAMENTOS_NO_MAPA.md). Preservar os planos abertos do catálogo e os recortes concluídos 93/98.
+**Data: 2026-11-16. Estado: especificação e plano aprovados por respostas distintas “siga”; Fase 3 aprovada por “siga”; Fase 4 concluída; entrega em [102](../../../docs/recovery/102_ENTREGA_GRUPAMENTOS_NO_MAPA.md).** Referências: [especificação](../../../SPEC-unit-registry.md), [plano](plan.md), [101](../../../docs/recovery/101_TAREFAS_GRUPAMENTOS_NO_MAPA.md). Preservar os planos abertos do catálogo e os recortes concluídos 93/98.
 
 Após aprovação desta lista, executar sequencialmente, com testes antes da implementação pertinente e commits por incremento verificado. Checkpoints A/B/C são verificações do contrato já aprovado; comunicar resultados e continuar dentro do escopo. Mudança material de contrato exige revisar a decisão afetada. Não instalar dependências, modificar originais, migrar bancos ou iniciar confronto temporal.
 
@@ -18,7 +18,7 @@ node check_map_groups.mjs
 node check_map_visuals.mjs
 ```
 
-Os novos verificadores ainda não existem. Não houve execução de testes de software nesta preparação documental. Verificar o runtime Node disponível antes de executar os comandos JS. Não usar descoberta vazia ou leitura do código como teste de interface. `git diff --check` é executado na raiz do repositório antes de registrar incrementos.
+Verificadores criados e executados: 54 testes nomeados e dois verificadores assertivos passaram, além da inspeção de navegador e da correção verificada em nova base visual, conforme 102. Verificar o runtime Node disponível antes de executar os comandos JS. Não usar descoberta vazia ou leitura do código como teste de interface. `git diff --check` é executado na raiz do repositório antes de registrar incrementos.
 
 ## GMAP-01 — Resolver identidade e elegibilidade autorizadas
 
@@ -88,7 +88,7 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ## GMAP-07 — Documentar entrega e contratos
 
-- [ ] Revisar o código e consolidar evidências finais.
+- [x] Revisar o código e consolidar evidências finais. Entrega 102 e roteiro solicitado em 103; contagens e limites registrados.
 - **Aceite:** especificação/plano/lista distinguem implementado/pendente e gates satisfeitos; README/relatório descrevem como acessar, aviso temporário e categorias elegíveis. Contagens são as efetivamente executadas, sem dupla soma ou testes ignorados; exemplos não representam composição real otimizada.
 - **Verificar:** comandos pertinentes acima e diff; ampliar regressões somente quando houver motivo concreto. Conferir links e registro da inspeção visual. Não repetir software por edição documental posterior.
 - **Dependências:** GMAP-06 e Checkpoint C verificado.
@@ -96,7 +96,7 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ## GMAP-08 — Atualizar controles
 
-- [ ] Consolidar índice, riscos, continuidade e mapa de capacidades.
+- [x] Consolidar índice, riscos, continuidade e mapa de capacidades, com links/hashes de preservação conferidos.
 - **Aceite:** controles refletem a entrega comprovada e limites de memória/elegibilidade, distinguindo composição gráfica de confronto CPC. Não reabrir aprovações das entregas 93/98 nem modificar planos antigos do catálogo.
 - **Verificar:** links locais, hashes de preservação dos planos antigos e `git diff --check`.
 - **Dependência:** GMAP-07.
@@ -104,12 +104,12 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ## GMAP-09 — Sincronizar e versionar
 
-- [ ] Entregar arquivos autorizados na pasta SISCAN e no GitHub.
+- [x] Entregar arquivos autorizados na pasta SISCAN e no GitHub, com conferência de hashes; servidor principal preservado.
 - **Aceite:** origem/destino conferidos por SHA-256; somente código/docs do recorte versionados, sem originais proprietários, credenciais, bases ou resultados locais de teste. Estado Git e envio verificados; não reiniciar/substituir servidor em uso sem preservar seu estado temporário e informar o impacto.
 - **Verificar:** hashes, diff preparado, commits por incremento e resultado do envio. Publicar código não significa atualizar processo já em execução; registrar separadamente a disponibilidade da interface no servidor ativo e não alegar que a nova aba está visível sem observá-la.
 - **Dependência:** GMAP-08.
 - **Arquivos prováveis:** este checklist e relatório de entrega, mais cópia dos arquivos já produzidos; sem nova alteração funcional.
 
-## Gate
+## Conclusão
 
-Lista de Fase 3 aprovada pelo responsável por “siga”; implementação em execução. Após aprovação, implementar GMAP-01–09 sem novas confirmações rotineiras de cada tarefa/checkpoint. A autorização desta lista não muda o requisito de usar o mapa definido nem aprova migração de instâncias reais, persistência, instalação de dependências ou execução de combate.
+Lista de Fase 3 aprovada por “siga”; GMAP-01–09 implementadas e verificadas conforme 102. Não reabrir gates concluídos. A aba usa o mapa definido e não executa confronto, migração de instâncias reais ou persistência. Roteiro do instrutor em 103 distingue claramente o que existe das próximas integrações.

@@ -131,3 +131,8 @@ Preparação não executa nem confirma confronto. Estado/adjudicação durável,
 ## Atualização — 2026-11-17: tarefas do julgamento no mapa
 
 [115](docs/recovery/115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md) registra a aprovação do plano e propõe [JUD-01–14](tasks/force-confrontation/julgamento/todo.md), das APIs públicas/coordenação até painel/mapa, navegador/recuperação e entrega. Especificação e plano não aguardam aprovação; Fase 3 aguarda revisão antes do código. Marco parcial exige fluxo real no navegador, com confirmação única e histórico retomável; sem migração principal ou confronto automático nesta fatia.
+
+
+## Atualização — 2026-11-17: julgamento no mapa entregue
+
+[116](docs/recovery/116_ENTREGA_JULGAMENTO_DIDATICO_NO_MAPA.md) conclui JUD-01–14 do Recorte 3 de `force-confrontation`, consumindo `operational-state`: base/prévia, propostas/revisões, decisão oficial do instrutor, retomada/correção e projeção no mesmo mapa. 179 testes nomeados e verificador assertivo de plotagem passaram; percurso real, reinício, estado AZUL 75% preservado e acesso de operador observados em isolamento. Gates 113–115 concluídos. O marco parcial foi demonstrado; principal não migrado/reiniciado. Automático por grupamentos, persistência de composições e expansão técnica continuam recortes próprios; próxima etapa 4 de 104 produz proposta para a mesma revisão humana.

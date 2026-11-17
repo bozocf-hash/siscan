@@ -1,6 +1,6 @@
 # 10 — Plano de continuidade
 
-**Ligação do fluxo — [104](104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md):** revisar responsabilidades/ordem antes das especificações afetadas: seleção do par e dossiê no mapa; contrato/armazenamento de estado e adjudicação; julgamento didático com revisão/confirmação/aplicação; depois ensaio automático como produtor de proposta. Não anunciar preparação isolada como confronto completo; usar o mesmo mapa e preservar gates anteriores.
+**Próximo contrato — [105](105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md):** escopo/ordem aprovados em 104; revisar Recorte 2 de `SPEC-force-confrontation.md` para seleção/conferência do par no mesmo mapa. Após aprovação, elaborar plano próprio preservando arquivos anteriores. Em seguida, especificar estado/adjudicação durável e ligar julgamento/confirmação; não publicar efeitos pela preparação.
 
 **Mapa entregue — [102](102_ENTREGA_GRUPAMENTOS_NO_MAPA.md):** GMAP-01–09 concluídas, com painel/identidade/rotas/realce e verificação isolada. Roteiro solicitado pelo responsável em [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md). Próximo recorte deve ligar seleção do par AZUL/VERMELHO e conferência inicial ao dossiê 98 antes de executar/aplicar resultados no mapa. Usar a mesma base cartográfica e preservar autoridade do instrutor. Atualização do processo principal e persistência não foram feitas automaticamente.
 

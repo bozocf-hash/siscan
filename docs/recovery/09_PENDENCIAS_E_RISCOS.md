@@ -1,6 +1,6 @@
 # 09 — Pendências e riscos
 
-**Resultado oficial — [104](104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md):** ainda faltam publicador de efeitos, revisões/recibos e histórico durável de adjudicação. Grupos em memória não bastam para decisões oficiais. O snapshot de combustível não contém todas as entradas de combate automático; não inventá-las. Proposta didática não altera recursos/relógio/avarias antes da confirmação. Recorte e ordem aguardam revisão.
+**Preparação visual CPC — [105](105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md):** especificação proposta após aprovação de 104. Hash técnico não contém posições, e snapshot inicial não é saldo atual; usar manifesto geográfico separado e fontes explícitas. Vista simultânea é exclusiva do instrutor. Seleção/conferência não conclui a ligação de julgamento/decisão/efeitos, cujos provedores duráveis continuam pendentes.
 
 **Interface entregue — [102](102_ENTREGA_GRUPAMENTOS_NO_MAPA.md):** grupos temporários integrados ao mapa definido e verificados; gates desta fatia concluídos. Instâncias reais sem snapshot/domínio continuam pendentes; não há durabilidade ou confronto de grupamentos na tela. [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md) distingue uso atual das etapas futuras. Seleção do par, execução/replay/adjudicação/efeitos oficiais continuam recortes próprios. Processo principal não foi reiniciado; prévia usa base/porta/cookie separados.
 

@@ -2,6 +2,8 @@
 
 **Data: 2026-11-16. Estado: especificação, plano e tarefas aprovados; recorte implementado e verificado em [98](docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md).** A lista de Fase 3 foi aprovada por “siga”. O registro entregue em 93 permanece preservado. Esta entrega acrescenta o consumidor de composições em memória, sem execução ou interface de confronto. Mantido o mapa ATLANTICADOR já definido.
 
+**Extensão de 2026-11-17:** escopo/ordem de [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) aprovados por “si”. Recorte 2 abaixo especifica seleção do par e conferência no mapa; Fase 1 proposta conforme [105](docs/recovery/105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md). Entrega 98 preservada; sem publicação de efeitos oficiais nesta extensão.
+
 ## Objetivo e premissas
 
 Preparar um dossiê inicial de dois grupamentos, um AZUL e um VERMELHO, no mesmo exercício, para conferência didática pelo instrutor. Cada integrante mantém identidade, versão de configuração, snapshot e recursos próprios. O sucesso desta fatia é uma preparação rastreável e reproduzível, sem executar combate ou decidir o resultado.
@@ -106,3 +108,115 @@ A proposta não inclui execução do confronto, exportador novo, gravador duráv
 ## Conclusão
 
 Gates de especificação, plano e tarefas satisfeitos por aprovações distintas. Implementação verificada em [98](docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md); não reabrir os gates desta fatia. Novas integrações gráficas/execução/persistência seguem escopo próprio. A concepção de 97 mantém o mapa existente.
+
+## Recorte 2 — Selecionar o par e conferir no mapa
+
+### Objetivo e premissas
+
+O instrutor atribuído ao exercício seleciona um grupamento AZUL e um VERMELHO, confere integrantes/posições/referências e obtém a preparação de 98 pela interface do mesmo mapa ATLANTICADOR. Esta é a primeira etapa da ordem aprovada em 104; julgamento, confirmação e aplicação oficial dependem das próximas especificações de estado/adjudicação durável.
+
+Usar grupos efetivamente cadastrados na instância e o provedor autorizado de 102. Não pré-carregar forças fictícias, reconstruir grupos por nome ou importar a demonstração de 98. Elegibilidade continua limitada às instâncias/snapshots/domínios demonstrados; grupos em memória não são duráveis.
+
+Operadores continuam compondo/consultando o próprio partido. A visão simultânea desta preparação é exclusiva do instrutor autorizado; não cria regra de contato/detecção ou acesso livre ao inimigo. Preservar identidade, quatro níveis MPNL, autoridade de dados e resultado oficial do instrutor, conforme 08/49/53/80/81.
+
+### Fluxo de uso
+
+1. Instrutor abre uma área CPC no painel existente, com seletores identificados por partido; uma única área lateral ativa e o mesmo mapa/camadas definidos.
+2. Backend lista grupos/revisões e impedimentos. Grupo arquivado, integrante revogado, snapshot alterado ou domínio não demonstrado não prepara sem correção explícita; não editar composição para fazê-la caber no pedido.
+3. Escolher ambos os grupos e acionar **Preparar confronto**. A tela explica que essa ação confere os dados, sem executar combate ou aplicar resultados.
+4. Servidor usa `preparar_dossie_grupamentos` e associa vista autorizada das posições de planejamento. Devolve projeção de conferência, sem inventários completos/snapshots brutos desnecessários ao navegador.
+5. O mesmo mapa mostra as duas forças selecionadas. Lista/ficha informa integrantes, nome/código, revisão, posição e pendências; enquadramento é ação explícita, sem deslocar meios.
+6. Alteração de seleção, atualização das fontes ou troca de exercício invalida a preparação visual anterior. Sair restaura o modo/perspectiva autorizado anterior, sem gravar efeitos.
+
+Não incluir controles funcionais de julgamento, execução ou confirmação nesta fatia. Indicar os próximos passos como ainda não disponíveis, sem confirmação simulada ou mensagem de confronto concluído.
+
+### Entrada e HTTP
+
+| Interface proposta | Contrato |
+|---|---|
+| `GET /api/cpc/groups` | Grupos AZUL/VERMELHO contextualizados, revisões e elegibilidade; sem preparar/executar |
+| `POST /api/cpc/preparations` | Corpo estrito `{AZUL: {group_id, expected_revision}, VERMELHO: {group_id, expected_revision}}`; retorna conferência do par |
+
+As duas interfaces são exclusivas do instrutor participante. Exercício/versão de cenário, papel e identidade vêm da sessão/participação no servidor. Cliente não envia exercício como autoridade, autorizador, snapshot, aprovação, regra de combate ou posição para substituir o provedor. POST exige CSRF. Preparação é leitura/conferência sem publicação: não introduzir recibo ou `command_id` fictício.
+
+Autorizar antes de ler ambos os partidos. Usar 401 para sessão ausente, 403 para acesso negado, 400 para formato inválido, 404 para grupo ausente no contexto, 409 para referências/revisões incompatíveis e 503 para fonte/integridade indisponível. Erro não vira lista vazia ou preparação parcial válida. Exercício encerrado permite informar a situação, mas recusa nova preparação.
+
+Usar operações públicas dos provedores; não acessar `_state`/`_lock` do registro ou chamar o próprio HTTP para resolver dados internos. Enviar esse POST não confirma efeito algum.
+
+### Dossiê, posições e atualização
+
+Preservar o contrato/hash de `siscan-cpc-group-preparation-01`: ele não contém posição geográfica. A nova projeção tem `schema_version=siscan-cpc-map-preparation-01`, exercício/versão de cenário conferidos, referência/hash do dossiê, grupos/revisões e integrantes selecionados. Manifesto geográfico registra `unit_id`, `asset_id`, partido, latitude/longitude quando existentes e `position_revision`.
+
+Ausência de posição permanece `null`/“Sem posição”; não usar (0,0), centroide ou base presumida. Hash próprio da vista gráfica cobre o conteúdo canônico utilizado, excluindo o próprio hash. Nova posição altera o manifesto/vista, sem alterar o dossiê técnico se snapshots/composições permanecerem iguais. Unidade não participante não entra no manifesto; não usar horário/UUID aleatório para forçar diferenças.
+
+Posições são de planejamento, não trajetórias/distâncias táticas. Não converter automaticamente latitude/longitude no plano local sintético do CPC. Snapshot inicial também não é saldo logístico atual: eventual recurso exibido exige fonte/unidade/referência temporal; ausência de fonte atual aparece não informada, sem copiar o saldo inicial como atual.
+
+Revisões de grupo/posição observadas como alteradas durante a captura recusam o lote. A vista conferida e seus limites devem ser identificados: memória e SQL não constituem transação distribuída ou reserva de disponibilidade. Futura execução/decisão exige revalidar seus provedores. Conferência estrutural não é aptidão física para combate.
+
+Saída: `status=requires_instructor_review`, `simulation_started=false`, `official_calculation_ready=false`, `official_effects_applied=false`. Sem consumo, relógio, movimento, avarias ou decisão oficial.
+
+### Visualização e interação
+
+Mostrar as duas forças com identificação textual de partido e símbolos/contornos distinguíveis sem depender só de cor. Reutilizar mapa e simbologia existentes. Na vista do par, ocultar/substituir apenas a camada de meios de planejamento para evitar duplicidade do mesmo asset; não modificar camadas originais ou desenhar outro mapa.
+
+Conferência não permite plotar/reposicionar, selecionar área para gravar posição ou editar integrantes pelo marcador. Cancelar movimentação/área pendentes ao entrar; restaurar arraste/perspectiva coerentes ao sair e recarregar a vista autorizada atual, sem ressuscitar dados revogados. Meios sem posição ficam na lista sem marcador.
+
+Clique no integrante abre conferência no painel, com referências técnicas detalhadas em expansão. Não inventar foto, estado operativo, munição, barra de poder ou probabilidade de vitória. Seleção não é ordem de ataque.
+
+Distinguir carga/vazio/erro/conflito. Respostas atrasadas não restauram par de contexto anterior nem sobrescrevem seleção posterior. Sem painéis sobrepostos; foco/teclado, rótulos e alternativa pela lista. Testes de tela estreita não devem deixar viewport forçado no navegador do usuário.
+
+### Estrutura, estilo e verificação
+
+Python padrão e JS nativo; reaproveitar `cpc_group_preparation.py`, `map_groups.py`, `app.py` e adaptador do mapa. Plano fechará módulos/verificadores novos. Sem dependência, DDL ou alteração de originais. Não inserir comparação de poderes no provedor de identidade.
+
+Seguir contratos/type hints/docstrings e renderização por texto, por exemplo:
+
+```python
+def conferir_revisao(actual: int, expected: int) -> None:
+    """Recusa uma referência observada como desatualizada."""
+    if actual != expected:
+        raise GroupConflict("Atualize a composição antes de preparar o par.")
+```
+
+É exemplo de estilo, não implementação ou obrigação de criar helper. JS mantém seleção distinta dos comandos de plotagem.
+
+Verificadores futuros: `unittest` de provedor/HTTP em banco/cookie/porta isolados; JS de seleção/respostas fora de ordem; navegador real com cópia do mapa para vista simultânea, teclado, tela estreita e retorno ao planejamento. Comparar posições, recursos, execuções e estado oficial antes/depois, inclusive nas recusas.
+
+Regressões existentes, somente após implementar mudanças pertinentes, partindo de `prototype`:
+
+```powershell
+$pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+& $pythonCpc check_cpc_group_preparation.py
+& $pythonCpc check_map_groups.py
+& $pythonCpc check_map_groups_http.py
+& $pythonCpc check_map_units.py
+node check_map_groups.mjs
+node check_map_visuals.mjs
+```
+
+Comandos focados novos serão definidos no plano; verificadores da extensão ainda não existem e nenhum teste foi executado nesta fase documental. Não usar descoberta vazia ou leitura de código como prova visual. Testes não reiniciam a instância em uso ou descartam seus grupos; publicação e atualização do servidor ativo são fatos separados.
+
+### Critérios de aceite
+
+| ID | Resultado verificável |
+|---|---|
+| CP-01 | Instrutor participante consulta ambos os partidos; operador/não participante é recusado antes da leitura |
+| CP-02 | Seleção exige grupo AZUL e VERMELHO, IDs/revisões explícitos no contexto atual |
+| CP-03 | Preparação reutiliza 98 e recusa arquivo, snapshot/revisão/identidade/adjudicação incompatíveis sem resultado parcial |
+| CP-04 | Nome/posição vêm de vínculo autorizado; ausência não inventa coordenada, meio ou fonte |
+| CP-05 | Hash técnico e manifesto geográfico separados; posição nova altera somente o conteúdo correspondente |
+| CP-06 | Mudança observada gera conflito; atualizações futuras exigem nova preparação, sem reserva pelo hash |
+| CP-07 | Duas forças no mesmo mapa, sem marcadores duplicados; integrantes sem posição na lista |
+| CP-08 | Conferência cancela movimentos pendentes, não grava plotagem e restaura a vista autorizada atual ao sair |
+| CP-09 | Seleção/contexto novos e respostas atrasadas não restauram par antigo ou dados indevidos |
+| CP-10 | Situação inicial distingue snapshot, planejamento e estado atual; desconhecidos não viram zero/100% |
+| CP-11 | Interface não alega combate executado/resultado oficial; recursos, relógio e avarias permanecem intactos |
+| CP-12 | Navegador/teclado/tela estreita em dados isolados, com sessão/CSRF/rotas e regressões afetadas passando |
+
+### Limites e gate
+
+- Sempre preservar identidade/revisão/evidência/autorização e ausência de efeitos pela preparação; informar disponibilidade temporária e testar recusas.
+- Exigir contrato próprio antes de persistência/DDL, impactos propostos, decisão/aplicação oficial, posições temporais/consumo, exposição a operadores ou modelo automático.
+- Nunca modificar DB3K/originais, promover dado por estar no grupo, calcular composição otimizada ou publicar cálculo militar automaticamente como resultado oficial.
+
+Escopo/ordem de 104 aprovados por “si”. Fase 1 deste Recorte 2 aguarda revisão antes de plano/tarefas/código. Sua conclusão será a seleção/conferência do par; julgamento, decisão e efeitos continuam explicitamente pendentes até suas entregas próprias.

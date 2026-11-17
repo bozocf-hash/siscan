@@ -1,5 +1,7 @@
 # 104 — Ligação entre mapa, ensaio e decisão do instrutor
 
+**Atualização de gate:** recorte e ordem aprovados pelo responsável por “si”. A primeira especificação de seleção/conferência foi proposta em [105](105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md). O conteúdo abaixo registra a proposta de escopo; não representa implementação.
+
 **Data: 2026-11-17. Estado: recorte de integração proposto para revisão.** O responsável pediu continuar a ligação que falta entre mapa, ensaio e confirmação do resultado. Esta proposta usa as capacidades já identificadas no mapa do projeto, sem substituir o ATLANTICADOR ou reabrir entregas 93/98/102.
 
 ## Objetivo visível

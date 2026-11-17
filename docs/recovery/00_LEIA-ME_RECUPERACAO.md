@@ -1,6 +1,6 @@
 # Recuperação documental do SISCAN
 
-**Ligação mapa–ensaio–decisão — [104](104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md):** nova proposta de recorte para fechar o caminho de julgamento didático completo: seleção/conferência, proposta, confirmação e estado oficial durável. Modo automático como produtor posterior de proposta, após definição/verificação das entradas. Não há implementação desta ligação; entregas 98/102 preservadas.
+**Par CPC no mapa — [105](105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md):** escopo/ordem de 104 aprovados por “si”; especificação da primeira ligação proposta: selecionar AZUL/VERMELHO, preparar dossiê e conferir ambas as forças no mapa existente. Sem execução ou confirmação oficial nesta fatia; entregas anteriores e sequência de julgamento/estado durável preservadas.
 
 **Grupamentos no mapa entregues — [102](102_ENTREGA_GRUPAMENTOS_NO_MAPA.md):** GMAP-01–09 aprovadas e concluídas; criar/consultar/realçar/enquadrar/arquivar no mapa ATLANTICADOR existente. Passaram 54 testes nomeados, verificadores de mapa/silhuetas e inspeção visual isolada. [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md) traz o passo a passo, distinguindo composição atual de confronto ainda não integrado. Registro temporário e elegibilidade limitada explícitos; principal em 8787 não reiniciado.
 

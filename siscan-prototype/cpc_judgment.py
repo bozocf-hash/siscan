@@ -119,8 +119,12 @@ def _write(db,user,registry,body,operation):
         replay=state.consultar_recibo(db,user,body['command_id'])
         if replay is not None:
             matches=replay['operation']==operation
-            if operation=='decide':matches=matches and replay['payload']==body
-            else:matches=matches and replay['payload']['origin'].get('request_sha256')==digest(body)
+            if operation=='decide':
+                _proposal(db,user,body['proposal_id'])
+                matches=matches and replay['payload']==body
+            else:
+                origin=replay['payload'].get('origin',{})
+                matches=matches and origin.get('schema_version')==ORIGIN and origin.get('request_sha256')==digest(body)
             if not matches:raise state.Conflict('Comando reutilizado com outra intenção.')
             db.commit();return replay['result']
         view=_proposal(db,user,body['proposal_id']) if operation in ('revise','decide') else None
@@ -156,3 +160,6 @@ def register(db,user,registry,body):return _write(db,user,registry,body,'registe
 
 
 def revise(db,user,registry,body):return _write(db,user,registry,body,'revise')
+
+
+def decide(db,user,registry,body):return _write(db,user,registry,body,'decide')

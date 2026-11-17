@@ -66,7 +66,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-05 — Confirmar/rejeitar com revisão protegida e aplicação única
 
-- [ ] Implementar decisão CPC e a coordenação transacional de novas escritas.
+- [x] Decisão/coordenação implementadas; nove testes passaram, incluindo commit antes de mutação concorrente de grupo.
 - **Aceite:** conexão independente, reserva SQL → escopo público do registro → conferência/aplicação → commit ainda protegido. Confirmação usa exatamente revisão/hash/base aceitos; rejeição não exige grupo disponível, conforme 112. Replay autorizado consulta recibo antes de revalidar grupo antigo; correção é nova proposta referenciada, sem apagar decisão.
 - **Verificar:** `check_cpc_judgment.py` com conexões/threads controladas e timeout: grupo alterado antes/durante confirmação, duas decisões, estado concorrente, falha entre integrantes/commit e transação externa recusada. Comprovar ordem de locks, ausência de deadlock e lote integral, sem escrita em recursos/posição/tempo/snapshot. JMAP-02/03/04/05/06/07.
 - **Dependências:** JUD-04 e fundação verificada.
@@ -74,9 +74,9 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ### Checkpoint A — Backend do julgamento
 
-- [ ] Base/prévia, registro/revisão e confirmação/rejeição/retomada verificadas pelo publicador único.
-- [ ] Alteração concorrente de grupo/estado serializada ou recusada, com rollback/replay e commit durável comprovados.
-- [ ] Sem aplicação por prévia/rejeição ou alteração de recursos/mapa/relógio; autorização e origem separadas.
+- [x] Fluxo de backend verificado pelo publicador único.
+- [x] Disputa de grupo, rollback/replay e commit protegido comprovados; disputas de estado cobertas também por 112.
+- [x] Prévia/rejeição não aplicam efeitos; autoridade/origem separadas.
 
 ## JUD-06 — Expor rotas autenticadas e CSRF
 

@@ -1,6 +1,8 @@
 # 09 — Pendências e riscos
 
-**Estado/adjudicação — [109](109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação proposta, ainda não implementada. Não confundir snapshot inicial ou combustível de ensaio com estado operativo oficial. Revisar índice absoluto/correção rastreável de perda e contrato durável antes do plano/migração. Persistência, confirmação integral e recuperação precisam de testes futuros; não anunciar julgamento gráfico como disponível.
+**Plano durável — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação aprovada; plano de armazenamento/migração em revisão. Tratar commit implícito de `executescript`, referências a grupos voláteis, revisão por unidade e exposição adversária como riscos de implementação. Migração/concorrência/backup/restauração ainda não testados. Não há estado oficial ou confirmação gráfica implementados por este documento.
+
+**Estado/adjudicação — [109](109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação proposta, ainda não implementada. Não confundir snapshot inicial ou combustível de ensaio com estado operativo oficial. Índice absoluto/correção rastreável de perda aprovados na especificação; revisar o plano 110 antes das tarefas/migração. Persistência, confirmação integral e recuperação precisam de testes futuros; não anunciar julgamento gráfico como disponível.
 
 **Par CPC entregue — [108](108_ENTREGA_PAR_CPC_NO_MAPA.md):** preparação autorizada e conferência no mapa verificadas; tarefas/checkpoints concluídos. Vista não reserva disponibilidade futura nem é transação distribuída. Grupos temporários, snapshots iniciais e posições de planejamento não provam logística atual. Elegibilidade do provedor continua aérea sintética controlada. Faltam estado/adjudicação durável, julgamento, confirmação/aplicação oficial e execução/replay de grupamentos. Instância principal preservada; reiniciar perderia grupos em memória.
 

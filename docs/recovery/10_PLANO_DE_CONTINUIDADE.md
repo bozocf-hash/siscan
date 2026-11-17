@@ -1,6 +1,8 @@
 # 10 — Plano de continuidade
 
-**Próxima etapa — [109](109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** revisar [SPEC-operational-state.md](../../SPEC-operational-state.md). Após aprovação, elaborar plano técnico/migração e depois tarefas, preservando planos anteriores. Implementar/verificar o provedor durável antes de ligar julgamento didático, prévia, confirmação e efeitos ao mapa. Seleção/conferência de 108 já entregue; não repetir seus gates.
+**Próxima etapa — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** revisar o plano de Fase 2; a especificação 109 foi aprovada por “siga”. Após aprovação do plano, detalhar tarefas em `tasks/operational-state/todo.md`, preservando os planos anteriores. Implementação seguirá validação → migração isolada → proposta/revisão/rejeição → confirmação → recuperação, antes da ligação gráfica futura.
+
+**Próxima etapa — [109](109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** [SPEC-operational-state.md](../../SPEC-operational-state.md) aprovada por “siga”; plano técnico/migração proposto em 110 antes das tarefas, preservando planos anteriores. Implementar/verificar o provedor durável antes de ligar julgamento didático, prévia, confirmação e efeitos ao mapa. Seleção/conferência de 108 já entregue; não repetir seus gates.
 
 **Par CPC entregue — [108](108_ENTREGA_PAR_CPC_NO_MAPA.md):** CPMAP-01–09 concluídas; seleção AZUL/VERMELHO e conferência no mapa já disponíveis na prévia isolada. Não reabrir gates de 104–107. Conforme 104, próximo recorte exige contrato próprio de estado/adjudicação durável antes de julgamento didático, confirmação e aplicação única de efeitos pelo instrutor. Ensaio temporal/replay permanece integração própria. Preservar mapa definido e planos independentes do catálogo.
 

@@ -1,5 +1,7 @@
 # 109 — Especificação de estado e adjudicação durável
 
+**Atualização de gate:** especificação aprovada pelo responsável por “siga”; plano de Fase 2 proposto em [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md). O texto abaixo preserva o registro da fase documental anterior; sua aprovação não está mais pendente.
+
 **2026-11-17. Fase 1 proposta para revisão.** Continuidade solicitada por “pode seguir” após a entrega 108. Segue a etapa 2 da ordem aprovada em [104](104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md), sem reabrir a seleção/conferência do par já entregue. Especificação completa em [SPEC-operational-state.md](../../SPEC-operational-state.md).
 
 ## Resultado proposto

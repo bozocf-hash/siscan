@@ -1,6 +1,6 @@
 # Spec: operational-state — estado e adjudicação durável
 
-**2026-11-17. Fase 1 proposta para revisão; não implementada.** Prosseguimento solicitado por “pode seguir” após [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md). A ordem já aprovada em [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) é preservada: conferência do par → estado/adjudicação durável → julgamento didático e confirmação no mapa → produtor automático posterior. Não reabrir gates da conferência entregue.
+**2026-11-17. Fase 1 aprovada por “siga”; Fase 2 proposta em [plano técnico](tasks/operational-state/plan.md), conforme [110](docs/recovery/110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md); não implementada.** Prosseguimento solicitado por “pode seguir” após [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md). A ordem já aprovada em [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) é preservada: conferência do par → estado/adjudicação durável → julgamento didático e confirmação no mapa → produtor automático posterior. Não reabrir gates da conferência entregue.
 
 ## Objetivo e premissas
 
@@ -109,6 +109,6 @@ Na raiz: `git diff --check`. Os dois primeiros verificadores ainda não existem.
 
 Sempre: autorização antes da leitura sensível, validação estrita, transação por comando, autoria, histórico e testes com dados isolados. Rever antes de ampliar: efeitos logísticos, índices agregados, APIs/UI, semântica de novos domínios e migração fora do procedimento aprovado. Nunca: publicar resultado pelo operador, copiar algoritmo proprietário, preencher desconhecidos por suposição, apagar histórico ou alterar fonte técnica para representar avaria.
 
-Propostas específicas a revisar: índice absoluto em vez de dano relativo quando a origem é desconhecida; correção explícita e auditável de perdas; fase inicial sem publicação gráfica. Não há dúvida bloqueante para revisar o contrato, mas esses pontos ainda não são decisões aprovadas.
+Pontos aprovados na Fase 1: índice absoluto em vez de dano relativo quando a origem é desconhecida; correção explícita e auditável de perdas; fase inicial sem publicação gráfica. O plano técnico detalha sua realização sem ampliar os efeitos admitidos.
 
-Fase 1 termina nesta especificação. Após aprovação, elaborar o plano técnico/migração em turno próprio e depois tarefas, conforme a skill solicitada. Aprovar este documento não declara implementação concluída nem autoriza executar migração no banco principal neste turno.
+Fase 1 aprovada por “siga”. Plano técnico/migração de Fase 2 proposto em 110 e no diretório próprio; aguarda revisão antes da lista de tarefas. Aprovação da especificação não declara implementação concluída nem migração executada no banco principal.

@@ -100,4 +100,9 @@ Preparação não executa nem confirma confronto. Estado/adjudicação durável,
 
 ## Atualização — 2026-11-17: especificação de estado/adjudicação
 
-[109](docs/recovery/109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md) propõe a Fase 1 de `operational-state`, seguindo a etapa 2 já aprovada em 104. [SPEC-operational-state.md](SPEC-operational-state.md) define estado por unidade, proposta/decisão/efeitos duráveis, acesso por partido, confirmação transacional e recuperação. Não importa o algoritmo CPC; futuros consumidores usam o mesmo provedor de publicação. Especificação aguarda revisão antes de plano/código/migração; conferência no mapa de 108 permanece entregue. Não aprova valores Command, regras de armamento ou implementação antecipada.
+[109](docs/recovery/109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md) propõe a Fase 1 de `operational-state`, seguindo a etapa 2 já aprovada em 104. [SPEC-operational-state.md](SPEC-operational-state.md) define estado por unidade, proposta/decisão/efeitos duráveis, acesso por partido, confirmação transacional e recuperação. Não importa o algoritmo CPC; futuros consumidores usam o mesmo provedor de publicação. Especificação aprovada por “siga”; plano proposto em 110 antes de tarefas/código/migração; conferência no mapa de 108 permanece entregue. Não aprova valores Command, regras de armamento ou implementação antecipada.
+
+
+## Atualização — 2026-11-17: plano de estado/adjudicação
+
+[110](docs/recovery/110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md) registra a aprovação da especificação `operational-state` e propõe seu [plano técnico](tasks/operational-state/plan.md). Inclui persistência aditiva, identidade/domínio comprovados, propostas/decisões/efeitos/recibos, transações, autorização e recuperação. Fase 2 aguarda revisão antes da lista de Fase 3. Nenhum código ou banco alterado; integração de julgamento ao mapa e produtor automático continuam futuros.

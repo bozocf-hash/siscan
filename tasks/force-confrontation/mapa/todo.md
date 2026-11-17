@@ -1,6 +1,6 @@
 # Tarefas: force-confrontation — par CPC no mapa
 
-**Data: 2026-11-17. Estado: escopo, especificação e plano aprovados; Fase 3 proposta para revisão.** O plano de 106 recebeu “sim”. Referências: [especificação](../../../SPEC-force-confrontation.md), [plano](plan.md), [107](../../../docs/recovery/107_TAREFAS_PAR_CPC_NO_MAPA.md). Preservar os planos anteriores e as entregas 98/102.
+**Data: 2026-11-17. Estado: escopo, especificação e plano aprovados; Fase 3 aprovada por “sim”; Fase 4 em execução.** O plano de 106 recebeu “sim”. Referências: [especificação](../../../SPEC-force-confrontation.md), [plano](plan.md), [107](../../../docs/recovery/107_TAREFAS_PAR_CPC_NO_MAPA.md). Preservar os planos anteriores e as entregas 98/102.
 
 Após aprovação desta lista, executar sequencialmente com testes de comportamento antes da implementação correspondente e commits por incremento verificado. Checkpoints são verificações técnicas do contrato aprovado; comunicar resultados e continuar sem confirmações rotineiras. Mudança material exige rever a decisão afetada. Não instalar dependências, modificar originais, migrar bancos ou executar confronto.
 
@@ -25,7 +25,7 @@ Verificadores novos ainda não existem e nenhum teste foi executado nesta fase d
 
 ## CPMAP-01 — Listar e preparar o par autorizado
 
-- [ ] Implementar e verificar o fluxo válido e a fronteira de autorização.
+- [x] Implementar e verificar o fluxo válido e a fronteira de autorização. Sete testes focados passaram; sem escrita SQL ou alteração do registro.
 - **Aceite:** instrutor participante é autorizado antes da leitura dos dois partidos; lista distingue grupos/revisões/impedimentos sem seleção automática. Preparação exige AZUL/VERMELHO explícitos e exercício aberto, usa o dossiê 98 e vincula membros/posições pelo provedor atual, preservando ausências e sem publicar efeitos.
 - **Verificar:** `check_cpc_map.py` com banco de teste e registro real, provedor instrumentado que detecta leitura antes da autorização, casos de operador/não participante, fechado, seleção inválida, grupo arquivado/revisão/snapshot/adjudicação incompatíveis e vínculo ausente. Comparar entradas/registro/SQL antes/depois. CP-01–04, CP-10–11.
 - **Dependência:** aprovação desta lista.
@@ -109,4 +109,4 @@ Verificadores novos ainda não existem e nenhum teste foi executado nesta fase d
 
 ## Gate
 
-Fase 3 aguarda aprovação desta lista antes da implementação. Após aprovada, executar CPMAP-01–09 sem novas confirmações rotineiras de tarefas/checkpoints. Persistência/DDL, julgamento/decisão/efeitos e modo automático continuam fora deste recorte; não alterar a ordem de 104 ou o requisito de usar o mapa definido.
+Fase 3 aprovada por “sim”; implementação em execução. Após aprovada, executar CPMAP-01–09 sem novas confirmações rotineiras de tarefas/checkpoints. Persistência/DDL, julgamento/decisão/efeitos e modo automático continuam fora deste recorte; não alterar a ordem de 104 ou o requisito de usar o mapa definido.

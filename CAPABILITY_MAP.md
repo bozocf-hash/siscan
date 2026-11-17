@@ -111,3 +111,8 @@ Preparação não executa nem confirma confronto. Estado/adjudicação durável,
 ## Atualização — 2026-11-17: tarefas de estado/adjudicação
 
 [111](docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md) registra o plano aprovado e propõe [OST-01–10](tasks/operational-state/todo.md), com dependências/aceites/verificações e checkpoints A–D. Especificação e plano não aguardam nova aprovação. Revisão da lista precede código; migração somente isolada, sem implementação gráfica ou produtor automático nesta fatia.
+
+
+## Atualização — 2026-11-17: estado/adjudicação durável entregue
+
+[112](docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md) conclui OST-01–10 de `operational-state`: proposta/revisão/decisão/efeitos/recibo persistentes, confirmação única e transacional pelo instrutor, consulta por partido e recuperação por processo novo. Passaram 46 testes novos, 49 regressões nomeadas e o verificador assertivo de plotagem. Gates 109–111 satisfeitos. O banco/processo principal não foi migrado/reiniciado e não há novos controles gráficos ou produtor automático. Próximo recorte de 104 liga julgamento didático/prévia/confirmação/efeitos ao mesmo mapa, com procedimento próprio para habilitação do armazenamento.

@@ -1,6 +1,6 @@
 # Tarefas: operational-state — estado e adjudicação durável
 
-**2026-11-17. Especificação aprovada por “siga”; plano aprovado por “aprovado”; Fase 3 aprovada por “aprovado”; Fase 4 em execução.** Referências: [especificação](../../SPEC-operational-state.md), [plano](plan.md), [111](../../docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md). A aprovação do plano autoriza esta decomposição, sem iniciar código ou migração neste turno.
+**2026-11-17. Especificação aprovada por “siga”; plano aprovado por “aprovado”; Fase 3 aprovada por “aprovado”; Fase 4 concluída conforme 112.** Referências: [especificação](../../SPEC-operational-state.md), [plano](plan.md), [111](../../docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md). OST-01–10 implementadas/verificadas; a migração ocorreu somente em bases descartáveis.
 
 Depois de aprovada esta lista, executar sequencialmente com testes de comportamento antes da implementação correspondente e commits por incremento verificado. Checkpoints são verificações técnicas do contrato aprovado: comunicar e continuar sem novas confirmações rotineiras. Mudança material exige revisão do ponto afetado. Não alterar `tasks/plan.md`/`tasks/todo.md`, fontes originais, DB3K, banco principal ou processos em uso.
 
@@ -19,7 +19,7 @@ $pythonState = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\depen
 & $pythonState check_map_units.py
 ```
 
-Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nenhum teste executado nesta etapa documental. Executar comandos pertinentes a cada incremento e registrar contagens reais, sem somar novamente a mesma bateria. HTTP exige loopback autorizado e base/cookie/porta isolados. Não repetir testes por edição apenas documental nem declarar descoberta vazia como aprovação.
+Na raiz: `git diff --check`. Os verificadores novos existem; passaram 46 testes novos e 49 regressões nomeadas, mais o verificador assertivo de plotagem, conforme 112. Executar comandos pertinentes a cada incremento e registrar contagens reais, sem somar novamente a mesma bateria. HTTP exige loopback autorizado e base/cookie/porta isolados. Não repetir testes por edição apenas documental nem declarar descoberta vazia como aprovação.
 
 ## OST-01 — Validar efeitos e compartilhar evidência de domínio
 
@@ -108,7 +108,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-09 — Documentar e consolidar a entrega
 
-- [ ] Revisar código/contratos e atualizar documentação em dois incrementos pequenos.
+- [x] Código/contratos revisados; README, relatório 112 e controles atualizados, com limites de implantação explícitos.
 - **Aceite:** primeiro README, relatório numerado livre, especificação e este checklist refletem API/contratos/exemplos, resultados reais, fronteira de commit, migração somente isolada e ausência de integração gráfica. Depois índice/riscos/continuidade/mapa de capacidades e este checklist refletem entrega, sem declarar aplicação no principal ou reabrir gates anteriores.
 - **Verificar:** diff/revisão do código, comandos pertinentes já executados, links locais e hashes dos planos antigos. Não repetir bateria por mudança apenas documental. Tratar números de testes e evidências conforme execução, sem antecipar sucesso.
 - **Dependências:** OST-08 e Checkpoint D.
@@ -116,7 +116,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-10 — Sincronizar arquivos e versionar
 
-- [ ] Entregar somente código/documentação autorizados na pasta SISCAN e GitHub.
+- [x] Código/documentação autorizados sincronizados por SHA-256 e publicados no GitHub; principal preservado.
 - **Aceite:** comparar origem/destino e SHA-256, preservar alterações externas e não incluir bancos, backups, credenciais ou originais. Commits por incremento na branch existente, push e situação final verificados. Nenhuma migração automática do principal ou reinício que apague grupos em memória.
 - **Verificar:** diff/hashes/commits e confirmação do envio. Provedor interno disponível no código/testes não significa botão no processo ativo. Reportar migração do principal e ligação ao mapa como etapas futuras explícitas.
 - **Dependência:** OST-09.
@@ -124,4 +124,4 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## Gate
 
-Especificação, plano e lista aprovados; executar OST-01–10 com checkpoints técnicos A–D, sem novas confirmações rotineiras. Este aceite não se estende a DDL no banco principal, APIs/UI de julgamento ou produtor automático. As restrições são as mesmas da especificação/plano aprovados.
+Especificação, plano e lista aprovados; OST-01–10 e checkpoints A–D concluídos conforme 112, sem gates pendentes desta fatia. Este aceite não se estende a DDL no banco principal, APIs/UI de julgamento ou produtor automático. As restrições são as mesmas da especificação/plano aprovados.

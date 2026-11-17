@@ -1,12 +1,12 @@
 # Spec: operational-state — estado e adjudicação durável
 
-**2026-11-17. Fase 1 aprovada por “siga”; Fase 2 aprovada por “aprovado”, conforme [110](docs/recovery/110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md); [tarefas de Fase 3](tasks/operational-state/todo.md) propostas em [111](docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md); não implementada.** Prosseguimento solicitado por “pode seguir” após [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md). A ordem já aprovada em [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) é preservada: conferência do par → estado/adjudicação durável → julgamento didático e confirmação no mapa → produtor automático posterior. Não reabrir gates da conferência entregue.
+**2026-11-17. Especificação, plano e tarefas aprovados; implementação verificada em [112](docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md).** Lista de Fase 3 aprovada por “aprovado”; OST-01–10 concluídas. Preservadas a ordem de 104 e a conferência gráfica de 108; provedor interno entregue sem migração do principal ou nova interface de julgamento.
 
 ## Objetivo e premissas
 
 Registrar de forma durável o estado individual dos meios e a trilha de propostas, decisões e efeitos confirmados pelo instrutor. Sucesso: após fechar/reabrir a conexão ou reiniciar o serviço, o estado e sua origem continuam consultáveis; rejeição não produz efeitos e confirmação repetida não reaplica alterações.
 
-Premissas propostas: usar o SQLite SISCAN e a biblioteca padrão existentes, com migração aditiva própria; manter IDs de unidade, exercício, partido e configuração; nenhuma alteração no DB3K ou nos snapshots técnicos. Este recorte entrega o provedor interno e seu armazenamento, sem novos botões/rotas ou ligação automática da tela. A proposta de efeitos é declarativa e didática; não contém cálculo militar.
+Premissas aprovadas: usar o SQLite SISCAN e a biblioteca padrão existentes, com migração aditiva própria; manter IDs de unidade, exercício, partido e configuração; nenhuma alteração no DB3K ou nos snapshots técnicos. Este recorte entrega o provedor interno e seu armazenamento, sem novos botões/rotas ou ligação automática da tela. A proposta de efeitos é declarativa e didática; não contém cálculo militar.
 
 Fontes: [35 DEC-018/019](docs/recovery/35_REGISTRO_MESTRE_DECISOES_SISCAN.md), [49](docs/recovery/49_REGISTRO_DECISOES_APR_01_A_APR_20.md), [80](docs/recovery/80_CONFRONTO_FORCAS_E_ESTADO_OPERATIVO.md), [81](docs/recovery/81_INDICADORES_COMPACTOS_E_RESTRICOES_RECURSOS.md), [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md), [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md) e [mapa de capacidades](CAPABILITY_MAP.md). O plano técnico deverá conferir os contratos físicos do backend antes de propor sua migração.
 
@@ -48,7 +48,7 @@ Armazenar propostas/revisões, decisões, efeitos e recibos no banco SISCAN, com
 
 Congelar referências suficientes à composição/dossiê para interpretar a decisão sem depender de grupos temporários ainda existirem após reinício. O histórico não referencia somente um ID volátil. A captura congelada não é reserva: futuras confirmações precisam de identidade/disponibilidade/revisão atuais. Revalidar a composição operacional antes de confirmar será obrigação da integração CPC, sem contornar mudanças de composição pela cópia histórica.
 
-Migração aditiva, versionada e transacional, verificável em cópia isolada; falha não deixa schema parcialmente atualizado. Inicialização do provedor não apaga histórico nem altera originais. Verificar integridade na abertura/leitura; inconsistência deve ser recusada e reportada, sem fabricar novo estado ou reconstruir silenciosamente por defaults. Backup/restauração inclui todos esses registros e suas restrições. Banco principal só será migrado no procedimento de entrega aprovado; nesta fase nenhum banco será aberto para escrita.
+Migração aditiva, versionada e transacional, verificável em cópia isolada; falha não deixa schema parcialmente atualizado. Inicialização do provedor não apaga histórico nem altera originais. Verificar integridade na abertura/leitura; inconsistência deve ser recusada e reportada, sem fabricar novo estado ou reconstruir silenciosamente por defaults. Backup/restauração inclui todos esses registros e suas restrições. Banco principal só será migrado no procedimento de entrega aprovado; neste recorte somente bases descartáveis são abertas para testes de escrita.
 
 ## Autorização e visibilidade
 
@@ -66,7 +66,7 @@ Fora da fatia: persistir grupos, criar novas identidades reais, migrar o DB3K, c
 
 ## Estrutura e estilo previstos
 
-Código em `siscan-prototype/operational_state.py`; verificadores `check_operational_state.py` e `check_operational_state_storage.py`; documentos em `docs/recovery/`. Plano/lista futuros em `tasks/operational-state/`, preservando os planos antigos. Nomes são proposta de localização, não arquivos de código já existentes.
+Código em `siscan-prototype/operational_state.py` e armazenamento em `operational_state_storage.py`; verificadores `check_operational_state.py` e `check_operational_state_storage.py`; documentos em `docs/recovery/`. Plano/lista concluídos em `tasks/operational-state/`, preservando os planos antigos. Código e verificadores implementados conforme 112.
 
 Python 3.11+, `sqlite3`, biblioteca padrão e estilo do backend existente: funções pequenas, payloads estritos, exceções de permissão/validação/conflito e JSON canônico. Exemplo de forma, sem implementação:
 
@@ -88,7 +88,7 @@ $pythonState = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\depen
 & $pythonState check_map_units.py
 ```
 
-Na raiz: `git diff --check`. Os dois primeiros verificadores ainda não existem. Não houve execução de testes nesta fase documental. Não usar descoberta vazia como prova. Testes futuros devem usar bancos/usuários descartáveis e conexões/processos independentes, sem reiniciar a instância do usuário. Planejar migração em cópia, rollback por falha, reinício/recuperação, concorrência e idempotência; não basta consultar a mesma conexão em memória.
+Na raiz: `git diff --check`. Verificadores implementados e executados: 46 testes novos, 49 regressões nomeadas e o verificador assertivo de plotagem passaram, conforme 112. Não usar descoberta vazia como prova. Testes futuros devem usar bancos/usuários descartáveis e conexões/processos independentes, sem reiniciar a instância do usuário. Planejar migração em cópia, rollback por falha, reinício/recuperação, concorrência e idempotência; não basta consultar a mesma conexão em memória.
 
 ## Critérios de aceite
 
@@ -111,4 +111,4 @@ Sempre: autorização antes da leitura sensível, validação estrita, transaç�
 
 Pontos aprovados na Fase 1: índice absoluto em vez de dano relativo quando a origem é desconhecida; correção explícita e auditável de perdas; fase inicial sem publicação gráfica. O plano técnico detalha sua realização sem ampliar os efeitos admitidos.
 
-Fase 1 aprovada por “siga”. Plano técnico/migração de Fase 2 aprovado por “aprovado”; lista de Fase 3 proposta em 111 e no diretório próprio, aguardando revisão antes da implementação. Aprovação da especificação não declara implementação concluída nem migração executada no banco principal.
+Gates de especificação, plano e tarefas satisfeitos por aprovações distintas. OST-01–10 implementadas/verificadas conforme 112; não reabrir gates desta fatia. Migração no principal, novas rotas/UI de julgamento e produtor automático continuam fora desta entrega e exigem seus procedimentos/contratos próprios.

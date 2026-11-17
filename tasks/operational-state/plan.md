@@ -1,6 +1,6 @@
 # Plano técnico: operational-state — estado e adjudicação durável
 
-**2026-11-17. Especificação de Fase 1 aprovada por “siga”; Fase 2 aprovada por “aprovado”; [lista de Fase 3](todo.md) proposta conforme [111](../../docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md).** Contrato: [SPEC-operational-state.md](../../SPEC-operational-state.md). Escopo/ordem de [104](../../docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) e entrega 108 preservados. Plano novo na localização já indicada pela especificação; não sobrescrever `tasks/plan.md`, `tasks/todo.md` ou os planos anteriores de confronto. Sem código, DDL ou testes executados nesta fase.
+**2026-11-17. Especificação, plano e tarefas aprovados; implementação concluída em [112](../../docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md).** Plano preservado como contrato da entrega interna; diretório independente do catálogo e dos recortes anteriores.
 
 ## Resultado e dependências
 
@@ -94,7 +94,7 @@ Revisão de proposta e rejeição também usam transação, pré-condições e c
 5. Recuperação em processo novo, corrupção e restauração; regressões dos provedores. **Checkpoint D:** durabilidade e rastreabilidade OS-01–10 demonstradas.
 6. Documentar contratos/limites, sincronizar apenas código/docs autorizados e versionar; manter processo/banco principal intactos e relatar separadamente sua indisponibilidade nesta fase interna.
 
-Fatiar cada item em tarefas de até cerca de cinco arquivos, com testes de comportamento antes da implementação correspondente. Os checkpoints verificam o contrato aprovado; comunicar resultados e continuar sem novas confirmações rotineiras durante a execução aprovada. Mudança material de contrato requer revisão do ponto afetado. Plano aprovado; lista de Fase 3 proposta em `todo.md`. Não implementar antes da revisão dessa lista.
+Fatiar cada item em tarefas de até cerca de cinco arquivos, com testes de comportamento antes da implementação correspondente. Os checkpoints verificam o contrato aprovado; comunicar resultados e continuar sem novas confirmações rotineiras durante a execução aprovada. Mudança material de contrato requer revisão do ponto afetado. Plano/lista aprovados e executados; OST-01–10 concluídas em `todo.md`.
 
 ## Verificadores previstos
 
@@ -111,7 +111,7 @@ $pythonState = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\depen
 & $pythonState check_map_units.py
 ```
 
-Na raiz: `git diff --check`. Os verificadores novos não existem e nenhum teste foi executado nesta fase. A futura bateria HTTP usa base/cookie/porta isolados e permissão de loopback quando necessária; não usa o processo principal. Não repetir verificadores por edição apenas documental.
+Na raiz: `git diff --check`. Verificadores implementados e executados: 95 testes nomeados e o script assertivo de plotagem passaram, conforme 112. A futura bateria HTTP usa base/cookie/porta isolados e permissão de loopback quando necessária; não usa o processo principal. Não repetir verificadores por edição apenas documental.
 
 Cobertura planejada: OS-01/02/09 por validação/classificação e estado ausente; OS-03 por papel, exercício e revogação; OS-04 por SQL antes/depois de proposta/revisão/rejeição; OS-05/06 por falhas provocadas, disputa com conexões independentes sem sleeps e recibos; OS-07/08 por processo novo, migração/backup/restauração/corrupção; OS-10 por regressões e hashes dos arquivos preservados. Sem ensaio de combate ou auditoria de parâmetros reais nesta bateria.
 
@@ -129,4 +129,4 @@ Cobertura planejada: OS-01/02/09 por validação/classificação e estado ausent
 
 ## Gate da Fase 2
 
-Fase 1 aprovada por “siga” e Fase 2 aprovada por “aprovado”. [Lista de Fase 3](todo.md) proposta para revisão conforme 111, antes da implementação. Não restam perguntas de localização: `tasks/operational-state/` já consta da especificação aprovada. Nenhum schema/código/banco/processo foi alterado; a migração descrita não foi executada ou testada ainda.
+Especificação, plano e [lista de Fase 3](todo.md) aprovados. Implementação verificada em 112, com migração somente em bancos descartáveis, recuperação por processo novo e nenhuma mudança no banco/processo principal. Não restam gates desta fatia; a integração gráfica segue contrato próprio.

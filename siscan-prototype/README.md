@@ -1,5 +1,21 @@
 # Protótipo didático SISCAN
 
+**Estado/adjudicação durável entregue:** `operational_state` registra propostas didáticas, revisões e decisões, aplicando efeitos oficiais somente por confirmação autorizada do instrutor. Cada lote tem antes/depois, revisão própria e recibo; rejeitar não altera os meios e repetir um comando não reaplica seus efeitos. Estado não avaliado não vira 100%. O armazenamento sobrevive a processo novo; ver [112 — Entrega](../docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md).
+
+Este é um provedor interno, sem novas rotas/botões no mapa. `operational_state_storage.migrate(db)` é explícita e foi verificada somente em bases descartáveis; `app.initialize` não a chama. O banco principal e o processo ativo não foram migrados/reiniciados. Antes de eventual implantação, preparar backup consistente e procedimento de entrega aprovado. Recursos de ensaio, posições e snapshots não são modificados pela confirmação.
+
+Na pasta `prototype`, verificar o fluxo completo isolado e a recuperação em processo novo:
+
+```powershell
+$pythonState = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+& $pythonState check_operational_state.py
+& $pythonState check_operational_state_storage.py
+```
+
+Chamadas internas: `registrar_proposta`, `revisar_proposta`, `decidir_proposta`, `consultar` e `historico`. O chamador fornece sessão confiável, banco já inicializado/migrado e payload estrito; nunca obtém autoridade de um campo do payload. A proposta exige `command_id` UUID, `source='didactic'`, `reason`, `origin` e `effects`. Cada efeito informa `unit_id`, `expected_state_revision`, `snapshot_id`, `snapshot_sha256`, `configuration_version_id` e `changes` (`index_percent` e/ou `lost`). Registro admite `correction_decision_id` opcional. Revisão acrescenta `proposal_id`, `expected_revision` e `expected_sha256`; decisão contém esses campos, comando, `action='confirm'/'reject'` e motivo. O registro/revisão retorna ID, revisão, hash e conteúdo congelado usados na decisão.
+
+Sem avaliação, revisão é 0, índice/perda desconhecidos. `index_percent=null` retira a avaliação; campo omitido preserva. `lost` é booleano explícito; recuperar perda exige nova proposta que referencia a decisão do estado atual. Histórico confirmado continua legível após perder os grupos temporários. Dentro de transação externa, o chamador precisa confirmar o commit para obter durabilidade; rollback externo desfaz todo o lote. Detalhes e limites no relatório 112.
+
 **Conferência CPC no mapa entregue:** instrutor abre **CPC**, seleciona explicitamente um grupo AZUL e outro VERMELHO, aciona **Preparar confronto**, consulta os integrantes e usa **Enquadrar o par**. **Voltar ao planejamento** encerra a consulta. Essa preparação não executa combate nem confirma/aplica resultados. Dados logísticos atuais desconhecidos permanecem não informados; posições são de planejamento. Ver [108 — Entrega](../docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md) e [103 — Roteiro atualizado](../docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md).
 
 Para testar este recorte com dois grupos sintéticos previamente criados e uma base descartável, execute `check_cpc_map_http.py --serve` com o Python abaixo. O terminal informa a URL; entre na raiz e abra `/atlanticador/editor.html`. As contas/senha de teste descritas abaixo também se aplicam. O processo principal em 8787 não foi reiniciado; copiar código não atualiza suas rotas Python.

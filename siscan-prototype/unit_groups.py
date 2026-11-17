@@ -5,6 +5,7 @@ autenticação. Não consulta bancos, não promove dados ou agrega poder de comb
 """
 
 from copy import deepcopy
+from contextlib import contextmanager
 import hashlib
 import json
 import re
@@ -145,6 +146,19 @@ class RegistroGrupamentos:
     def __init__(self) -> None:
         self._lock = RLock()
         self._state = {'groups': {}, 'receipts': {}, 'owners': {}}
+
+    @contextmanager
+    def conferir_revisoes(self, referencias):
+        """Protege revisões no processo; consumidor reserva SQL antes deste escopo."""
+        if not isinstance(referencias,list) or not referencias:raise ValueError('Referências obrigatórias.')
+        with self._lock:
+            captured=[]
+            for ref in referencias:
+                if not isinstance(ref,dict) or set(ref)!={'context','group_id','expected_revision'}:
+                    raise ValueError('Referência de grupo inválida.')
+                current=self._current(_context(ref['context']),_uuid(ref['group_id'],'group_id'),_revision(ref['expected_revision']))
+                captured.append(deepcopy(current))
+            yield captured
 
     def _replay(self, context, operation, pedido):
         receipt = self._state['receipts'].get(context + (pedido['command_id'],))

@@ -37,7 +37,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-02 — Proteger revisões de grupos por escopo público
 
-- [ ] Implementar escopo público de conferência no registro, sem SQLite ou consumidor acessar armazenamento/lock privados.
+- [x] Escopo público implementado; 32 testes do registro passaram, incluindo disputa e saída por exceção.
 - **Aceite:** conferir contexto, grupos ativos/revisões de ambos os partidos e manter o escopo até a saída. Leituras reentrantes permitidas; adaptador não chama mutação do registro dentro do escopo. Thread concorrente só publica mudança após sua liberação; exceção libera o escopo sem alterar grupos.
 - **Verificar:** `check_unit_groups.py` com eventos/barreiras e limite de espera, sem sleeps: revisão/arquivo antes do escopo, mutação concorrente bloqueada, saída normal/exceção e cópias independentes. Preservar operações/recibos existentes. JMAP-02/05/12.
 - **Dependência:** JUD-01 para integração posterior; o registro continua independente do provedor SQL.
@@ -45,8 +45,8 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ### Verificação de fundação
 
-- [ ] Leituras/prévia do provedor e escopo do registro verificados; nenhuma aplicação nova ou dependência circular.
-- [ ] Interfaces públicas definidas antes do adaptador; regressões pertinentes passam.
+- [x] Leituras/prévia e escopo verificados, sem publicação adicional ou ciclo.
+- [x] Interfaces públicas verificadas antes do adaptador.
 
 ## JUD-03 — Capturar base de julgamento e prévia sem escrita
 

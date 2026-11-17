@@ -4,7 +4,7 @@ from copy import deepcopy
 import hashlib
 import json
 from queue import SimpleQueue
-from threading import Barrier, Thread
+from threading import Barrier, Thread, Event
 import unittest
 import uuid
 
@@ -28,6 +28,21 @@ def unidade(unit_id, *, domain='naval', team='AZUL', exercise_id=1, classe='clas
 
 
 class GrupamentosTests(unittest.TestCase):
+    def test_escopo_publico_serializa_e_libera_apos_excecao(self):
+        grupo=self.criar();started=Event();done=Event()
+        refs=[dict(context=self.contexto,group_id=grupo['group_id'],expected_revision=1)]
+        def archive():
+            started.set();self.registro.arquivar_grupamento(self.contexto,self.arquivo(grupo));done.set()
+        thread=Thread(target=archive,daemon=True)
+        with self.assertRaises(RuntimeError):
+            with self.registro.conferir_revisoes(refs) as captured:
+                captured[0]['members'].clear();thread.start();self.assertTrue(started.wait(2))
+                self.assertFalse(done.is_set())
+                self.assertEqual(self.registro.consultar_grupamento(self.contexto,grupo['group_id'])['composition_revision'],1)
+                raise RuntimeError('saída provocada')
+        thread.join(3);self.assertTrue(done.is_set())
+        with self.assertRaises(GroupConflict):
+            with self.registro.conferir_revisoes(refs):pass
     def test_lista_contextual_copias_e_arquivados(self):
         grupo = self.criar()
         self.assertEqual(self.registro.listar_grupamentos(self.contexto), [grupo])

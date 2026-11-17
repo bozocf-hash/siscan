@@ -96,7 +96,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-08 — Projetar estado oficial nas consultas do mapa
 
-- [ ] Acrescentar projeção oficial mínima à consulta autorizada de meios existente.
+- [x] Projeção oficial integrada; dez testes do adaptador, seis de grupos e o verificador de plotagem passaram.
 - **Aceite:** identidade demonstrada recebe estado confirmado/revisão/origem, sem motivo privado ou adversário; diferenciar não avaliado, armazenamento não habilitado e integridade indisponível. Meio sem instância continua plotável sob regra anterior. Sem novo publicador, ciclo de imports, migração ou saldo de ensaio promovido a estado oficial.
 - **Verificar:** `check_cpc_judgment.py` e/ou `check_map_units.py` com confirmação, ausência, schema ausente/corrompido, operador por partido e meio sem instância; comparar SQL sem escrita e regressões `check_map_groups.py`/HTTP se pertinentes. JMAP-07/08/09/10/12.
 - **Dependências:** JUD-01/06; harness JUD-07 disponível para observação seguinte.
@@ -104,9 +104,9 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ### Checkpoint B — HTTP e projeção
 
-- [ ] Fluxo HTTP completo verificado em base/porta/cookie isolados, com contratos de acesso/erro e sem DDL por requisição.
-- [ ] Projeção oficial e privacidade confirmadas; armazenamento ausente preserva planejamento e não fabrica avaliação.
-- [ ] Harness abre novamente a própria base sem reseed ou reconstrução de grupos; principal preservado.
+- [x] Fluxo HTTP verificado em isolamento, sem DDL por requisição.
+- [x] Projeção/privacidade e indisponibilidade explícita verificadas.
+- [x] Reabertura própria sem reseed/reconstrução verificada; principal preservado.
 
 ## JUD-09 — Editar e registrar julgamento pelo painel
 

@@ -15,6 +15,7 @@ from check_map_groups import seed,TEACHER,BLUE
 from check_cpc_map import seed_pairs
 from unit_groups import RegistroGrupamentos,GroupConflict
 import cpc_judgment as judgment
+import map_units
 
 
 class JudgmentTests(unittest.TestCase):
@@ -102,6 +103,14 @@ class JudgmentTests(unittest.TestCase):
         self.assertIsNone(preview['effects'][0]['before']['index_percent'])
         self.assertEqual(self.base()['basis_sha256'],body['basis_sha256'])
         self.assertEqual(list(self.db.iterdump()),before)
+
+    def test_projecao_oficial_no_mapa_e_schema_indisponivel(self):
+        p,_=self.register();judgment.decide(self.db,TEACHER,self.registry,self.command(p))
+        views=map_units.listing(self.db,TEACHER,'AZUL')['units']+map_units.listing(self.db,TEACHER,'VERMELHO')['units']
+        official=[u['operational_state'] for u in views]
+        self.assertTrue(any(v['status']=='available' and v['state']['index_percent']==60 for v in official))
+        self.db.execute('DROP TRIGGER operational_commands_no_update');self.db.commit()
+        self.assertTrue(all(u['operational_state']['status']=='unavailable' for u in map_units.listing(self.db,BLUE,'AZUL')['units']))
 
     def test_operador_recusado_antes_das_fontes(self):
         with patch('cpc_map.prepare',side_effect=AssertionError('Fonte indevida')):

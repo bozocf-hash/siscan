@@ -1,6 +1,7 @@
 """Authoritative party-scoped plotting of adjudicated asset identities."""
-import json,math,uuid
+import json,math,uuid,sqlite3
 import engine_units,engine_runtime
+import operational_state
 SCHEMA='''
 CREATE TABLE IF NOT EXISTS map_unit_positions(asset_id INTEGER PRIMARY KEY REFERENCES assets(id),latitude REAL NOT NULL CHECK(latitude BETWEEN -90 AND 90),longitude REAL NOT NULL CHECK(longitude BETWEEN -180 AND 180),revision INTEGER NOT NULL,actor_id INTEGER NOT NULL REFERENCES users(id));
 CREATE TABLE IF NOT EXISTS map_plot_commands(command_id TEXT PRIMARY KEY,exercise_id INTEGER NOT NULL REFERENCES exercises(id),team TEXT NOT NULL,payload_json TEXT NOT NULL,result_json TEXT NOT NULL);
@@ -16,6 +17,12 @@ def listing(db,user,team):
  LEFT JOIN map_unit_positions p ON p.asset_id=a.id WHERE a.exercise_id=? AND a.team=? ORDER BY a.code''',(exercise['id'],team))]
  for unit in rows:
   unit['combat_capability']=None;unit['operational_availability']=None;unit['fuel']=None
+  instance=db.execute('SELECT unit_id FROM engine_units WHERE asset_id=? AND exercise_id=? AND team=?',
+                      (unit['id'],exercise['id'],team)).fetchone()
+  unit['operational_state']={'status':'no_instance'}
+  if instance:
+   try:unit['operational_state']=operational_state.projetar_disponivel(db,user,instance['unit_id'])
+   except sqlite3.Error:unit['operational_state']={'status':'unavailable'}
   fuel=db.execute('''SELECT s.* FROM engine_units u JOIN engine_resource_states s ON s.unit_id=u.unit_id
     JOIN engine_runs r ON r.run_id=s.run_id WHERE u.asset_id=? AND r.exercise_id=? ORDER BY r.rowid DESC LIMIT 1''',(unit['id'],exercise['id'])).fetchone()
   if fuel:unit['fuel']={'remaining_kg':fuel['remaining_grams']/1000,'capacity_kg':fuel['capacity_grams']/1000,'source':'synthetic_controlled'}

@@ -193,6 +193,15 @@ def autorizar_instrutor(db,user,write=False):
     return dict(exercise)
 
 
+def projetar_disponivel(db,user,unit_id):
+    _context(db,user)
+    if not db.execute("SELECT 1 FROM sqlite_master WHERE name='operational_schema_migrations'").fetchone():
+        return dict(status='storage_not_enabled')
+    result=consultar(db,user,unit_id)
+    result['status']='available' if result['state']['revision'] else 'not_evaluated'
+    return result
+
+
 def prever_efeitos(db,user,effects,correction_decision_id=None):
     with _view(db):
         exercise=autorizar_instrutor(db,user,write=True);storage.validate(db)

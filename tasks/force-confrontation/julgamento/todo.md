@@ -1,6 +1,6 @@
 # Tarefas: julgamento didático e efeitos no mapa
 
-**2026-11-17. Especificação e plano aprovados por “sim”; Fase 3 proposta para revisão.** Base: [especificação — Recorte 3](../../../SPEC-force-confrontation.md), [plano aprovado](plan.md) e [115](../../../docs/recovery/115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md). Entregas 108/112 e planos anteriores preservados. Após aprovação desta lista, implementar sequencialmente, com testes de comportamento antes da mudança correspondente e commits por incremento verificado.
+**2026-11-17. Especificação e plano aprovados por “sim”; Fase 3 aprovada por “sim”; Fase 4 em execução.** Base: [especificação — Recorte 3](../../../SPEC-force-confrontation.md), [plano aprovado](plan.md) e [115](../../../docs/recovery/115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md). Entregas 108/112 e planos anteriores preservados. Após aprovação desta lista, implementar sequencialmente, com testes de comportamento antes da mudança correspondente e commits por incremento verificado.
 
 O aceite final é o percurso real do instrutor no mapa, não apenas backend. Checkpoints são verificações técnicas: comunicar resultados e continuar sem confirmações rotineiras durante a execução aprovada. Mudança material exige rever o ponto afetado. Não migrar o principal, reiniciar processos em uso, editar originais/DB3K ou criar produtor automático.
 
@@ -29,7 +29,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-01 — Consultar proposta/recibo e conferir efeitos por API pública
 
-- [ ] Implementar leituras públicas autorizadas e transformação de prévia reutilizável no provedor de estado.
+- [x] Leituras públicas/prévia implementadas; 28 testes do provedor e 19 de armazenamento passaram.
 - **Aceite:** instrutor participante consulta proposta/revisões/decisão/recibo mesmo sem grupos; índice limitado/cursor estrito e filtro de origem CPC, sem snapshots completos. Retorno verifica integridade/contexto e não grava. Transformação pública de antes/depois mantém as regras de índice/perda/correção de 112 e não publica efeitos.
 - **Verificar:** testes em `check_operational_state.py` e `check_operational_state_storage.py` para papel, revogação, contexto, paginação, registro pendente/decidido, corrupção e SQL preservado; comparar prévia com efeito confirmado. Operador não recebe proposta/motivo privado. JMAP-01/03/06/07/09/12.
 - **Dependência:** aprovação desta lista.

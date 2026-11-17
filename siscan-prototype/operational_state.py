@@ -163,21 +163,90 @@ def decidir_proposta(db,user,payload):
 
 
 def _prepare_effects(db,user,exercise,root,body,decision_id):
-    rows=[];results=[]
-    for effect in body['effects']:
+    results=_calculate_effects(db,user,body['effects'],root['correction_decision_id']);rows=[]
+    for effect,result in zip(body['effects'],results):
+        refs=effect['refs'];before=result['before'];after=result['after']
+        rows.append((decision_id,refs['unit_id'],exercise['id'],refs['team'],after['revision'],before['revision'],refs['snapshot_id'],
+             engine_units.encoded(refs),_digest(refs),engine_units.encoded(before),_digest(before),
+             engine_units.encoded(after),_digest(after)))
+    return rows,results
+
+
+def _calculate_effects(db,user,effects,correction):
+    results=[]
+    for effect in effects:
         refs=effect['refs'];unit=_unit(db,user,refs['unit_id']);history=_chain(db,unit)
         before=history[-1]['after'] if history else _initial(db,unit)
         changes=effect['changes']
         if before['lost'] is True and changes.get('lost') is False:
-            if root['correction_decision_id']!=history[-1]['decision_id']:
+            if correction!=history[-1]['decision_id']:
                 raise Conflict('Recuperação exige referência à decisão do estado atual.')
         evidence=refs['domain_evidence']
         after=dict(before,**changes);after.update(revision=before['revision']+1,domain=evidence['domain'] if evidence else None)
-        rows.append((decision_id,unit['unit_id'],exercise['id'],unit['team'],after['revision'],before['revision'],refs['snapshot_id'],
-             engine_units.encoded(refs),_digest(refs),engine_units.encoded(before),_digest(before),
-             engine_units.encoded(after),_digest(after)))
         results.append(dict(unit_id=unit['unit_id'],before=before,after=after))
-    return rows,results
+    return results
+
+
+def autorizar_instrutor(db,user,write=False):
+    exercise=_context(db,user,write=write)
+    if user['role']!='instructor':raise PermissionError('Operação exclusiva do instrutor.')
+    return dict(exercise)
+
+
+def prever_efeitos(db,user,effects,correction_decision_id=None):
+    with _view(db):
+        exercise=autorizar_instrutor(db,user,write=True);storage.validate(db)
+        return _calculate_effects(db,user,_effects(db,user,effects,exercise),correction_decision_id)
+
+
+def consultar_recibo(db,user,command_id):
+    with _view(db):
+        exercise=autorizar_instrutor(db,user);storage.validate(db);_uuid(command_id)
+        row=db.execute('SELECT * FROM operational_commands WHERE command_id=?',(command_id,)).fetchone()
+        if row is None:return None
+        if row['exercise_id']!=exercise['id'] or row['actor_id']!=user['uid']:
+            raise PermissionError('Recibo indisponível para este participante.')
+        return dict(operation=row['operation'],payload=_checked_json(row['payload_json'],row['payload_sha256']),
+                    result=_checked_json(row['result_json'],row['result_sha256']))
+
+
+def consultar_proposta(db,user,proposal_id):
+    with _view(db):
+        exercise=autorizar_instrutor(db,user);storage.validate(db);_uuid(proposal_id)
+        root=db.execute('SELECT * FROM operational_proposals WHERE proposal_id=? AND exercise_id=?',
+                        (proposal_id,exercise['id'])).fetchone()
+        if root is None:raise KeyError('Proposta não encontrada neste exercício.')
+        revisions=[]
+        for row in db.execute('SELECT * FROM operational_proposal_revisions WHERE proposal_id=? ORDER BY revision',(proposal_id,)):
+            if row['revision']!=len(revisions)+1:raise sqlite3.DatabaseError('Proposal revision chain mismatch.')
+            revisions.append(dict(revision=row['revision'],body_sha256=row['body_sha256'],
+                                  body=_checked_json(row['body_json'],row['body_sha256']),created_at=row['created_at']))
+        if not revisions:raise sqlite3.DatabaseError('Missing proposal revision.')
+        decision=db.execute('SELECT * FROM operational_decisions WHERE proposal_id=?',(proposal_id,)).fetchone()
+        receipt=None
+        if decision:
+            row=db.execute('SELECT * FROM operational_commands WHERE command_id=?',(decision['command_id'],)).fetchone()
+            if row is None:raise sqlite3.DatabaseError('Missing decision receipt.')
+            _checked_json(row['payload_json'],row['payload_sha256']);receipt=_checked_json(row['result_json'],row['result_sha256'])
+            if receipt['decision_id']!=decision['decision_id']:raise sqlite3.DatabaseError('Decision receipt mismatch.')
+        return dict(root, current=revisions[-1],revisions=revisions,decision=dict(decision) if decision else None,receipt=receipt)
+
+
+def listar_propostas(db,user,*,limit=20,cursor=0,origin_schema=None):
+    with _view(db):
+        exercise=autorizar_instrutor(db,user);storage.validate(db)
+        if type(limit) is not int or not 1<=limit<=50 or type(cursor) is not int or cursor<0:
+            raise ValueError('Paginação inválida.')
+        rows=db.execute('SELECT rowid,proposal_id FROM operational_proposals WHERE exercise_id=? AND rowid>? ORDER BY rowid LIMIT ?',
+                        (exercise['id'],cursor,limit+1)).fetchall()
+        items=[]
+        for row in rows[:limit]:
+            view=consultar_proposta(db,user,row['proposal_id'])
+            if origin_schema and view['current']['body']['origin'].get('schema_version')!=origin_schema:continue
+            items.append(dict(proposal_id=view['proposal_id'],revision=view['current']['revision'],
+                body_sha256=view['current']['body_sha256'],reason=view['current']['body']['reason'],
+                status=view['decision']['action'] if view['decision'] else 'pending',created_at=view['created_at']))
+        return dict(items=items,next_cursor=rows[limit-1]['rowid'] if len(rows)>limit else None)
 
 
 def _digest(value):return hashlib.sha256(engine_units.encoded(value).encode('utf-8')).hexdigest()

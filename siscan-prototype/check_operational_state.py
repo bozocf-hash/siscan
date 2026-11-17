@@ -101,6 +101,21 @@ class ConfirmationTests(unittest.TestCase):
 class RevisionTests(unittest.TestCase):
     setUp=lambda self:ReadTests.setUp(self)
 
+    def test_leituras_publicas_e_previa_sem_escrita(self):
+        payload=proposal(self.db);first=state.registrar_proposta(self.db,TEACHER,payload)
+        before=list(self.db.iterdump())
+        view=state.consultar_proposta(self.db,TEACHER,first['proposal_id'])
+        self.assertEqual(view['current']['body_sha256'],first['body_sha256'])
+        self.assertIsNone(view['decision'])
+        self.assertEqual(state.consultar_recibo(self.db,TEACHER,payload['command_id'])['result'],first)
+        self.assertEqual(len(state.listar_propostas(self.db,TEACHER)['items']),1)
+        effects=state.prever_efeitos(self.db,TEACHER,payload['effects'])
+        self.assertEqual(effects[0]['after']['index_percent'],80)
+        self.assertEqual(list(self.db.iterdump()),before)
+        for operation,args in [(state.consultar_proposta,(first['proposal_id'],)),
+                (state.consultar_recibo,(payload['command_id'],)),(state.listar_propostas,())]:
+            with self.assertRaises(PermissionError):operation(self.db,BLUE,*args)
+
     def test_revisao_cria_versao_e_rejeicao_terminal_sem_efeito(self):
         first=state.registrar_proposta(self.db,TEACHER,proposal(self.db))
         edit=dict(proposal(self.db),proposal_id=first['proposal_id'],expected_revision=1,expected_sha256=first['body_sha256'])

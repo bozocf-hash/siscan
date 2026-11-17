@@ -233,7 +233,7 @@ class ValidationTests(unittest.TestCase):
         self.assertIsNone(state.classificar('superficie',None))
 
     def test_indice_invalido(self):
-        for value in (True,False,-1,101,math.nan,math.inf,-math.inf,'80',{},[]):
+        for value in (True,False,-1,101,10**400,math.nan,math.inf,-math.inf,'80',{},[]):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 state.validar_alteracoes({'index_percent':value})
 
@@ -247,7 +247,9 @@ class ValidationTests(unittest.TestCase):
         with sqlite3.connect(':memory:') as db:
             db.row_factory=sqlite3.Row;seed(db)
             unit=engine_units.list_units(db,TEACHER)['units'][0]
-            self.assertEqual(engine_units.configuration_domain(db,unit)['domain'],'aereo')
+            evidence=engine_units.configuration_domain(db,unit)
+            self.assertEqual(evidence['domain'],'aereo')
+            self.assertTrue(evidence['reference'].startswith('engine_units.prepare_units/'))
             unit['snapshot']['model_id']='inventado'
             self.assertIsNone(engine_units.configuration_domain(db,unit))
 

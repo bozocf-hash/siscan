@@ -131,7 +131,7 @@ def revisar_proposta(db,user,payload):
         exercise,replay=_command(db,user,payload,'revise',
             {'proposal_id','expected_revision','expected_sha256','source','reason','origin','effects'})
         if replay is not None:return replay
-        root,revision,old_body=_proposal(db,exercise,payload)
+        root,revision,_=_proposal(db,exercise,payload)
         body=_body(db,user,payload,exercise)
         result=_save_revision(db,user,exercise,root['proposal_id'],revision['revision']+1,body)
         return _receipt(db,user,exercise,payload,'revise',result)
@@ -152,17 +152,18 @@ def decidir_proposta(db,user,payload):
                          changes=e['changes']) for e in body['effects']]
             if _effects(db,user,source,exercise)!=body['effects']:raise Conflict('Fonte da proposta alterada.')
         decision_id=str(uuid.uuid4())
+        effect_rows,effects=_prepare_effects(db,user,exercise,root,body,decision_id) if payload['action']=='confirm' else ([],[])
         db.execute('INSERT INTO operational_decisions VALUES(?,?,?,?,?,?,?,?,?)',
             (decision_id,root['proposal_id'],revision['revision'],revision['body_sha256'],payload['action'],
              payload['reason'],user['uid'],datetime.now(timezone.utc).isoformat(),payload['command_id']))
-        effects=_apply(db,user,exercise,root,body,decision_id) if payload['action']=='confirm' else []
+        db.executemany('INSERT INTO operational_effects VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',effect_rows)
         result=dict(proposal_id=root['proposal_id'],revision=revision['revision'],body_sha256=revision['body_sha256'],
                     decision_id=decision_id,action=payload['action'],effects=effects)
         return _receipt(db,user,exercise,payload,'decide',result)
 
 
-def _apply(db,user,exercise,root,body,decision_id):
-    results=[]
+def _prepare_effects(db,user,exercise,root,body,decision_id):
+    rows=[];results=[]
     for effect in body['effects']:
         refs=effect['refs'];unit=_unit(db,user,refs['unit_id']);history=_chain(db,unit)
         before=history[-1]['after'] if history else _initial(db,unit)
@@ -172,12 +173,11 @@ def _apply(db,user,exercise,root,body,decision_id):
                 raise Conflict('Recuperação exige referência à decisão do estado atual.')
         evidence=refs['domain_evidence']
         after=dict(before,**changes);after.update(revision=before['revision']+1,domain=evidence['domain'] if evidence else None)
-        db.execute('INSERT INTO operational_effects VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
-            (decision_id,unit['unit_id'],exercise['id'],unit['team'],after['revision'],before['revision'],refs['snapshot_id'],
+        rows.append((decision_id,unit['unit_id'],exercise['id'],unit['team'],after['revision'],before['revision'],refs['snapshot_id'],
              engine_units.encoded(refs),_digest(refs),engine_units.encoded(before),_digest(before),
              engine_units.encoded(after),_digest(after)))
         results.append(dict(unit_id=unit['unit_id'],before=before,after=after))
-    return results
+    return rows,results
 
 
 def _digest(value):return hashlib.sha256(engine_units.encoded(value).encode('utf-8')).hexdigest()
@@ -201,8 +201,8 @@ def _view(db):
 
 
 def _unit(db,user,unit_id):
-    row=db.execute('SELECT exercise_id,team FROM engine_units WHERE unit_id=?',(unit_id,)).fetchone()
     exercise=_context(db,user)
+    row=db.execute('SELECT exercise_id,team FROM engine_units WHERE unit_id=?',(unit_id,)).fetchone()
     if not row or row['exercise_id']!=exercise['id'] or (user['role']!='instructor' and row['team']!=user['team']):
         raise PermissionError('Unidade não autorizada neste contexto.')
     unit=next((u for u in engine_units.list_units(db,user)['units'] if u['unit_id']==unit_id and u['allocated']),None)
@@ -218,30 +218,73 @@ def _initial(db,unit):
 def _checked_json(text,sha):
     try:
         value=json.loads(text)
-        if _digest(value)!=sha or engine_units.encoded(value)!=text:raise ValueError()
+        if not isinstance(value,dict) or _digest(value)!=sha or engine_units.encoded(value)!=text:raise ValueError()
         return value
     except (ValueError,TypeError,OverflowError) as exc:
         raise sqlite3.DatabaseError('Operational content integrity mismatch.') from exc
 
 
 def _chain(db,unit):
-    rows=db.execute('''SELECT e.*,d.action,d.actor_id,d.created_at,d.reason FROM operational_effects e
-      JOIN operational_decisions d ON d.decision_id=e.decision_id
-      WHERE e.unit_id=? ORDER BY e.revision''',(unit['unit_id'],)).fetchall()
+    rows=db.execute("""SELECT e.*,d.action,d.actor_id,d.created_at,d.reason,d.proposal_id,d.revision AS proposal_revision,
+      r.body_json,r.body_sha256,c.payload_json,c.payload_sha256,c.result_json,c.result_sha256,
+      c.actor_id AS command_actor,c.exercise_id AS command_exercise,c.operation
+      FROM operational_effects e JOIN operational_decisions d ON d.decision_id=e.decision_id
+      JOIN operational_proposal_revisions r ON r.proposal_id=d.proposal_id AND r.revision=d.revision
+      JOIN operational_commands c ON c.command_id=d.command_id
+      WHERE e.unit_id=? ORDER BY e.revision""",(unit['unit_id'],)).fetchall()
+    # Detectar efeito removido sem transformar histórico confirmado em ausência.
+    expected=db.execute("""SELECT d.decision_id,r.body_json,r.body_sha256 FROM operational_decisions d
+      JOIN operational_proposal_revisions r ON r.proposal_id=d.proposal_id AND r.revision=d.revision
+      WHERE r.exercise_id=? AND d.action='confirm' AND instr(r.body_json,?)>0""",
+      (db.execute('SELECT exercise_id FROM engine_units WHERE unit_id=?',(unit['unit_id'],)).fetchone()[0],
+       '"unit_id":'+engine_units.encoded(unit['unit_id']))).fetchall()
+    expected_ids=set()
+    try:
+        for row in expected:
+            body=_checked_json(row['body_json'],row['body_sha256'])
+            if any(e['refs']['unit_id']==unit['unit_id'] for e in body['effects']):expected_ids.add(row['decision_id'])
+    except (KeyError,TypeError) as exc:
+        raise sqlite3.DatabaseError('Invalid confirmed proposal content.') from exc
+    if expected_ids!={row['decision_id'] for row in rows}:
+        raise sqlite3.DatabaseError('Missing operational effect.')
     previous=None;history=[]
-    for row in rows:
-        before=_checked_json(row['before_json'],row['before_sha256'])
-        after=_checked_json(row['after_json'],row['after_sha256'])
-        refs=_checked_json(row['refs_json'],row['refs_sha256'])
-        if (row['action']!='confirm' or row['team']!=unit['team'] or before['revision']!=len(history)
-                or row['revision']!=len(history)+1 or after['revision']!=row['revision']
-                or (previous is not None and before!=previous)
-                or refs['unit_id']!=unit['unit_id'] or refs['snapshot_id']!=row['snapshot_id']):
-            raise sqlite3.DatabaseError('Operational effect chain mismatch.')
-        validar_alteracoes({'index_percent':after['index_percent']})
-        history.append(dict(decision_id=row['decision_id'],actor_id=row['actor_id'],created_at=row['created_at'],
-                            reason=row['reason'],before=before,after=after))
-        previous=after
+    try:
+        for row in rows:
+            before=_checked_json(row['before_json'],row['before_sha256'])
+            after=_checked_json(row['after_json'],row['after_sha256'])
+            refs=_checked_json(row['refs_json'],row['refs_sha256'])
+            body=_checked_json(row['body_json'],row['body_sha256'])
+            command=_checked_json(row['payload_json'],row['payload_sha256'])
+            receipt=_checked_json(row['result_json'],row['result_sha256'])
+            source=next(e for e in body['effects'] if e['refs']['unit_id']==unit['unit_id'])
+            evidence=refs['domain_evidence'];domain=evidence['domain'] if evidence else None
+            for value in (before,after):
+                if set(value)!={'revision','index_percent','lost','domain'} or type(value['revision']) is not int:
+                    raise ValueError('Invalid state shape')
+                validar_alteracoes({'index_percent':value['index_percent']})
+                if value['lost'] is not None and type(value['lost']) is not bool:raise ValueError('Invalid loss')
+            initial=dict(revision=0,index_percent=None,lost=None,domain=domain)
+            calculated=dict(before,**validar_alteracoes(source['changes']))
+            calculated.update(revision=len(history)+1,domain=domain)
+            snapshot=db.execute('SELECT * FROM engine_unit_snapshots WHERE snapshot_id=?',(refs['snapshot_id'],)).fetchone()
+            if (row['action']!='confirm' or row['team']!=unit['team'] or row['revision']!=len(history)+1
+                    or row['before_revision']!=len(history) or before!=(previous if previous is not None else initial)
+                    or after!=calculated or refs!=source['refs'] or source['expected_state_revision']!=before['revision']
+                    or refs['unit_id']!=unit['unit_id'] or refs['team']!=unit['team'] or refs['exercise_id']!=row['exercise_id']
+                    or refs['snapshot_id']!=row['snapshot_id'] or snapshot is None
+                    or any(snapshot[k]!=refs[k] for k in ('unit_id','exercise_id','team','snapshot_sha256','configuration_version_id'))
+                    or row['command_actor']!=row['actor_id'] or row['command_exercise']!=row['exercise_id']
+                    or row['operation']!='decide' or command['action']!='confirm' or command['reason']!=row['reason']
+                    or command['proposal_id']!=row['proposal_id'] or command['expected_revision']!=row['proposal_revision']
+                    or command['expected_sha256']!=row['body_sha256'] or receipt['decision_id']!=row['decision_id']
+                    or len(receipt['effects'])!=len(body['effects'])
+                    or dict(unit_id=unit['unit_id'],before=before,after=after) not in receipt['effects']):
+                raise ValueError('Inconsistent operational effect')
+            history.append(dict(decision_id=row['decision_id'],actor_id=row['actor_id'],created_at=row['created_at'],
+                                reason=row['reason'],before=before,after=after))
+            previous=after
+    except (KeyError,TypeError,ValueError,StopIteration) as exc:
+        raise sqlite3.DatabaseError('Operational effect chain mismatch.') from exc
     return history
 
 
@@ -269,7 +312,7 @@ def validar_alteracoes(changes):
         raise ValueError('Informe índice e/ou declaração explícita de perda.')
     if 'index_percent' in changes:
         value=changes['index_percent']
-        if value is not None and (type(value) not in (int,float) or not math.isfinite(value) or not 0<=value<=100):
+        if value is not None and (type(value) not in (int,float) or not 0<=value<=100 or not math.isfinite(value)):
             raise ValueError('Índice deve ser número finito entre 0 e 100 ou null.')
     if 'lost' in changes and type(changes['lost']) is not bool:
         raise ValueError('Declaração de perda deve ser booleana.')

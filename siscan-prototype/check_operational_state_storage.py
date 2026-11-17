@@ -8,11 +8,100 @@ from unittest.mock import patch
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier
 import uuid
+import json
+import hashlib
+import subprocess
+import sys
 
 from check_map_groups import seed,TEACHER
 import operational_state_storage as store
 import operational_state as state
 from check_operational_state import proposal,decision
+
+
+class RecoveryTests(unittest.TestCase):
+    setUp=lambda self:TransactionTests.setUp(self)
+    connect=lambda self:TransactionTests.connect(self)
+
+    def confirmed(self):
+        with self.connect() as db:
+            p=state.registrar_proposta(db,TEACHER,proposal(db));command=decision(p,'confirm')
+            result=state.decidir_proposta(db,TEACHER,command)
+            uid=result['effects'][0]['unit_id']
+            return uid,state.consultar(db,TEACHER,uid),command,result
+
+    def test_processo_novo_recupera_estado_historico_e_recibo(self):
+        uid,current,command,result=self.confirmed()
+        code='''import sqlite3,json,sys
+import operational_state as s
+db=sqlite3.connect(sys.argv[1]);db.row_factory=sqlite3.Row;db.execute('PRAGMA foreign_keys=ON')
+user=dict(uid=1,role='instructor',team=None)
+command=json.loads(db.execute("SELECT payload_json FROM operational_commands WHERE operation='decide'").fetchone()[0])
+print(json.dumps(dict(current=s.consultar(db,user,sys.argv[2]),history=s.historico(db,user,sys.argv[2]),receipt=s.decidir_proposta(db,user,command))))
+db.close()
+'''
+        child=subprocess.run([sys.executable,'-c',code,str(self.path),uid],cwd=Path(__file__).parent,
+                             capture_output=True,text=True,timeout=30,check=True)
+        recovered=json.loads(child.stdout)
+        self.assertEqual(recovered['current'],current);self.assertEqual(recovered['receipt'],result)
+        self.assertEqual(len(recovered['history']),1)
+
+    def test_backup_restauracao_em_terceiro_arquivo(self):
+        uid,current,command,result=self.confirmed()
+        backup=Path(self.temp.name)/'backup.sqlite3';restored=Path(self.temp.name)/'restored.sqlite3'
+        with self.connect() as source,closing(sqlite3.connect(backup)) as target:source.backup(target)
+        with closing(sqlite3.connect(backup)) as source,closing(sqlite3.connect(restored)) as target:source.backup(target)
+        with closing(sqlite3.connect(restored)) as db:
+            db.row_factory=sqlite3.Row;db.execute('PRAGMA foreign_keys=ON')
+            self.assertEqual(db.execute('PRAGMA integrity_check').fetchone()[0],'ok')
+            self.assertFalse(db.execute('PRAGMA foreign_key_check').fetchall())
+            self.assertEqual(state.consultar(db,TEACHER,uid),current)
+            self.assertEqual(state.decidir_proposta(db,TEACHER,command),result)
+
+    def corrupt(self,db,table,column,value,sha_column=None):
+        trigger='operational_'+table+'_no_update'
+        db.execute('DROP TRIGGER '+trigger)
+        values=[value]
+        sql='UPDATE operational_'+table+' SET '+column+'=?'
+        if sha_column:
+            sql+=','+sha_column+'=?';values.append(hashlib.sha256(value.encode('utf-8')).hexdigest())
+        sql+=' WHERE rowid=(SELECT min(rowid) FROM operational_'+table+')'
+        db.execute(sql,values)
+        db.execute(next(s for s in store.STATEMENTS if s.startswith('CREATE TRIGGER '+trigger+' ')));db.commit()
+
+    def test_corrupcao_semantica_com_hash_recalculado_recusa(self):
+        uid,current,command,result=self.confirmed()
+        cases=[('effects','before_json','before_sha256','index_percent',45),
+               ('effects','after_json','after_sha256','index_percent',20),
+               ('effects','after_json','after_sha256','lost','sim'),
+               ('effects','refs_json','refs_sha256','configuration_version_id','inexistente')]
+        for table,column,sha,key,value in cases:
+            with self.subTest(column=column,key=key),self.connect() as source,closing(sqlite3.connect(':memory:')) as db:
+                source.backup(db);db.row_factory=sqlite3.Row;db.execute('PRAGMA foreign_keys=ON')
+                obj=json.loads(db.execute('SELECT '+column+' FROM operational_'+table+' ORDER BY rowid LIMIT 1').fetchone()[0]);obj[key]=value
+                self.corrupt(db,table,column,json.dumps(obj,sort_keys=True,ensure_ascii=False,separators=(',',':')),sha)
+                with self.assertRaises(sqlite3.DatabaseError):state.consultar(db,TEACHER,uid)
+
+    def test_corrupcao_proposta_e_recibo_e_detectada_na_leitura(self):
+        uid,current,command,result=self.confirmed()
+        for table,column in [('proposal_revisions','body_json'),('commands','result_json')]:
+            with self.subTest(table=table),self.connect() as source,closing(sqlite3.connect(':memory:')) as db:
+                source.backup(db);db.row_factory=sqlite3.Row;db.execute('PRAGMA foreign_keys=ON')
+                # Escolher o recibo da decisão, não o de registro da proposta.
+                if table=='commands':
+                    db.execute('DROP TRIGGER operational_commands_no_update')
+                    db.execute("UPDATE operational_commands SET result_json='{}' WHERE operation='decide'")
+                    db.execute(next(s for s in store.STATEMENTS if s.startswith('CREATE TRIGGER operational_commands_no_update ')));db.commit()
+                else:self.corrupt(db,table,column,'{}')
+                with self.assertRaises(sqlite3.DatabaseError):state.consultar(db,TEACHER,uid)
+
+    def test_elo_removido_nao_vira_estado_nao_avaliado(self):
+        uid,current,command,result=self.confirmed()
+        with self.connect() as db:
+            db.execute('DROP TRIGGER operational_effects_no_delete')
+            db.execute('DELETE FROM operational_effects WHERE unit_id=?',(uid,))
+            db.execute(next(s for s in store.STATEMENTS if s.startswith('CREATE TRIGGER operational_effects_no_delete ')));db.commit()
+            with self.assertRaises(sqlite3.DatabaseError):state.consultar(db,TEACHER,uid)
 
 
 class TransactionTests(unittest.TestCase):

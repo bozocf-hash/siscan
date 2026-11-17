@@ -151,4 +151,4 @@ def configuration_domain(db, unit):
             or configuration['manifest_json'] != encoded(manifest)):
         return None
     return dict(domain='aereo', basis='synthetic_controlled',
-                reference='prepare_units/synthetic-engine-01/' + expected)
+                reference='engine_units.prepare_units/synthetic-engine-01/' + expected)

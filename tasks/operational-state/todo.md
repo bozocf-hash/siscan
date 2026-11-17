@@ -94,7 +94,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-08 — Recuperar, detectar corrupção e restaurar em cópia
 
-- [ ] Verificar ciclo durável completo com processo novo e backup consistente.
+- [x] Processo novo, backup/restauração e corrupção verificados. Passaram 46 testes novos e 49 regressões nomeadas (95 distintos), além do verificador assertivo de plotagem.
 - **Aceite:** proposta/revisões/decisão/efeitos/recibos e estado derivado sobrevivem ao reinício e à ausência do registro de grupos; inconsistência de schema/referências/hash/cadeia de efeitos recusa leitura, sem reset/default. Backup/restauração conservam relações/revisões/recibos e não sobrescrevem arquivo ativo.
 - **Verificar:** `check_operational_state_storage.py` com processo Python independente aberto no arquivo temporário já commitado, sem herdar conexão/registro. Usar `Connection.backup`, restaurar em terceiro arquivo e conferir `integrity_check`/`foreign_key_check` e consultas autorizadas. Corromper somente cópias de teste, incluindo JSON/hash, elo antes/depois e versão de schema. Executar regressões previstas quando a extração/provedores afetarem consumidores. OS-07/08/10.
 - **Dependências:** OST-07 e Checkpoint C.
@@ -102,9 +102,9 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ### Checkpoint D — Durabilidade e recuperação
 
-- [ ] OS-01–10 rastreados a testes reais; reinício não simulado apenas pela mesma conexão em memória.
-- [ ] Migração, corrupção, restauração e regressões verificadas; contagens sem dupla soma e limitações reais documentadas.
-- [ ] Nenhum processo/banco principal reiniciado ou migrado; não anunciar julgamento gráfico ou eficácia real de combate como entregue.
+- [x] OS-01–10 rastreados em 112; recuperação verificada em processo Python independente.
+- [x] Migração/corrupção/restauração/regressões verificadas; 95 testes nomeados sem dupla soma.
+- [x] Nenhum processo/banco principal reiniciado ou migrado; nenhuma alegação de julgamento gráfico ou eficácia real.
 
 ## OST-09 — Documentar e consolidar a entrega
 

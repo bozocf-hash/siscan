@@ -152,4 +152,3 @@ def configuration_domain(db, unit):
         return None
     return dict(domain='aereo', basis='synthetic_controlled',
                 reference='prepare_units/synthetic-engine-01/' + expected)
-

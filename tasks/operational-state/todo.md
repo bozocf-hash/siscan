@@ -31,7 +31,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-02 — Migrar armazenamento em base isolada
 
-- [ ] Implementar migração aditiva versionada, íntegra e reversível por rollback em caso de falha.
+- [x] Migração aditiva implementada; sete testes de armazenamento passaram, incluindo falha no DDL e reexecução.
 - **Aceite:** seis tabelas/relações/índices/triggers do plano, sem alterar tabelas anteriores; conexão independente, FK ativa, `BEGIN IMMEDIATE` e declarações completas por `execute`. Reexecução confere versão/schema sem escrita; schema parcial ou versão divergente/futura recusa sem completar silenciosamente.
 - **Verificar:** `check_operational_state_storage.py` em SQLite temporário com dados anteriores. Provocar falha intermediária no DDL e comparar schema/dados/versão antes/depois; testar transação externa/FK desligada, constraints, imutabilidade, reexecução e divergência. Sem `executescript` no lote, sem `PRAGMA user_version` reaproveitado ou alteração de `app.initialize`. OS-08/10.
 - **Dependência:** OST-01; pode exercitar somente armazenamento nesta fatia, sem comandos parciais publicados.
@@ -39,8 +39,8 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ### Checkpoint A — Migração isolada
 
-- [ ] DDL/falha/reexecução/integridade verificados em base descartável; tabelas e dados anteriores preservados.
-- [ ] Nenhuma migração automática, escrita no principal, alteração de originais ou ampliação de domínio.
+- [x] DDL/falha/reexecução/integridade verificados em base descartável; dados anteriores preservados.
+- [x] Nenhuma migração automática, escrita no principal, alteração de originais ou ampliação de domínio.
 
 ## OST-03 — Consultar estado autorizado sem criar avaliação
 

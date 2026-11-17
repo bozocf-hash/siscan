@@ -21,33 +21,7 @@ def _read_view(db):
 
 
 def _controlled_domain(db, unit):
-    """Reconhece somente o contrato aéreo controlado criado por prepare_units."""
-    snapshot = unit['snapshot']
-    payload = engine_units.controlled_example()
-    validation = engine_units.validate_input(payload)
-    if not validation['accepted']:
-        return None
-    manifest = validation['manifest']
-    model = 'SYN-AIR-MODEL-001'
-    expected = str(uuid.uuid5(uuid.NAMESPACE_URL, engine_units.input_hash(
-        dict(model=model, input=payload, manifest=manifest))))
-    configuration = db.execute('SELECT * FROM engine_configurations WHERE version_id=?',
-                               (unit['configuration_version_id'],)).fetchone()
-    identity = db.execute('SELECT purpose FROM engine_units WHERE unit_id=?', (unit['unit_id'],)).fetchone()
-    if (not configuration or not identity or identity['purpose'] != 'synthetic-engine-01'
-            or unit['configuration_version_id'] != expected
-            or snapshot.get('model_id') != model
-            or snapshot.get('source_kind') != 'synthetic_controlled'
-            or snapshot.get('official_calculation_ready') is not False
-            or snapshot.get('input_template') != payload or snapshot.get('input_manifest') != manifest
-            or snapshot.get('configuration_id') != payload['configuration_id']
-            or configuration['model_id'] != model
-            or configuration['configuration_id'] != payload['configuration_id']
-            or configuration['input_json'] != engine_units.encoded(payload)
-            or configuration['manifest_json'] != engine_units.encoded(manifest)):
-        return None
-    return dict(domain='aereo', basis='synthetic_controlled',
-                reference='engine_units.prepare_units/synthetic-engine-01/' + expected)
+    return engine_units.configuration_domain(db, unit)
 
 
 def view(db, user: dict, team: str) -> dict:

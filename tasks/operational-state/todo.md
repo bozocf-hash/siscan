@@ -1,6 +1,6 @@
 # Tarefas: operational-state — estado e adjudicação durável
 
-**2026-11-17. Especificação aprovada por “siga”; plano aprovado por “aprovado”; Fase 3 proposta para revisão.** Referências: [especificação](../../SPEC-operational-state.md), [plano](plan.md), [111](../../docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md). A aprovação do plano autoriza esta decomposição, sem iniciar código ou migração neste turno.
+**2026-11-17. Especificação aprovada por “siga”; plano aprovado por “aprovado”; Fase 3 aprovada por “aprovado”; Fase 4 em execução.** Referências: [especificação](../../SPEC-operational-state.md), [plano](plan.md), [111](../../docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md). A aprovação do plano autoriza esta decomposição, sem iniciar código ou migração neste turno.
 
 Depois de aprovada esta lista, executar sequencialmente com testes de comportamento antes da implementação correspondente e commits por incremento verificado. Checkpoints são verificações técnicas do contrato aprovado: comunicar e continuar sem novas confirmações rotineiras. Mudança material exige revisão do ponto afetado. Não alterar `tasks/plan.md`/`tasks/todo.md`, fontes originais, DB3K, banco principal ou processos em uso.
 
@@ -23,7 +23,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-01 — Validar efeitos e compartilhar evidência de domínio
 
-- [ ] Implementar validação/classificação e extração mínima da evidência de identidade.
+- [x] Validação/classificação e evidência pública implementadas; 4 testes novos, 6 de grupos e 14 de CPC passaram.
 - **Aceite:** índice finito 0–100 ou ausência; booleanos/NaN/infinito/fora de domínio recusados. Superfície comprovada usa >60 combater, 40–60 navegar e <40 flutuar; não generalizar a outros domínios ou inferir perda. Evidência aérea sintética passa a função pública em `engine_units`, com a ponte de grupos delegando e sem ampliar elegibilidade.
 - **Verificar:** teste de comportamento antes da mudança, cobrindo 0/40/60/80/100 e valores imediatamente acima/abaixo das fronteiras, ausência/índice `null`, omissão de alteração e perda independente. Fixture de domínio de superfície é explicitamente de teste, sem cadastrar navio real validado. Regressões `check_map_groups.py` e `check_cpc_map.py`. OS-01/02/09/10.
 - **Dependência:** aprovação desta lista. Sem consulta fictícia a schema ainda inexistente; consulta não avaliada será ligada em OST-03.
@@ -124,4 +124,4 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## Gate
 
-Especificação e plano aprovados; solicitar revisão desta lista de Fase 3. Após aprovação, executar OST-01–10 com checkpoints técnicos A–D, sem novas confirmações rotineiras. Este aceite não se estende a DDL no banco principal, APIs/UI de julgamento ou produtor automático. As restrições são as mesmas da especificação/plano aprovados.
+Especificação, plano e lista aprovados; executar OST-01–10 com checkpoints técnicos A–D, sem novas confirmações rotineiras. Este aceite não se estende a DDL no banco principal, APIs/UI de julgamento ou produtor automático. As restrições são as mesmas da especificação/plano aprovados.

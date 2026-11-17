@@ -1,6 +1,6 @@
 # 09 — Pendências e riscos
 
-**Preparação visual CPC — [105](105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md):** especificação proposta após aprovação de 104. Hash técnico não contém posições, e snapshot inicial não é saldo atual; usar manifesto geográfico separado e fontes explícitas. Vista simultânea é exclusiva do instrutor. Seleção/conferência não conclui a ligação de julgamento/decisão/efeitos, cujos provedores duráveis continuam pendentes.
+**Plano do par CPC — [106](106_PLANO_PAR_CPC_NO_MAPA.md):** especificação aprovada, plano aguarda revisão. Captura SQL e grupos em memória não são transação distribuída/reserva; conferir alterações observadas e origem dos dados. Vista simultânea exclusiva do instrutor; camada não pode gravar posições nem restaurar dados revogados. Julgamento e estado oficial durável não fazem parte desta preparação.
 
 **Interface entregue — [102](102_ENTREGA_GRUPAMENTOS_NO_MAPA.md):** grupos temporários integrados ao mapa definido e verificados; gates desta fatia concluídos. Instâncias reais sem snapshot/domínio continuam pendentes; não há durabilidade ou confronto de grupamentos na tela. [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md) distingue uso atual das etapas futuras. Seleção do par, execução/replay/adjudicação/efeitos oficiais continuam recortes próprios. Processo principal não foi reiniciado; prévia usa base/porta/cookie separados.
 

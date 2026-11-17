@@ -1,6 +1,6 @@
 # 10 — Plano de continuidade
 
-**Próximo contrato — [105](105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md):** escopo/ordem aprovados em 104; revisar Recorte 2 de `SPEC-force-confrontation.md` para seleção/conferência do par no mesmo mapa. Após aprovação, elaborar plano próprio preservando arquivos anteriores. Em seguida, especificar estado/adjudicação durável e ligar julgamento/confirmação; não publicar efeitos pela preparação.
+**Par CPC — [106](106_PLANO_PAR_CPC_NO_MAPA.md):** revisar plano em `tasks/force-confrontation/mapa/plan.md`; escopo e especificação aprovados. Após aprovação, detalhar tarefas de provedor, HTTP, painel/camada e navegador isolado no mesmo diretório. Preparação continua sem efeitos; contratos de estado/adjudicação durável e julgamento/confirmação são etapas seguintes de 104.
 
 **Mapa entregue — [102](102_ENTREGA_GRUPAMENTOS_NO_MAPA.md):** GMAP-01–09 concluídas, com painel/identidade/rotas/realce e verificação isolada. Roteiro solicitado pelo responsável em [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md). Próximo recorte deve ligar seleção do par AZUL/VERMELHO e conferência inicial ao dossiê 98 antes de executar/aplicar resultados no mapa. Usar a mesma base cartográfica e preservar autoridade do instrutor. Atualização do processo principal e persistência não foram feitas automaticamente.
 

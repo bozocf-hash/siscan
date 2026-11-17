@@ -1,5 +1,7 @@
 # 105 — Especificação da seleção do par CPC no mapa
 
+**Atualização de gate:** especificação aprovada por “siga”; plano proposto em [106](106_PLANO_PAR_CPC_NO_MAPA.md). O conteúdo abaixo registra a preparação histórica da Fase 1, sem implementação desta extensão.
+
 **Data: 2026-11-17. Estado: escopo/ordem de 104 aprovados por “si”; Fase 1 do primeiro recorte proposta para revisão.** Extensão em [SPEC-force-confrontation.md](../../SPEC-force-confrontation.md), Recorte 2, preservando entregas 98/102.
 
 Primeira ligação: instrutor seleciona AZUL/VERMELHO e prepara o dossiê pela interface do mesmo mapa ATLANTICADOR. Backend autoriza, confere composições/snapshots/adjudicação e associa manifesto das posições de planejamento. Duas forças selecionadas aparecem sem duplicar marcadores ou permitir plotagem no modo de conferência.

@@ -110,7 +110,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-09 — Editar e registrar julgamento pelo painel
 
-- [ ] Implementar controlador/formulário de contexto, edição, prévia e registro/revisão.
+- [x] Controlador/painel implementados; prévia, registro e revisão observados no navegador e testes JS passando.
 - **Aceite:** módulo próprio instalado no CPC existente, uma área lateral; alterações explícitas de índice/perda e motivo com prévia antes/depois. Preservar/retirar avaliação são ações distintas; vazio não vira zero. Ajuste posterior marca revisão não salva; não confirmar ou salvar implicitamente.
 - **Verificar:** novo `check_cpc_judgment.mjs` com validação local, payloads enviados, respostas atrasadas/fora de contexto, troca de seleção e saída com edição não salva. Preview não envia comando de aplicação. Módulo autenticado/opcional mantém mapa anterior em instância antiga. JMAP-03/04/07/10/11.
 - **Dependências:** JUD-06/08 e Checkpoint B.
@@ -118,7 +118,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-10 — Confirmar, rejeitar, retomar e corrigir pelo painel
 
-- [ ] Implementar revisão final explícita, decisões e recuperação da intenção/recibo na interface.
+- [x] Confirmação/rejeição/correção/retomada implementadas; dez testes JS passaram, incluindo retry e resposta antiga.
 - **Aceite:** Confirmar efeitos → Confirmar aplicação envia revisão aceita; cancelar não aplica. Retry mantém UUID e intenção; após commit/refresh falho, conservar recibo e indicar vista pendente sem novo comando. Retomada/histórico e nova proposta de correção não recriam grupo, reaplicam decisão ou apagam passado.
 - **Verificar:** `check_cpc_judgment.mjs` com duplo clique, falha/resposta perdida, retry, rejeição, revisão editada, refresh falho, grupo ausente, retorno de consulta antiga e correção referenciada. Nenhum efeito disparado por reload, seleção ou abertura de histórico. JMAP-04/05/06/07/11.
 - **Dependência:** JUD-09.

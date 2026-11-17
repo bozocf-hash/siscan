@@ -1,12 +1,13 @@
 // Conferência de duas composições; sem execução ou publicação de resultados.
 const TEAMS=['AZUL','VERMELHO'];
-export function createCpcController({request,render,preview}){
+export function createCpcController({request,render,preview,beforeChange=()=>true}){
  let generation=0;
  const empty=active=>({active,list:null,selection:{AZUL:null,VERMELHO:null},preparation:null,member:null,loading:false,busy:false,error:''});
  let state=empty(false);
  const emit=()=>render(structuredClone(state));
  function clearView(){state.preparation=null;state.member=null;preview(null);}
  async function enter(){
+  if(state.active&&!beforeChange())return false;
   const token=++generation;state=empty(true);state.loading=true;preview(null);emit();
   try{
    const data=await request('/api/cpc/groups');if(token!==generation)return;
@@ -17,11 +18,13 @@ export function createCpcController({request,render,preview}){
  }
  function choose(team,id){
   if(!TEAMS.includes(team)||!state.active)return;
+  if(!beforeChange()){emit();return;}
   const group=state.list?.parties.find(p=>p.team===team)?.groups.find(g=>g.group_id===id&&g.preparable);
   ++generation;state.selection[team]=group?group.group_id:null;state.busy=false;clearView();state.error='';emit();
  }
  async function prepare(){
   if(!state.active||state.loading||state.busy||!state.list?.exercise_open)return false;
+  if(!beforeChange())return false;
   const selection={};
   for(const team of TEAMS){
    const group=state.list.parties.find(p=>p.team===team).groups.find(g=>g.group_id===state.selection[team]&&g.preparable);
@@ -40,11 +43,16 @@ export function createCpcController({request,render,preview}){
   }catch(error){if(token===generation){clearView();state.busy=false;state.list=null;state.selection={AZUL:null,VERMELHO:null};state.error=error.message;emit();}return false;}
  }
  return {enter,choose,prepare,
+  restore(preparation){
+   if(!state.active||!state.list||preparation.exercise_id!==state.list.exercise_id||preparation.scenario_version!==state.list.scenario_version)return false;
+   if(!TEAMS.every(team=>{const p=preparation.parties.find(x=>x.team===team);return p&&state.list.parties.find(x=>x.team===team)?.groups.some(g=>g.preparable&&g.group_id===p.group_id&&g.composition_revision===p.composition_revision);}))return false;
+   ++generation;state.selection=Object.fromEntries(preparation.parties.map(p=>[p.team,p.group_id]));state.preparation=structuredClone(preparation);state.member=null;state.error='';preview(structuredClone(preparation));emit();return true;
+  },
   leave:()=>{++generation;state=empty(false);preview(null);emit();},
   inspect:uid=>{const exists=state.preparation?.parties.some(p=>p.members.some(m=>m.unit_id===uid));state.member=exists?uid:null;emit();}};
 }
 
-export function installCpcPanel({container,csrf,preview,focus,exit}){
+export function installCpcPanel({container,csrf,preview,focus,exit,installJudgmentPanel=null,onOfficial=()=>{}}){
  const el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
  const heading=el('h2','Preparação CPC'),note=el('p','Conferência do par: não executa combate nem aplica resultados.'),
   warning=el('p','Grupos temporários; dados confirmados nesta vista não reservam disponibilidade futura.'),
@@ -55,11 +63,14 @@ export function installCpcPanel({container,csrf,preview,focus,exit}){
  for(const team of TEAMS){const label=el('label','Grupamento '+team),select=el('select');select.setAttribute('aria-label','Grupamento '+team);label.append(select);selectors.append(label);selects[team]=select;}
  for(const button of [prepareButton,refresh,back,fit])button.type='button';
  container.append(heading,note,warning,status,selectors,prepareButton,refresh,back,fit,details);
+ const judgmentArea=el('section');container.append(judgmentArea);let judgment=null,lastPreparation,restoring=false,officialConsulted=false;
  let wasBusy=false,restorePreparationFocus=false;
  function render(state){
+  const preparationKey=state.preparation?.view_sha256??null;
+  if(judgment&&(!state.active||preparationKey!==lastPreparation)){lastPreparation=preparationKey;officialConsulted=false;if(!restoring)judgment.setPreparation(state.preparation);}
   if(state.busy&&!wasBusy)restorePreparationFocus=document.activeElement===prepareButton;
   const completed=wasBusy&&!state.busy;wasBusy=state.busy;
-  status.textContent=state.error||(state.loading?'Consultando composições…':state.busy?'Conferindo dados e posições…':state.preparation?'Par conferido. Revisão do instrutor pendente.':state.list?`Exercício ${state.list.exercise_id} · cenário v${state.list.scenario_version}${state.list.exercise_open?'':' · Encerrado'}`:'Atualize os grupos para conferir.');
+  status.textContent=state.error||(state.loading?'Consultando composições…':state.busy?'Conferindo dados e posições…':state.preparation?officialConsulted?'Par conferido. Estado oficial consultado; julgamento no painel abaixo.':'Par conferido. Revisão do instrutor pendente.':state.list?`Exercício ${state.list.exercise_id} · cenário v${state.list.scenario_version}${state.list.exercise_open?'':' · Encerrado'}`:'Atualize os grupos para conferir.');
   status.className=state.error?'siscan-group-error':'';
   for(const team of TEAMS){
    const select=selects[team];select.replaceChildren();const initial=el('option','Selecione '+team);initial.value='';select.append(initial);
@@ -79,13 +90,18 @@ export function installCpcPanel({container,csrf,preview,focus,exit}){
     }
     section.append(list);details.append(section);
    }
-   const refs=el('details');refs.append(el('summary','Referências desta conferência'),el('p','Dossiê: '+state.preparation.dossier_sha256),el('p','Posições: '+state.preparation.positions_sha256),el('p','Vista: '+state.preparation.view_sha256));details.append(refs,el('p','Próximas integrações: julgamento didático, confirmação e aplicação oficial. Ainda não disponíveis.'));
+   const refs=el('details');refs.append(el('summary','Referências desta conferência'),el('p','Dossiê: '+state.preparation.dossier_sha256),el('p','Posições: '+state.preparation.positions_sha256),el('p','Vista: '+state.preparation.view_sha256));details.append(refs);
+   if(!judgment)details.append(el('p','Julgamento indisponível nesta instância; atualize o servidor.'));
    if(state.member)details.querySelector(`[data-cpc-member="${CSS.escape(state.member)}"]`)?.focus({preventScroll:true});
   }
   if(completed){if(state.active&&restorePreparationFocus&&document.activeElement===document.body)(prepareButton.disabled?refresh:prepareButton).focus({preventScroll:true});restorePreparationFocus=false;}
  }
  const request=async(path,options)=>{const response=await fetch(path,options?{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:JSON.stringify(options.body)}:undefined);const body=await response.json();if(!response.ok)throw Object.assign(Error(body.error||'Conferência indisponível.'),{status:response.status});return body;};
- const controller=createCpcController({request,render,preview});
+ const controller=createCpcController({request,render,preview,beforeChange:()=>judgment?.canLeave()??true});
+ if(installJudgmentPanel)judgment=installJudgmentPanel({container:judgmentArea,csrf,
+  onOfficial:states=>{officialConsulted=true;status.textContent='Par conferido. Estado oficial consultado; julgamento no painel abaixo.';onOfficial(states);},
+  onResumePair:preparation=>{restoring=true;try{return controller.restore(preparation);}finally{restoring=false;}},onForbidden:()=>controller.leave()});
+ controller.canLeave=()=>judgment?.canLeave()??true;
  for(const team of TEAMS)selects[team].onchange=()=>controller.choose(team,selects[team].value);
  refresh.onclick=()=>controller.enter();prepareButton.onclick=()=>controller.prepare();back.onclick=exit;fit.onclick=focus;
  return controller;

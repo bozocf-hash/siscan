@@ -58,7 +58,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-04 — Registrar e retomar propostas CPC duráveis
 
-- [ ] Implementar registro/revisão e consulta/índice de proposta pelo adaptador.
+- [x] Registro/revisão/retomada/replay implementados; cinco testes do adaptador passaram.
 - **Aceite:** base esperada e referências reconferidas; origem `siscan-cpc-didactic-origin-01` e hash da intenção HTTP construídos no servidor. Registro/revisão usa somente publicador 112, sem efeitos oficiais; revisão substitui conteúdo completo e exige referência vigente. Retomada distingue origem congelada de disponibilidade atual, inclusive após perder grupos.
 - **Verificar:** `check_cpc_judgment.py`: base desatualizada, proposta de outra origem/exercício, paginação, proposta decidida/pendente e leitura após registro novo em memória vazio. Replay exato de registro/revisão devolve recibo; mesma chave com outra intenção recusa, sem depender de grupo atual para comando já aplicado. JMAP-01/02/03/05/06.
 - **Dependência:** JUD-03.

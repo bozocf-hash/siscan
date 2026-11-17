@@ -26,6 +26,23 @@ class JudgmentTests(unittest.TestCase):
         return dict(selection=self.selection,basis_sha256=base['basis_sha256'],reason='Aula de julgamento',
                     effects=[dict(unit_id=uid,changes={'index_percent':60})])
 
+    def register(self):
+        body=dict(self.body(),command_id=str(uuid.uuid4()))
+        return judgment.register(self.db,TEACHER,self.registry,body),body
+
+    def test_registrar_retomar_revisar_e_replay_sem_grupos(self):
+        first,body=self.register()
+        view=judgment.get(self.db,TEACHER,self.registry,first['proposal_id'])
+        self.assertTrue(view['available']);self.assertEqual(len(judgment.listing(self.db,TEACHER)['items']),1)
+        edit=dict(self.body(),command_id=str(uuid.uuid4()),proposal_id=first['proposal_id'],
+                  expected_revision=first['revision'],expected_sha256=first['body_sha256'])
+        edit['effects'][0]['changes']['index_percent']=40
+        second=judgment.revise(self.db,TEACHER,self.registry,edit)
+        self.assertEqual(second['revision'],2)
+        self.assertEqual(judgment.register(self.db,TEACHER,RegistroGrupamentos(),body),first)
+        self.assertFalse(judgment.get(self.db,TEACHER,RegistroGrupamentos(),first['proposal_id'])['available'])
+        self.assertEqual(self.db.execute('SELECT count(*) FROM operational_effects').fetchone()[0],0)
+
     def test_contexto_previa_sem_escrita_e_hash_estavel(self):
         before=list(self.db.iterdump());body=self.body()
         preview=judgment.preview(self.db,TEACHER,self.registry,body)

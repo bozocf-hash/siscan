@@ -125,4 +125,9 @@ Preparação não executa nem confirma confronto. Estado/adjudicação durável,
 
 ## Atualização — 2026-11-17: plano do julgamento no mapa
 
-[114](docs/recovery/114_PLANO_JULGAMENTO_DIDATICO_NO_MAPA.md) propõe o [plano de Fase 2](tasks/force-confrontation/julgamento/plan.md) após aprovação de 113. O marco parcial exige fluxo real no mapa: julgamento, prévia, registro, confirmação/rejeição e consulta/retomada de efeitos. Coordenação SQL/registro e recibos públicos antecedem HTTP/painel/projeção; checkpoints A–D e testes isolados antes de entrega. Plano aguarda revisão; nenhum código/banco alterado. Automático permanece etapa 4 de 104.
+[114](docs/recovery/114_PLANO_JULGAMENTO_DIDATICO_NO_MAPA.md) propõe o [plano de Fase 2](tasks/force-confrontation/julgamento/plan.md) após aprovação de 113. O marco parcial exige fluxo real no mapa: julgamento, prévia, registro, confirmação/rejeição e consulta/retomada de efeitos. Coordenação SQL/registro e recibos públicos antecedem HTTP/painel/projeção; checkpoints A–D e testes isolados antes de entrega. Plano aprovado por “sim”; tarefas propostas em 115 antes do código. Nenhum código/banco alterado nesta etapa. Automático permanece etapa 4 de 104.
+
+
+## Atualização — 2026-11-17: tarefas do julgamento no mapa
+
+[115](docs/recovery/115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md) registra a aprovação do plano e propõe [JUD-01–14](tasks/force-confrontation/julgamento/todo.md), das APIs públicas/coordenação até painel/mapa, navegador/recuperação e entrega. Especificação e plano não aguardam aprovação; Fase 3 aguarda revisão antes do código. Marco parcial exige fluxo real no navegador, com confirmação única e histórico retomável; sem migração principal ou confronto automático nesta fatia.

@@ -1,6 +1,6 @@
 # Plano técnico: julgamento didático e efeitos no mapa
 
-**2026-11-17. Recorte 3 da especificação aprovado por “sim”; Fase 2 proposta para revisão.** O pedido posterior “seguios entao” mantém a continuidade. Base: [SPEC-force-confrontation.md](../../../SPEC-force-confrontation.md), Recorte 3, [113](../../../docs/recovery/113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md), ordem de 104 e publicador de [112](../../../docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md). Preservar todos os planos anteriores. Nenhum código, teste ou migração executado nesta fase.
+**2026-11-17. Recorte 3 da especificação aprovado por “sim”; Fase 2 aprovada por “sim”; [tarefas de Fase 3](todo.md) propostas conforme [115](../../../docs/recovery/115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md).** O pedido posterior “seguios entao” mantém a continuidade. Base: [SPEC-force-confrontation.md](../../../SPEC-force-confrontation.md), Recorte 3, [113](../../../docs/recovery/113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md), ordem de 104 e publicador de [112](../../../docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md). Preservar todos os planos anteriores. Nenhum código, teste ou migração executado nesta fase.
 
 ## Marco de entrega
 
@@ -89,7 +89,7 @@ Testes sem navegador usam SQLite temporário, HTTP em loopback e controlador JS 
 5. Percurso de navegador, foco/tela estreita, processo novo, histórico e correção. **Checkpoint D:** marco parcial observado, sem anunciar confronto automático ou principal atualizado.
 6. Documentação, roteiro 103, controles/spec/plano/lista, comparação SHA-256 e commits/push. Dividir manutenção documental em incrementos de até cerca de cinco arquivos.
 
-Plano será detalhado em `tasks/force-confrontation/julgamento/todo.md` após aprovação desta Fase 2. Cada tarefa terá até cerca de cinco arquivos, testes de comportamento antes da implementação correspondente, dependências e verificação. Execução será sequencial; checkpoints são verificações técnicas do contrato aprovado e não exigem novas confirmações rotineiras. Alteração material do contrato exige revisar o ponto afetado.
+Plano aprovado e detalhado em `tasks/force-confrontation/julgamento/todo.md`, com lista de Fase 3 proposta para revisão. Cada tarefa terá até cerca de cinco arquivos, testes de comportamento antes da implementação correspondente, dependências e verificação. Execução será sequencial; checkpoints são verificações técnicas do contrato aprovado e não exigem novas confirmações rotineiras. Alteração material do contrato exige revisar o ponto afetado.
 
 ## Comandos e evidências previstos
 
@@ -130,4 +130,4 @@ JMAP-01/09 por autorização/CSRF/privacidade HTTP; 02/03/07 por base/preview/SQ
 
 ## Gate da Fase 2
 
-Especificação de 113 aprovada por “sim”; submeter este plano concreto à revisão antes de detalhar tarefas de Fase 3. Não há dúvida de localização: diretório já consta da especificação aprovada. Nenhum código/DDL/banco/processo alterado, teste executado ou nova funcionalidade anunciada como pronta nesta etapa.
+Especificação de 113 e plano 114 aprovados por “sim”; [lista de Fase 3](todo.md) proposta para revisão antes do código, conforme 115. Não há dúvida de localização: diretório já consta da especificação aprovada. Nenhum código/DDL/banco/processo alterado, teste executado ou nova funcionalidade anunciada como pronta nesta etapa.

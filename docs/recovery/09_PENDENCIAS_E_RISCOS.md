@@ -1,6 +1,6 @@
 # 09 — Pendências e riscos
 
-**Plano gráfico — [114](114_PLANO_JULGAMENTO_DIDATICO_NO_MAPA.md):** especificação aprovada; plano em revisão. Fechar coordenação SQL → registro com commit antes da liberação, replay sem grupo atual, prévia/estado oficial separados e retomada persistente. Esses controles ainda precisam ser implementados/testados. Principal não migrado/reiniciado; entrega parcial depende de percurso real no navegador, não apenas backend.
+**Tarefas gráficas — [115](115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md):** plano aprovado; lista JUD-01–14 em revisão. Concorrência SQL/registro, replay após commit, retomada sem grupo, projeção oficial e privacidade ainda precisam ser implementados/verificados. Testes HTTP/JS não substituem percurso real em navegador e reinício isolado. Nenhum código, migração principal ou teste novo nesta etapa.
 
 **Provedor durável entregue — [112](112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md):** OST-01–10 verificadas em bancos descartáveis. Limites atuais: provedor interno sem UI/HTTP nova; principal não migrado; identidade demonstrada ainda aérea sintética. Implantação principal requer backup verificado/janela/procedimento próprio; hashes não protegem contra administrador que reescreva coerentemente todo o banco. Integração julgamento → prévia → confirmação no mapa continua futura, sem reabrir gates de 109–111.
 

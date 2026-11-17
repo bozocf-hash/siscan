@@ -1,5 +1,7 @@
 # 114 — Plano: julgamento didático no mapa
 
+**Atualização de gate:** plano aprovado pelo responsável por “sim”; lista de Fase 3 proposta em [115](115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md). O texto abaixo preserva a proposta documental anterior; aprovação do plano não está mais pendente.
+
 **2026-11-17. Especificação 113 aprovada por “sim”; Fase 2 proposta para revisão.** Plano completo em [tasks/force-confrontation/julgamento/plan.md](../../tasks/force-confrontation/julgamento/plan.md), seguindo o Recorte 3 de [SPEC-force-confrontation.md](../../SPEC-force-confrontation.md). A continuidade posterior confirmou como próximo marco uma versão parcial utilizável pelo instrutor, antes do automático.
 
 Marco verificável: no mapa ATLANTICADOR existente, selecionar o par, julgar, conferir prévia, registrar/revisar, confirmar/rejeitar e consultar efeitos/histórico. A entrega só será concluída depois do percurso real em navegador isolado; testes de backend sozinhos não representam aplicativo integrado.

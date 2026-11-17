@@ -3,9 +3,108 @@ import math
 import hashlib
 import json
 import sqlite3
+import uuid
+from datetime import datetime, timezone
 from contextlib import contextmanager
 import engine_units
 import operational_state_storage as storage
+from engine_runtime import atomic, Conflict
+
+
+def _fields(value,required,optional=()):
+    if not isinstance(value,dict) or not set(required)<=set(value) or set(value)-set(required)-set(optional):
+        raise ValueError('Campos de comando inválidos.')
+
+
+def _uuid(value):
+    try:
+        if not isinstance(value,str) or str(uuid.UUID(value))!=value:raise ValueError()
+    except (ValueError,AttributeError) as exc:raise ValueError('Identificador UUID inválido.') from exc
+
+
+def _reason(value):
+    if not isinstance(value,str) or not value.strip() or len(value)>4000:
+        raise ValueError('Justificativa obrigatória, até 4000 caracteres.')
+
+
+def _command(db,user,payload,operation,required,optional=()):
+    exercise=_context(db,user,write=True);storage.validate(db)
+    _fields(payload,{'command_id',*required},optional);_uuid(payload['command_id'])
+    try:
+        if len(engine_units.encoded(payload).encode('utf-8'))>64000:raise ValueError('Comando excede 64 KB.')
+    except (TypeError,OverflowError) as exc:raise ValueError('Conteúdo JSON inválido.') from exc
+    row=db.execute('SELECT * FROM operational_commands WHERE command_id=?',(payload['command_id'],)).fetchone()
+    if row:
+        _checked_json(row['payload_json'],row['payload_sha256'])
+        if (row['exercise_id']!=exercise['id'] or row['actor_id']!=user['uid'] or row['operation']!=operation
+                or row['payload_json']!=engine_units.encoded(payload)):
+            raise Conflict('Comando já usado com outro conteúdo/contexto.')
+        return exercise,_checked_json(row['result_json'],row['result_sha256'])
+    return exercise,None
+
+
+def _receipt(db,user,exercise,payload,operation,result):
+    db.execute('INSERT INTO operational_commands VALUES(?,?,?,?,?,?,?,?,?)',
+        (payload['command_id'],exercise['id'],user['uid'],operation,engine_units.encoded(payload),_digest(payload),
+         engine_units.encoded(result),_digest(result),datetime.now(timezone.utc).isoformat()))
+    return result
+
+
+def _effects(db,user,effects,exercise):
+    if not isinstance(effects,list) or not 1<=len(effects)<=100:raise ValueError('Informe de 1 a 100 efeitos.')
+    seen=set();captured=[]
+    for item in effects:
+        _fields(item,{'unit_id','expected_state_revision','snapshot_id','snapshot_sha256','configuration_version_id','changes'})
+        if not isinstance(item['unit_id'],str) or item['unit_id'] in seen:raise ValueError('Unidade inválida ou duplicada.')
+        seen.add(item['unit_id'])
+        expected=item['expected_state_revision']
+        if type(expected) is not int or expected<0:raise ValueError('Revisão de estado inválida.')
+        changes=validar_alteracoes(item['changes']);unit=_unit(db,user,item['unit_id'])
+        for key in ('snapshot_id','snapshot_sha256','configuration_version_id'):
+            if item[key]!=unit[key]:raise Conflict('Referência técnica incompatível; atualize a proposta.')
+        history=_chain(db,unit);current=history[-1]['after'] if history else _initial(db,unit)
+        if current['revision']!=expected:raise Conflict('Estado operativo alterado; atualize a proposta.')
+        evidence=engine_units.configuration_domain(db,unit)
+        refs={k:unit[k] for k in ('unit_id','team','snapshot_id','snapshot_sha256','configuration_version_id')}
+        refs.update(exercise_id=exercise['id'],domain_evidence=evidence)
+        captured.append(dict(refs=refs,expected_state_revision=expected,changes=changes))
+    return sorted(captured,key=lambda e:e['refs']['unit_id'])
+
+
+def _body(db,user,payload,exercise):
+    if payload['source']!='didactic':raise ValueError('Fonte aceita nesta fatia: didactic.')
+    _reason(payload['reason'])
+    if not isinstance(payload['origin'],dict) or not payload['origin']:raise ValueError('Referência de origem obrigatória.')
+    return dict(scenario_version=exercise['scenario_version'],reason=payload['reason'],origin=payload['origin'],
+                effects=_effects(db,user,payload['effects'],exercise))
+
+
+def _save_revision(db,user,exercise,proposal_id,revision,body):
+    sha=_digest(body)
+    db.execute('INSERT INTO operational_proposal_revisions VALUES(?,?,?,?,?,?,?,?)',
+        (proposal_id,exercise['id'],revision,exercise['scenario_version'],engine_units.encoded(body),sha,
+         user['uid'],datetime.now(timezone.utc).isoformat()))
+    return dict(proposal_id=proposal_id,revision=revision,body_sha256=sha,body=body)
+
+
+def registrar_proposta(db,user,payload):
+    """Grava somente proposta/recibo. Em transação externa, commit é do chamador."""
+    _context(db,user,write=True)
+    with atomic(db):
+        exercise,replay=_command(db,user,payload,'register',{'source','reason','origin','effects'},{'correction_decision_id'})
+        if replay is not None:return replay
+        body=_body(db,user,payload,exercise);correction=payload.get('correction_decision_id')
+        if correction is not None:
+            _uuid(correction)
+            prior=db.execute('''SELECT d.action,p.exercise_id FROM operational_decisions d JOIN operational_proposals p
+              ON p.proposal_id=d.proposal_id WHERE d.decision_id=?''',(correction,)).fetchone()
+            if not prior or prior['exercise_id']!=exercise['id'] or prior['action']!='confirm':
+                raise Conflict('Decisão corrigida não encontrada neste exercício.')
+        proposal_id=str(uuid.uuid4())
+        db.execute('INSERT INTO operational_proposals VALUES(?,?,?,?,?,?)',
+            (proposal_id,exercise['id'],'didactic',user['uid'],datetime.now(timezone.utc).isoformat(),correction))
+        result=_save_revision(db,user,exercise,proposal_id,1,body)
+        return _receipt(db,user,exercise,payload,'register',result)
 
 
 def _digest(value):return hashlib.sha256(engine_units.encoded(value).encode('utf-8')).hexdigest()

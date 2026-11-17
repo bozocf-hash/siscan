@@ -52,7 +52,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-04 — Registrar proposta didática durável
 
-- [ ] Implementar `registrar_proposta` com conteúdo congelado e recibo idempotente.
+- [x] Registro e recibo idempotente implementados; 15 testes de validação/leitura/proposta passaram, sem efeitos oficiais.
 - **Aceite:** instrutor participante, exercício aberto, payload estrito e fonte didática; justificativa, cenário, referências reais/snapshots, revisão de estado esperada e efeitos sem unidades duplicadas. Gravar proposta/revisão/hash/recibo na mesma transação, sem efeito oficial. Origem congelada não depende de grupo em memória nem prova disponibilidade futura.
 - **Verificar:** `check_operational_state.py`: proposta válida, referências inválidas, injeção de autor/papel/horário, esquema desconhecido, fonte automática, exercício fechado, comando repetido/divergente e falha de gravação. Conferir persistência da proposta em conexão nova e SQL das tabelas de meios/recursos/posições/relógio/snapshots inalterado. OS-03/04/06/07/09.
 - **Dependência:** OST-03.

@@ -1,6 +1,6 @@
 # Tarefas: unit-registry — grupamentos no mapa
 
-**Data: 2026-11-16. Estado: especificação e plano aprovados por respostas distintas “siga”; Fase 3 proposta para revisão.** Referências: [especificação](../../../SPEC-unit-registry.md), [plano](plan.md), [101](../../../docs/recovery/101_TAREFAS_GRUPAMENTOS_NO_MAPA.md). Preservar os planos abertos do catálogo e os recortes concluídos 93/98.
+**Data: 2026-11-16. Estado: especificação e plano aprovados por respostas distintas “siga”; Fase 3 aprovada por “siga”; Fase 4 em execução.** Referências: [especificação](../../../SPEC-unit-registry.md), [plano](plan.md), [101](../../../docs/recovery/101_TAREFAS_GRUPAMENTOS_NO_MAPA.md). Preservar os planos abertos do catálogo e os recortes concluídos 93/98.
 
 Após aprovação desta lista, executar sequencialmente, com testes antes da implementação pertinente e commits por incremento verificado. Checkpoints A/B/C são verificações do contrato já aprovado; comunicar resultados e continuar dentro do escopo. Mudança material de contrato exige revisar a decisão afetada. Não instalar dependências, modificar originais, migrar bancos ou iniciar confronto temporal.
 
@@ -22,7 +22,7 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ## GMAP-01 — Resolver identidade e elegibilidade autorizadas
 
-- [ ] Implementar e verificar o provedor do partido.
+- [x] Implementar e verificar o provedor do partido. Seis testes passaram, sem alteração dos dados SQL.
 - **Aceite:** sessão/participação e partido autorizados antes da leitura; `unit_id`/`asset_id` pertencem ao mesmo contexto e adjudicação ativa; snapshot/configuração íntegros. Domínio da configuração sintética tem evidência explícita; nome/categoria/flag isolada não demonstram elegibilidade. Meio sem instância ou domínio válido permanece plotável, mas aparece pendente, sem criar dados ou revelar o adversário.
 - **Verificar:** `check_map_groups.py` com SQLite isolado e fonte real do adaptador, incluindo vínculo inválido, fonte sintética falsamente alegada, adjudicação revogada e dados desconhecidos. Comparar dados SQL antes/depois. GM-02–04, GM-11–12.
 - **Dependência:** aprovação desta lista.
@@ -30,7 +30,7 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ## GMAP-02 — Listar grupos pelo contrato público
 
-- [ ] Implementar e verificar consulta contextual do registro.
+- [x] Implementar e verificar consulta contextual do registro. Trinta e um testes do registro passaram, incluindo dois novos de lista/cópia/contexto.
 - **Aceite:** `listar_grupamentos(contexto)` devolve versões atuais, inclusive arquivadas, em ordem determinística e como cópias; não atravessa exercício/partido. Consulta e edição do retorno não mudam registro/histórico; preservar criação, revisão, arquivo, recibos e exclusividade existentes.
 - **Verificar:** `check_unit_groups.py` com casos novos de lista/contexto/cópia/arquivo; sem acesso privado pelo consumidor. GM-04, GM-07, GM-09 e preservação dos critérios UG da entrega 93.
 - **Dependência:** GMAP-01 para a sequência de integração; o registro continua independente de SQLite/HTTP.
@@ -112,4 +112,4 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ## Gate
 
-Lista de Fase 3 aguarda revisão do responsável. Após aprovação, implementar GMAP-01–09 sem novas confirmações rotineiras de cada tarefa/checkpoint. A autorização desta lista não muda o requisito de usar o mapa definido nem aprova migração de instâncias reais, persistência, instalação de dependências ou execução de combate.
+Lista de Fase 3 aprovada pelo responsável por “siga”; implementação em execução. Após aprovação, implementar GMAP-01–09 sem novas confirmações rotineiras de cada tarefa/checkpoint. A autorização desta lista não muda o requisito de usar o mapa definido nem aprova migração de instâncias reais, persistência, instalação de dependências ou execução de combate.

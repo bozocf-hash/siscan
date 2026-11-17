@@ -212,6 +212,13 @@ class RegistroGrupamentos:
         with self._lock:
             return self._get(context, group_id, revision)
 
+    def listar_grupamentos(self, contexto: dict) -> list[dict]:
+        """Versões atuais, inclusive arquivadas, como cópias do contexto pedido."""
+        context = _context(contexto)
+        with self._lock:
+            return [json.loads(self._state['groups'][key][-1])
+                    for key in sorted(self._state['groups']) if key[:2] == context]
+
     def _current(self, context, group_id, expected_revision):
         current = self._get(context, group_id)
         if current['composition_revision'] != expected_revision:

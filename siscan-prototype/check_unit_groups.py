@@ -28,6 +28,22 @@ def unidade(unit_id, *, domain='naval', team='AZUL', exercise_id=1, classe='clas
 
 
 class GrupamentosTests(unittest.TestCase):
+    def test_lista_contextual_copias_e_arquivados(self):
+        grupo = self.criar()
+        self.assertEqual(self.registro.listar_grupamentos(self.contexto), [grupo])
+        self.assertEqual(self.registro.listar_grupamentos(dict(exercise_id=1, team='VERMELHO')), [])
+        self.assertEqual(self.registro.listar_grupamentos(dict(exercise_id=2, team='AZUL')), [])
+        self.registro.listar_grupamentos(self.contexto)[0]['members'].clear()
+        self.assertEqual(self.registro.consultar_grupamento(self.contexto, grupo['group_id']), grupo)
+        archived = self.registro.arquivar_grupamento(self.contexto, self.arquivo(grupo))
+        self.assertEqual(self.registro.listar_grupamentos(self.contexto), [archived])
+
+    def test_lista_ordenada_por_identidade(self):
+        first = self.criar(self.pedido(['n1']))
+        second = self.criar(self.pedido(['n2']))
+        self.assertEqual([g['group_id'] for g in self.registro.listar_grupamentos(self.contexto)],
+                         sorted([first['group_id'], second['group_id']]))
+
     def setUp(self):
         self.registro = RegistroGrupamentos()
         self.contexto = dict(exercise_id=1, team='AZUL')

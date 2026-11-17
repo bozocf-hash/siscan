@@ -53,7 +53,9 @@ def sandbox(with_map=False):
             with closing(original_connect()) as db:
                 with db:
                     yield db
-        with patch.object(app, 'DATA_DIR', data), patch.object(app, 'DB_PATH', db_path), patch.object(app, 'connect', isolated_connect):
+        with patch.object(app, 'DATA_DIR', data), patch.object(app, 'DB_PATH', db_path), \
+                patch.object(app, 'connect', isolated_connect), \
+                patch.object(app, 'COOKIE_NAME', 'siscan_map_groups_test_' + data.name):
             server = app.SiscanServer(('127.0.0.1', 0), QuietHandler)
             worker = Thread(target=server.serve_forever, daemon=True)
             worker.start()
@@ -103,6 +105,7 @@ class HttpTests(unittest.TestCase):
         return request(self.env, '/api/map-unit-groups', body=body or self.create_body(), **kwargs)
 
     def test_autenticacao_partido_e_csrf(self):
+        self.assertTrue(app.COOKIE_NAME.startswith('siscan_map_groups_test_'))
         self.assertEqual(self.listing(user=None)[0], 401)
         self.assertEqual(self.listing(user=3)[0], 403)
         self.assertEqual(self.listing(user=1)[0], 200)

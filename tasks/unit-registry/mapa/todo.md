@@ -52,7 +52,7 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ## GMAP-04 — Acrescentar aba e fluxo de composição
 
-- [ ] Implementar e verificar painel, formulário e arquivamento.
+- [x] Implementar e verificar painel, formulário e arquivamento. Painel no mapa existente e confirmação no próprio painel; nove testes JS passaram.
 - **Aceite:** aba “Grupamentos” no painel existente, uma área ativa, seletor de partido coerente e aviso temporário persistente. Criar/consultar/confirmar arquivo usa API/sessão/CSRF; nomes como texto, foco e alternativa por lista/teclado. Carregamento/vazio/erro/pendência/arquivado distintos; comando só é reutilizado para a mesma intenção após falha de rede.
 - **Verificar:** `check_map_groups.mjs` para estados, criação, conflito e reenvio com respostas controladas; verificar que nenhum payload inclui snapshots, aprovação ou `asset_id` alegado pelo cliente. Não anunciar validação visual antes de GMAP-06. GM-01, GM-03–05, GM-07, GM-09–10.
 - **Dependência:** GMAP-03 e Checkpoint A verificado.
@@ -60,7 +60,7 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ## GMAP-05 — Realçar membros sem alterar plotagem
 
-- [ ] Implementar e verificar seleção e enquadramento seguros.
+- [x] Implementar e verificar seleção e enquadramento seguros. Contexto/assincronia testados; cancelamento de reposicionamento corrigido e conferido no navegador e SQL temporário.
 - **Aceite:** consulta do grupo realça somente marcadores já existentes; enquadramento exige ação/posição válidas; ausência de posição/vínculo não inventa marcador. Seleção de grupo é separada da seleção de plotagem; alternar para grupos cancela reposicionamento/área pendentes sem gravar coordenadas. Troca de partido limpa seleção e descarta GET/POST atrasados; redraw só reaplica realce de membros ainda autorizados.
 - **Verificar:** `check_map_groups.mjs` com callbacks de marcador/câmera, respostas fora de ordem e troca de contexto durante escrita; `check_map_visuals.mjs` e `check_map_units.py` como regressões. Conferir que seleção/consulta não envia POST de plotagem. GM-01, GM-06, GM-08, GM-10–12.
 - **Dependência:** GMAP-04.
@@ -68,13 +68,13 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ### Checkpoint B — Fluxo gráfico verificável
 
-- [ ] Testes JS/backend passam; seleção, escrita e respostas atrasadas mantêm contexto/identidade.
-- [ ] Ferramentas e mapa originais preservados; sem marcadores duplicados ou comando de plotagem por consulta.
-- [ ] Interface informa claramente elegibilidade limitada e perda no reinício; ainda não declarar inspeção visual concluída.
+- [x] Testes JS/backend passam; seleção, escrita e respostas atrasadas mantêm contexto/identidade.
+- [x] Ferramentas e mapa originais preservados; sem marcadores duplicados ou comando de plotagem por consulta.
+- [x] Interface informa claramente elegibilidade limitada e perda no reinício; inspeção visual concluída posteriormente em GMAP-06.
 
 ## GMAP-06 — Verificar no navegador real isolado
 
-- [ ] Executar fluxo de ponta a ponta e registrar evidências.
+- [x] Executar fluxo de ponta a ponta e registrar evidências. Criação, arquivo com cancelar/confirmar, realce, enquadramento, abas, teclado, troca de partido e operador restrito conferidos em base isolada; telas de 1280 e 390 px.
 - **Aceite:** criar → consultar/selecionar → enquadrar → arquivar funciona no mapa ATLANTICADOR definido em cópia de teste, sem painel sobreposto. Conferir foco/teclado, viewport estreita, camadas, reposicionamento e hover anteriores; consulta do operador não expõe outro partido. Nenhuma ação de teste é aplicada à base/posições do usuário.
 - **Verificar:** servidor de teste em porta própria e `DATA_DIR`/`DB_PATH` temporários; mapa preparado em cópia, sem modificar ZIP/original. Usar ferramenta de navegador disponível sem instalar serviço. Conferir erros de console/rede pelos recursos disponíveis, registrar exatamente o que foi observado e qualquer limite. Se faltar mapa/ferramenta, não alegar visual completo; resolver a preparação autorizada ou registrar impedimento real.
 - **Dependência:** GMAP-05 e Checkpoint B verificado.
@@ -82,9 +82,9 @@ Os novos verificadores ainda não existem. Não houve execução de testes de so
 
 ### Checkpoint C — Aceite observado
 
-- [ ] GM-01–GM-12 ligados a testes/evidências efetivos, sem confundir verificação JS com inspeção visual.
-- [ ] Preservação da base/posições/recursos do usuário conferida; resultado comunicado.
-- [ ] Nenhum confronto temporal, replay ou estado oficial aplicado; limitações não ocultadas.
+- [x] GM-01–GM-12 ligados a testes/evidências efetivos, sem confundir verificação JS com inspeção visual.
+- [x] Preservação da base/posições/recursos do usuário conferida; resultado comunicado.
+- [x] Nenhum confronto temporal, replay ou estado oficial aplicado; limitações não ocultadas.
 
 ## GMAP-07 — Documentar entrega e contratos
 

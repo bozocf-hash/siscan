@@ -1,6 +1,6 @@
 # Plano técnico: force-confrontation — par CPC no mapa
 
-**Data: 2026-11-17. Estado: especificação do Recorte 2 aprovada por “siga”; Fase 2 aprovada por “sim”; lista de Fase 3 proposta para revisão.** Base: [SPEC-force-confrontation.md](../../../SPEC-force-confrontation.md), [104](../../../docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) e [105](../../../docs/recovery/105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md). Este diretório preserva os planos anteriores do catálogo, do dossiê e da composição gráfica. Sem implementação nesta etapa.
+**Data: 2026-11-17. Estado: especificação do Recorte 2 aprovada por “siga”; Fase 2 aprovada por “sim”; Fase 3 aprovada por “sim”; implementação concluída em 108.** Base: [SPEC-force-confrontation.md](../../../SPEC-force-confrontation.md), [104](../../../docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) e [105](../../../docs/recovery/105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md). Este diretório preserva os planos anteriores do catálogo, do dossiê e da composição gráfica. Plano preservado como contrato da implementação verificada em [108](../../../docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md).
 
 ## Resultado e dependências
 
@@ -117,7 +117,7 @@ node check_map_groups.mjs
 node check_map_visuals.mjs
 ```
 
-Arquivos novos ainda não existem; nenhum teste executado nesta fase documental. Depois de alterações pertinentes, conferir `git diff --check`; não repetir baterias por documentação posterior. O teste de posições deve variar a posição em fixture isolada, não mover meios do usuário para gerar o caso.
+Arquivos implementados e verificadores executados: 73 testes nomeados e dois scripts assertivos passaram, conforme 108. Depois de alterações pertinentes, conferir `git diff --check`; não repetir baterias por documentação posterior. O teste de posições deve variar a posição em fixture isolada, não mover meios do usuário para gerar o caso.
 
 Navegador real: selecionar ambos os grupos, preparar, contar marcadores e conferir partido, abrir integrantes e referências, mudar seleção com requisição pendente, sair/restaurar, teclado e viewport estreito. Conferir console/rede pelos recursos disponíveis e registrar limites. Não instalar ferramentas/dependências de navegador; usar os recursos disponíveis na implementação e remover overrides de largura ao terminar.
 
@@ -135,4 +135,4 @@ Navegador real: selecionar ambos os grupos, preparar, contar marcadores e confer
 
 ## Gate da Fase 2
 
-Especificação e plano aprovados por “siga” e “sim”. [Lista de Fase 3](todo.md) proposta conforme [107](../../../docs/recovery/107_TAREFAS_PAR_CPC_NO_MAPA.md), aguardando revisão antes do código. Sem código, DDL, banco, execução de testes ou validação visual nesta etapa. Julgamento/decisão/aplicação oficial continuam as próximas entregas da ordem aprovada em 104.
+Especificação e plano aprovados por “siga” e “sim”. [Lista de Fase 3](todo.md) aprovada por “sim”; CPMAP-01–09 concluídas conforme [108](../../../docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md), com verificações automatizadas e gráficas isoladas. Sem DDL ou alterações dos bancos do usuário. Julgamento/decisão/aplicação oficial continuam as próximas entregas da ordem aprovada em 104.

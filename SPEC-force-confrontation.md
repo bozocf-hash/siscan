@@ -2,7 +2,7 @@
 
 **Data: 2026-11-16. Estado: especificação, plano e tarefas aprovados; recorte implementado e verificado em [98](docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md).** A lista de Fase 3 foi aprovada por “siga”. O registro entregue em 93 permanece preservado. Esta entrega acrescenta o consumidor de composições em memória, sem execução ou interface de confronto. Mantido o mapa ATLANTICADOR já definido.
 
-**Extensão de 2026-11-17:** escopo/ordem de [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) aprovados por “si”. Recorte 2 abaixo especifica seleção do par e conferência no mapa; Fase 1 aprovada por “siga”; [plano de Fase 2](tasks/force-confrontation/mapa/plan.md) aprovado por “sim”; [tarefas de Fase 3](tasks/force-confrontation/mapa/todo.md) propostas conforme [107](docs/recovery/107_TAREFAS_PAR_CPC_NO_MAPA.md). Entrega 98 preservada; sem publicação de efeitos oficiais nesta extensão.
+**Extensão de 2026-11-17:** escopo/ordem de [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) aprovados por “si”. Recorte 2 abaixo especifica seleção do par e conferência no mapa; Fase 1 aprovada por “siga”; [plano de Fase 2](tasks/force-confrontation/mapa/plan.md) aprovado por “sim”; [tarefas de Fase 3](tasks/force-confrontation/mapa/todo.md) aprovadas por “sim” e concluídas conforme [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md). Entrega 98 preservada; sem publicação de efeitos oficiais nesta extensão.
 
 ## Objetivo e premissas
 
@@ -219,4 +219,4 @@ Comandos focados novos serão definidos no plano; verificadores da extensão ain
 - Exigir contrato próprio antes de persistência/DDL, impactos propostos, decisão/aplicação oficial, posições temporais/consumo, exposição a operadores ou modelo automático.
 - Nunca modificar DB3K/originais, promover dado por estar no grupo, calcular composição otimizada ou publicar cálculo militar automaticamente como resultado oficial.
 
-Escopo/ordem de 104 aprovados por “si”. Fase 1 deste Recorte 2 aprovada por “siga”; [plano de Fase 2](tasks/force-confrontation/mapa/plan.md) aprovado por “sim”; [lista de Fase 3](tasks/force-confrontation/mapa/todo.md) proposta conforme 107, aguardando revisão antes do código. Sua conclusão será a seleção/conferência do par; julgamento, decisão e efeitos continuam explicitamente pendentes até suas entregas próprias.
+Escopo/ordem de 104 aprovados por “si”. Fase 1 deste Recorte 2 aprovada por “siga”; [plano de Fase 2](tasks/force-confrontation/mapa/plan.md) aprovado por “sim”; [lista de Fase 3](tasks/force-confrontation/mapa/todo.md) aprovada por “sim” e concluída em [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md). Seleção/conferência do par implementada e verificada; julgamento, decisão e efeitos continuam explicitamente pendentes até suas entregas próprias.

@@ -1,5 +1,9 @@
 # Protótipo didático SISCAN
 
+**Conferência CPC no mapa entregue:** instrutor abre **CPC**, seleciona explicitamente um grupo AZUL e outro VERMELHO, aciona **Preparar confronto**, consulta os integrantes e usa **Enquadrar o par**. **Voltar ao planejamento** encerra a consulta. Essa preparação não executa combate nem confirma/aplica resultados. Dados logísticos atuais desconhecidos permanecem não informados; posições são de planejamento. Ver [108 — Entrega](../docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md) e [103 — Roteiro atualizado](../docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md).
+
+Para testar este recorte com dois grupos sintéticos previamente criados e uma base descartável, execute `check_cpc_map_http.py --serve` com o Python abaixo. O terminal informa a URL; entre na raiz e abra `/atlanticador/editor.html`. As contas/senha de teste descritas abaixo também se aplicam. O processo principal em 8787 não foi reiniciado; copiar código não atualiza suas rotas Python.
+
 **Grupamentos no mapa:** no editor ATLANTICADOR existente, a aba “Grupos” permite compor, consultar, realçar, enquadrar e arquivar unidades elegíveis do partido. O registro é temporário e se perde ao reiniciar o servidor; configurações sem identidade/snapshot/domínio demonstrados aparecem pendentes. A tela ainda não executa confronto. Ver [102 — Entrega](../docs/recovery/102_ENTREGA_GRUPAMENTOS_NO_MAPA.md) e [103 — Passo a passo do instrutor](../docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md).
 
 Para uma prévia isolada, na pasta `prototype`, execute com o Python disponível nesta máquina:
@@ -13,7 +17,7 @@ O harness informa porta livre e cria dados/cookie próprios de teste, com cópia
 
 Publicar/copiar arquivos não atualiza o Python de um servidor já em execução. O processo principal não foi reiniciado nesta entrega; confirme a instância antes de testar novas rotas. Se a instância antiga não servir o novo módulo, Grupos fica desabilitado com aviso e as ferramentas anteriores continuam disponíveis. Reiniciar uma instância com grupos em memória perde essas composições.
 
-**Dossiê inicial dos grupamentos:** `cpc_group_preparation.preparar_dossie_grupamentos` confere autorização interna do instrutor e prepara AZUL/VERMELHO com as revisões e snapshots integrais dos membros selecionados. Preserva os estados individuais, não consome recursos e não inicia confronto. A saída exige revisão do instrutor e inclui hash canônico; não reserva disponibilidade futura. São 21 testes novos; detalhes e exemplo em [98 — Entrega](../docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md). A interface futura permanece no mesmo mapa ATLANTICADOR definido, conforme [97](../docs/recovery/97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md); ainda não há botão gráfico integrado ao dossiê.
+**Dossiê inicial dos grupamentos:** `cpc_group_preparation.preparar_dossie_grupamentos` confere autorização interna do instrutor e prepara AZUL/VERMELHO com as revisões e snapshots integrais dos membros selecionados. Preserva os estados individuais, não consome recursos e não inicia confronto. A saída exige revisão do instrutor e inclui hash canônico; não reserva disponibilidade futura. São 21 testes novos; detalhes e exemplo em [98 — Entrega](../docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md). A entrega 108 conecta sua projeção de conferência ao mesmo mapa ATLANTICADOR definido em 97.
 
 Na pasta `prototype`, verificação focada:
 

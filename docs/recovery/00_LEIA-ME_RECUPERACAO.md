@@ -1,6 +1,6 @@
 # Recuperação documental do SISCAN
 
-**Par CPC no mapa — [107](107_TAREFAS_PAR_CPC_NO_MAPA.md):** especificação e plano aprovados; CPMAP-01–09 propostas para revisão, com aceites, testes, dependências e checkpoints A/B. Seleção/conferência no mesmo mapa, sem execução/efeitos; entregas anteriores preservadas. Nenhuma implementação desta extensão ainda.
+**Par CPC no mapa entregue — [108](108_ENTREGA_PAR_CPC_NO_MAPA.md):** escopo, especificação, plano e tarefas aprovados; CPMAP-01–09 concluídas. Instrutor seleciona AZUL/VERMELHO, prepara e consulta ambos no mesmo mapa. Passaram 73 testes nomeados e verificadores de plotagem/silhuetas, com inspeção gráfica isolada. [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md) atualizado. Sem combate, consumo, confirmação ou efeitos oficiais; registro temporário, logística atual desconhecida e elegibilidade sintética explícitos. Principal 8787 preservado. Registros 104–107 são históricos, sem gates pendentes desta fatia.
 
 **Grupamentos no mapa entregues — [102](102_ENTREGA_GRUPAMENTOS_NO_MAPA.md):** GMAP-01–09 aprovadas e concluídas; criar/consultar/realçar/enquadrar/arquivar no mapa ATLANTICADOR existente. Passaram 54 testes nomeados, verificadores de mapa/silhuetas e inspeção visual isolada. [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md) traz o passo a passo, distinguindo composição atual de confronto ainda não integrado. Registro temporário e elegibilidade limitada explícitos; principal em 8787 não reiniciado.
 

@@ -62,4 +62,16 @@ class CpcHttpTests(unittest.TestCase):
         self.assertEqual(request(self.env,'/api/cpc/groups',user=1)[0],503)
 
 
-if __name__=='__main__':unittest.main()
+if __name__=='__main__':
+    import sys, json, time
+    if '--serve' in sys.argv:
+        with sandbox(with_map=True) as env:
+            with database(env.db_path) as db:
+                seed_pairs(db, env.server.unit_group_registry)
+            print(json.dumps(dict(url=env.url,database=str(env.db_path))),flush=True)
+            try:
+                while True: time.sleep(1)
+            except KeyboardInterrupt:
+                pass
+    else:
+        unittest.main()

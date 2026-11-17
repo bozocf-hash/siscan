@@ -12,6 +12,7 @@ from unit_groups import GroupConflict, RegistroGrupamentos
 
 
 def seed_pairs(db, registry):
+    db.row_factory = sqlite3.Row
     selection = {}
     for team in ('AZUL', 'VERMELHO'):
         units = map_groups.view(db, TEACHER, team)['units']

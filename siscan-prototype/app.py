@@ -29,6 +29,7 @@ import engine_profiles
 import fuel_limits
 import map_units
 import map_groups
+import cpc_map
 from unit_groups import GroupConflict, RegistroGrupamentos
 import mimetypes
 
@@ -402,6 +403,14 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path == '/api/cpc/groups':
+                current = self.require_user(db)
+                if current:
+                    if urlparse(self.path).query:
+                        self.send_json(400, {'error': 'Esta consulta não aceita parâmetros.'})
+                    else:
+                        self.cpc_map_action(db, current[1])
+                return
             if path == '/api/map-unit-groups':
                 current = self.require_user(db)
                 if current:
@@ -543,6 +552,11 @@ class Handler(BaseHTTPRequestHandler):
                 self.engine_runtime_action(db,user,path.rsplit('/',1)[1],payload)
             elif path == '/api/engine-profile-preview':
                 self.engine_profile_action(db,user,payload)
+            elif path == '/api/cpc/preparations':
+                if urlparse(self.path).query:
+                    self.send_json(400, {'error': 'Esta preparação não aceita parâmetros na URL.'})
+                else:
+                    self.cpc_map_action(db, user, payload)
             elif path == '/api/map-unit-groups' or (path.startswith('/api/map-unit-groups/') and path.endswith('/archive')):
                 try:
                     group_id = None
@@ -570,6 +584,17 @@ class Handler(BaseHTTPRequestHandler):
                 except sqlite3.Error:self.send_json(503,{'error':'Não foi possível registrar o limite. Nenhuma alteração parcial foi mantida.'})
             else:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "Rota não encontrada."})
+
+    def cpc_map_action(self, db, user, selection=None):
+        try:
+            operation = cpc_map.listing if selection is None else cpc_map.prepare
+            args = (db, user, self.server.unit_group_registry)
+            self.send_json(200, operation(*args) if selection is None else operation(*args, selection))
+        except PermissionError as exc: self.send_json(403, {'error': str(exc)})
+        except GroupConflict as exc: self.send_json(409, {'error': str(exc)})
+        except KeyError: self.send_json(404, {'error': 'Grupamento não encontrado neste contexto.'})
+        except ValueError as exc: self.send_json(400, {'error': str(exc)})
+        except sqlite3.Error: self.send_json(503, {'error': 'Fontes da conferência indisponíveis ou inconsistentes.'})
 
     @staticmethod
     def user_json(user: sqlite3.Row) -> dict:

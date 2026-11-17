@@ -41,7 +41,7 @@ Verificadores novos ainda não existem e nenhum teste foi executado nesta fase d
 
 ## CPMAP-03 — Integrar as rotas de preparação
 
-- [ ] Implementar e verificar HTTP real com sessão/CSRF.
+- [x] Implementar e verificar HTTP real com sessão/CSRF. Seis testes HTTP passaram em loopback e base temporária.
 - **Aceite:** GET `/api/cpc/groups` e POST `/api/cpc/preparations` aplicam contratos estritos, contexto da sessão, códigos de falha e registro único do servidor. Não aceitam autorizador/snapshot/posição do cliente nem criam recibo fictício. Respostas não contêm inventários completos ou dados de outro contexto.
 - **Verificar:** `check_cpc_map_http.py` com base, cookie exclusivo e porta isolados, reutilizando o harness existente sem tocar a base principal. Testar sessão/CSRF, papéis, fechado, formato/conflito/ausência/integridade e preservação SQL/registro. Regressão de `check_cpc_group_preparation.py`, `check_map_groups.py` e `check_map_groups_http.py` quando afetadas. CP-01–06, CP-11–12.
 - **Dependências:** CPMAP-01/02.
@@ -49,9 +49,9 @@ Verificadores novos ainda não existem e nenhum teste foi executado nesta fase d
 
 ### Checkpoint A — Preparação pelo backend
 
-- [ ] Provedor/HTTP passam, com autorização antes da leitura adversária e ausência de resposta parcial.
-- [ ] Hash técnico, manifesto geográfico e vista têm significado separado; mudanças observadas recusadas.
-- [ ] Posições, grupos, recursos, execuções/relógio e estado oficial preservados; resultado comunicado antes do gráfico.
+- [x] Provedor/HTTP passam, com autorização antes da leitura adversária e ausência de resposta parcial.
+- [x] Hash técnico, manifesto geográfico e vista têm significado separado; mudanças observadas recusadas.
+- [x] Posições, grupos, recursos, execuções/relógio e estado oficial preservados; resultado comunicado antes do gráfico.
 
 ## CPMAP-04 — Selecionar e conferir pelo painel
 

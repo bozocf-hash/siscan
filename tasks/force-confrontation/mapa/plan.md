@@ -1,6 +1,6 @@
 # Plano técnico: force-confrontation — par CPC no mapa
 
-**Data: 2026-11-17. Estado: especificação do Recorte 2 aprovada por “siga”; Fase 2 proposta para revisão.** Base: [SPEC-force-confrontation.md](../../../SPEC-force-confrontation.md), [104](../../../docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) e [105](../../../docs/recovery/105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md). Este diretório preserva os planos anteriores do catálogo, do dossiê e da composição gráfica. Sem implementação nesta etapa.
+**Data: 2026-11-17. Estado: especificação do Recorte 2 aprovada por “siga”; Fase 2 aprovada por “sim”; lista de Fase 3 proposta para revisão.** Base: [SPEC-force-confrontation.md](../../../SPEC-force-confrontation.md), [104](../../../docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) e [105](../../../docs/recovery/105_ESPECIFICACAO_PAR_CPC_NO_MAPA.md). Este diretório preserva os planos anteriores do catálogo, do dossiê e da composição gráfica. Sem implementação nesta etapa.
 
 ## Resultado e dependências
 
@@ -94,7 +94,7 @@ Rótulos: seleção do par, situação inicial, posições de planejamento, refe
 | Checkpoint B | Navegador real comprova par no mesmo mapa sem duplicidade ou plotagem; operadores sem acesso | CP-01–12 |
 | 5 | Documentação, controles, sincronização e Git com status/limites comprovados | CP-01–12 |
 
-Execução sequencial por contratos compartilhados; não requer agentes paralelos. Após aprovação deste plano, detalhar Fase 3 em `tasks/force-confrontation/mapa/todo.md`, dividindo tarefas para manter até cerca de cinco arquivos cada. Não modificar listas antigas ou reabrir gates cumpridos de 98/102/104/105.
+Execução sequencial por contratos compartilhados; não requer agentes paralelos. Lista de Fase 3 proposta em `tasks/force-confrontation/mapa/todo.md`, conforme 107, mantendo até cerca de cinco arquivos por tarefa/subpasso. Não modificar listas antigas ou reabrir gates cumpridos de 98/102/104/105.
 
 ## Verificação planejada
 
@@ -135,4 +135,4 @@ Navegador real: selecionar ambos os grupos, preparar, contar marcadores e confer
 
 ## Gate da Fase 2
 
-Especificação aprovada por “siga”; este plano aguarda revisão antes da lista de tarefas. Sem código, DDL, banco, execução de testes ou validação visual nesta etapa. Julgamento/decisão/aplicação oficial continuam as próximas entregas da ordem aprovada em 104.
+Especificação e plano aprovados por “siga” e “sim”. [Lista de Fase 3](todo.md) proposta conforme [107](../../../docs/recovery/107_TAREFAS_PAR_CPC_NO_MAPA.md), aguardando revisão antes do código. Sem código, DDL, banco, execução de testes ou validação visual nesta etapa. Julgamento/decisão/aplicação oficial continuam as próximas entregas da ordem aprovada em 104.

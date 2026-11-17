@@ -1,5 +1,7 @@
 # 106 — Plano da seleção do par CPC no mapa
 
+**Atualização de gate:** plano aprovado por “sim”; tarefas propostas em [107](107_TAREFAS_PAR_CPC_NO_MAPA.md). O conteúdo abaixo registra a preparação histórica da Fase 2, sem implementação.
+
 **Data: 2026-11-17. Estado: especificação de 105 aprovada por “siga”; plano de Fase 2 proposto para revisão.** [Plano técnico](../../tasks/force-confrontation/mapa/plan.md) do Recorte 2 de [force-confrontation](../../SPEC-force-confrontation.md), preservando os planos anteriores e entregas 98/102.
 
 O plano liga provedor autorizado, dossiê 98, posições de planejamento, rotas e painel/camada de consulta no mapa existente. Define hash técnico, geográfico e de vista separadamente. O instrutor vê o par; operadores são recusados antes da leitura adversária. Não há execução, proposta de impactos, confirmação oficial ou persistência nesta fatia.

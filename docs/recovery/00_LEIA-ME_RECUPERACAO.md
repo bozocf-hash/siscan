@@ -1,6 +1,6 @@
 # Recuperação documental do SISCAN
 
-**Par CPC no mapa — [106](106_PLANO_PAR_CPC_NO_MAPA.md):** especificação de 105 aprovada por “siga”; plano técnico proposto em `tasks/force-confrontation/mapa/plan.md`. Define provedor/rotas, três hashes, painel de seleção e camada simultânea no mesmo mapa, com retorno seguro ao planejamento. Sem código desta extensão; julgamento/decisão continuam na ordem aprovada em 104.
+**Par CPC no mapa — [107](107_TAREFAS_PAR_CPC_NO_MAPA.md):** especificação e plano aprovados; CPMAP-01–09 propostas para revisão, com aceites, testes, dependências e checkpoints A/B. Seleção/conferência no mesmo mapa, sem execução/efeitos; entregas anteriores preservadas. Nenhuma implementação desta extensão ainda.
 
 **Grupamentos no mapa entregues — [102](102_ENTREGA_GRUPAMENTOS_NO_MAPA.md):** GMAP-01–09 aprovadas e concluídas; criar/consultar/realçar/enquadrar/arquivar no mapa ATLANTICADOR existente. Passaram 54 testes nomeados, verificadores de mapa/silhuetas e inspeção visual isolada. [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md) traz o passo a passo, distinguindo composição atual de confronto ainda não integrado. Registro temporário e elegibilidade limitada explícitos; principal em 8787 não reiniciado.
 

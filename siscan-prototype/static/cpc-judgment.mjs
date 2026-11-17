@@ -1,3 +1,4 @@
+import {judgmentStage} from './map-presentation.mjs';
 // Julgamento didático; estado oficial só muda pelo comando explícito do instrutor.
 export function createJudgmentController({request,render,onOfficial,confirmDiscard=()=>true,onForbidden=()=>{},onResumePair=()=>{}}){
  const blank=()=>({preparation:null,basis:null,drafts:{},reason:'',preview:null,proposal:null,view:null,receipt:null,
@@ -49,7 +50,7 @@ export function createJudgmentController({request,render,onOfficial,confirmDisca
    const result=await request(pending.path,{body:pending.body});if(token!==generation)return false;
    s.pending=null;s.dirty=false;s.confirming=false;s.error='';
    if(pending.kind==='decide'){
-    s.receipt=result;s.notice=result.action==='confirm'?'Efeitos confirmados pelo instrutor.':'Proposta rejeitada; meios preservados.';
+    s.receipt=result;s.history=s.history.map(item=>item.proposal_id===s.proposal.proposal_id?{...item,status:result.action}:item);s.notice=result.action==='confirm'?'Efeitos confirmados pelo instrutor.':'Proposta rejeitada; meios preservados.';
     if(result.action==='confirm')await refreshOfficial();
    }else{s.proposal=result;s.notice='Proposta registrada. Os efeitos ainda não foram aplicados.';}
    if(token===generation){s.busy=false;emit();}return true;
@@ -108,29 +109,34 @@ export function installJudgmentPanel({container,csrf,onOfficial,onForbidden,onRe
  const el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
  container.classList.add('siscan-judgment');
  const style=el('style');style.textContent='.siscan-judgment{border-top:1px solid #7995aa;margin-top:14px;padding-top:12px}.siscan-judgment label{display:block;margin:10px 0}.siscan-judgment input:not([type=checkbox]),.siscan-judgment select,.siscan-judgment textarea{display:block;width:100%;box-sizing:border-box;padding:8px;background:#18354d;color:#fff;border:1px solid #7995aa;border-radius:4px}.siscan-judgment fieldset{margin:12px 0;padding:10px;border:1px solid #7995aa;border-radius:6px}.siscan-judgment small{display:block;overflow-wrap:anywhere}.siscan-judgment button{margin:5px 5px 5px 0}.siscan-judgment .judgment-final{border:2px solid #ffd27a;padding:10px}.siscan-judgment .judgment-error{color:#ffb7b7}.siscan-judgment [hidden]{display:none!important}';container.append(style);
- const heading=el('h3','Julgamento didático'),notice=el('p'),error=el('p'),form=el('div'),reason=el('textarea'),
+ const heading=el('h3','2 · Definir efeitos'),notice=el('p'),error=el('p'),form=el('div'),reason=el('textarea'),
   previewBox=el('section'),final=el('section'),receipt=el('p'),historyBox=el('section');
- notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');notice.tabIndex=-1;error.setAttribute('role','alert');error.className='judgment-error';
- reason.rows=3;reason.maxLength=4000;reason.setAttribute('aria-label','Justificativa do julgamento');
+ heading.tabIndex=-1;notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');notice.tabIndex=-1;error.setAttribute('role','alert');error.className='judgment-error';
+ reason.rows=2;reason.maxLength=4000;reason.setAttribute('aria-label','Justificativa do julgamento');
  const reasonLabel=el('label','Justificativa do instrutor');reasonLabel.append(reason);
  const controls={};const button=(key,text,host=container)=>{const b=el('button',text);b.type='button';controls[key]=b;host.append(b);return b;};
- container.append(heading,el('p','Arbitragem direta pelo instrutor. Esta etapa não executa combate automático.'),notice,error);
- button('open','Abrir julgamento didático');button('history','Retomar julgamento');container.append(form,reasonLabel);
- button('preview','Conferir prévia');button('save','Registrar proposta');container.append(previewBox);
- button('review','Confirmar efeitos');button('reject','Rejeitar proposta');
+ const steps=el('ol');steps.className='siscan-judgment-steps';steps.setAttribute('aria-label','Etapas do julgamento');for(const label of ['Efeitos','Revisão','Confirmação','Resultado'])steps.append(el('li',label));container.append(steps,heading,notice,error);
+ button('open','Definir efeitos');button('history','Retomar julgamento');container.append(form,reasonLabel);
+ button('preview','Revisar efeitos');container.append(previewBox);button('edit','Editar efeitos');button('save','Salvar proposta');
+ button('review','Avançar para confirmação');button('reject','Rejeitar proposta');
  final.className='judgment-final';final.append(el('strong','Revisão final — aplicação oficial'),el('p','Confirme somente a revisão e os efeitos exibidos na prévia.'));
  button('apply','Confirmar aplicação',final);button('cancel','Cancelar aplicação',final);container.append(final,receipt);
  button('retry','Reenviar mesma intenção');button('refresh','Atualizar vista oficial');button('correct','Nova proposta de correção');
  container.append(historyBox);button('more','Mais julgamentos');
- let controller,lastBasis=null,inputs=new Map(),wasBusy=false,lastFocused=null;
+ let controller,controllerState,lastBasis=null,lastStage=null,inputs=new Map(),wasBusy=false,lastFocused=null;
+ let editingPreview=false;
  const textState=value=>`${value.index_percent===null?'não avaliado':value.index_percent+'%'} · ${value.lost===null?'perda não avaliada':value.lost?'perda confirmada':'não perdido'}`;
  function memberName(basis,uid){for(const p of basis?.preparation.parties||[]){const m=p.members.find(x=>x.unit_id===uid);if(m)return p.team+' · '+m.code+' · '+m.name;}return uid;}
  function makeSelect(label,options){const l=el('label',label.split(' · ')[0]),select=el('select');select.setAttribute('aria-label',label);for(const [value,text] of options){const o=el('option',text);o.value=value;select.append(o);}l.append(select);return [l,select];}
  function render(s){
+  controllerState=s;
   if(s.busy&&!wasBusy)lastFocused=document.activeElement;const completed=wasBusy&&!s.busy;wasBusy=s.busy;
-  notice.textContent=s.busy?'Conferindo julgamento…':s.notice||'Prepare um par para julgar, ou retome um registro existente.';error.textContent=s.error;
+  const stage=editingPreview&&s.basis&&!s.receipt&&!s.confirming?'edit':judgmentStage(s);
+  container.dataset.stage=stage;heading.textContent=({start:'2 · Definir efeitos',edit:'2 · Definir efeitos',preview:'3 · Revisar efeitos',saved:'3 · Proposta salva',unavailable:'Proposta requer conferência',confirm:'4 · Confirmar aplicação',result:'Resultado registrado'})[stage];
+  const stepIndex=({start:0,edit:0,preview:1,saved:1,unavailable:1,confirm:2,result:3})[stage];[...steps.children].forEach((node,i)=>{if(i===stepIndex)node.setAttribute('aria-current','step');else node.removeAttribute('aria-current');});
+  notice.textContent=s.busy?'Conferindo julgamento…':s.notice||(s.preparation?'Defina os efeitos ou retome um julgamento salvo.':'Selecione as forças ou retome um julgamento salvo.');error.textContent=s.error;
   const locked=s.busy||Boolean(s.pending)||Boolean(s.receipt),key=s.basis?.basis_sha256||null;
-  if(key!==lastBasis){lastBasis=key;inputs.clear();form.replaceChildren();
+  if(key!==lastBasis){editingPreview=false;lastBasis=key;inputs.clear();form.replaceChildren();
    const ordered=(s.basis?.preparation.parties||[]).flatMap(p=>p.members.map(m=>m.unit_id));
    for(const uid of ordered){
     const field=el('fieldset'),legend=el('legend',memberName(s.basis,uid)),official=el('small'),check=el('input');check.type='checkbox';
@@ -146,26 +152,31 @@ export function installJudgmentPanel({container,csrf,onOfficial,onForbidden,onRe
   for(const [uid,n] of inputs){const d=s.drafts[uid]||{enabled:false,indexAction:'keep',indexValue:'',lossAction:'keep'};
    n.check.checked=d.enabled;n.index.value=d.indexAction;n.loss.value=d.lossAction;
    if(n.number.value!==String(d.indexValue))n.number.value=String(d.indexValue);
-   n.check.disabled=locked;n.index.disabled=locked||!d.enabled;n.loss.disabled=locked||!d.enabled;n.number.disabled=locked||!d.enabled||d.indexAction!=='set';
+   n.check.disabled=locked;n.index.disabled=locked||!d.enabled;n.loss.disabled=locked||!d.enabled;n.number.disabled=locked||!d.enabled||d.indexAction!=='set';n.number.hidden=d.indexAction!=='set';n.index.closest('label').hidden=!d.enabled;n.loss.closest('label').hidden=!d.enabled;
    n.official.textContent=(s.view?'Referência registrada: ':'Estado oficial conferido: ')+textState(s.basis.states[uid].state)+' · revisão '+s.basis.states[uid].state.revision;
   }
-  reasonLabel.hidden=!s.basis;reason.disabled=locked||!s.basis;if(reason.value!==s.reason)reason.value=s.reason;
+  form.hidden=stage!=='edit';reasonLabel.hidden=stage!=='edit';reason.disabled=locked||!s.basis;if(reason.value!==s.reason)reason.value=s.reason;
   controls.open.disabled=s.busy||!s.preparation;controls.history.disabled=s.busy;
-  controls.preview.disabled=locked||!s.basis;controls.save.disabled=locked||!s.preview||!s.dirty;controls.save.textContent=s.proposal?'Salvar revisão':'Registrar proposta';
+  controls.preview.disabled=locked||!s.basis;controls.save.disabled=locked||!s.preview||!s.dirty;controls.save.textContent=s.proposal?'Salvar revisão':'Salvar proposta';
   controls.review.disabled=locked||!s.proposal||s.dirty||!s.preview;controls.reject.disabled=locked||!s.proposal||s.dirty;
+  for(const [key,visible] of Object.entries({open:stage==='start'||stage==='result',history:stage==='start'||stage==='result',preview:stage==='edit',save:stage==='preview',edit:['preview','saved','unavailable'].includes(stage),review:stage==='saved',reject:['saved','unavailable'].includes(stage)}))controls[key].hidden=!visible;
+  const primary=({start:'open',edit:'preview',preview:'save',saved:'review',confirm:'apply',result:'open'})[stage];for(const [key,b] of Object.entries(controls))b.classList.toggle('is-primary',key===primary);
+  controls.edit.disabled=locked;controls.open.textContent=stage==='result'?'Novo julgamento':'Definir efeitos';
   final.hidden=!s.confirming;controls.apply.disabled=s.busy||Boolean(s.pending);controls.cancel.disabled=s.busy;
   controls.retry.hidden=!s.pending;controls.retry.disabled=s.busy;controls.refresh.hidden=!s.refreshPending;controls.refresh.disabled=s.busy;
   controls.correct.hidden=s.receipt?.action!=='confirm';controls.correct.disabled=s.busy;
   receipt.textContent=s.receipt?`Decisão ${s.receipt.decision_id} · ${s.receipt.action==='confirm'?'efeitos confirmados':'rejeitada, sem efeitos'}`:s.proposal?`Proposta ${s.proposal.proposal_id} · revisão ${s.proposal.revision} · efeitos ainda não aplicados`:'';
-  receipt.style.overflowWrap='anywhere';previewBox.replaceChildren();
+  receipt.style.overflowWrap='anywhere';receipt.className='siscan-judgment-receipt';previewBox.hidden=stage==='edit';previewBox.replaceChildren();
   if(s.preview){previewBox.append(el('h4',s.receipt?s.receipt.action==='confirm'?'Efeitos confirmados nesta decisão':'Proposta rejeitada — efeitos não aplicados':'Prévia — efeitos propostos'));
+   previewBox.append(el('p','Justificativa: '+s.reason));
    for(const e of s.preview.effects)previewBox.append(el('p',`${memberName(s.basis,e.unit_id)}: ${textState(e.before)} → ${textState(e.after)}`));
   }else if(s.view?.receipt?.effects){previewBox.append(el('h4','Efeitos desta decisão no histórico'));
    for(const e of s.view.receipt.effects)previewBox.append(el('p',`${memberName(s.basis,e.unit_id)}: ${textState(e.before)} → ${textState(e.after)}`));}
   historyBox.replaceChildren();if(s.history.length)historyBox.append(el('h4','Julgamentos registrados'));
-  for(const item of s.history){const b=el('button',`${item.status==='pending'?'Pendente':item.status==='confirm'?'Confirmado':'Rejeitado'} · ${item.reason} · revisão ${item.revision}`);b.type='button';b.onclick=()=>controller.resume(item.proposal_id);historyBox.append(b);}
+  for(const item of s.history){const b=el('button',`${item.status==='pending'?'Pendente':item.status==='confirm'?'Confirmado':'Rejeitado'} · ${item.reason} · revisão ${item.revision}`);b.type='button';b.title=b.textContent;b.onclick=()=>{editingPreview=false;controller.resume(item.proposal_id);};historyBox.append(b);}
   controls.more.hidden=s.nextCursor===null;controls.more.disabled=s.busy;controls.more.onclick=()=>controller.history(s.nextCursor);
-  if(completed&&document.activeElement===document.body){if(lastFocused?.isConnected&&!lastFocused.disabled)lastFocused.focus({preventScroll:true});else notice.focus({preventScroll:true});}
+  const stageChanged=lastStage!==null&&lastStage!==stage;lastStage=stage;
+  if((completed||stageChanged)&&(document.activeElement===document.body||!document.activeElement.getClientRects().length)){if(lastFocused?.isConnected&&!lastFocused.disabled&&lastFocused.getClientRects().length)lastFocused.focus({preventScroll:true});else heading.focus({preventScroll:true});}
  }
  const request=async(path,options)=>{
   const abort=new AbortController(),timer=setTimeout(()=>abort.abort(),15000);
@@ -174,9 +185,9 @@ export function installJudgmentPanel({container,csrf,onOfficial,onForbidden,onRe
   }finally{clearTimeout(timer);}
  };
  controller=createJudgmentController({request,render,onOfficial,onForbidden,onResumePair,confirmDiscard:message=>window.confirm(message)});
- reason.oninput=()=>controller.reason(reason.value);
- for(const [key,action] of Object.entries({open:()=>controller.open(),history:()=>controller.history(),preview:()=>controller.preview(),save:()=>controller.save(),
+ reason.oninput=()=>controller.reason(reason.value);controls.edit.onclick=()=>{editingPreview=true;render(controllerState);};
+ for(const [key,action] of Object.entries({open:()=>{editingPreview=false;return controller.open();},history:()=>controller.history(),preview:()=>{editingPreview=false;return controller.preview();},save:()=>controller.save(),
   review:()=>controller.review(),apply:()=>controller.decide('confirm'),cancel:()=>controller.cancelReview(),reject:()=>controller.decide('reject'),
-  retry:()=>controller.retry(),refresh:()=>controller.refresh(),correct:()=>controller.correct()}))controls[key].onclick=action;
+  retry:()=>controller.retry(),refresh:()=>controller.refresh(),correct:()=>{editingPreview=false;return controller.correct();}}))controls[key].onclick=action;
  return controller;
 }

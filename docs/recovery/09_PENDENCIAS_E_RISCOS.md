@@ -128,3 +128,8 @@ As APR-01 a APR-20 foram apreciadas pelo responsável. O documento [49 — Regis
 - Máscara costeira inadequada à resolução pode rejeitar posições válidas ou aceitar posições em terra.
 
 Não foi possível comparar requisitos com decisões históricas além das fontes fornecidas. As hierarquias e regras MPNL decididas estão consolidadas em 08; lacunas quantitativas permanecem pendentes. A pauta APR-01–APR-20 foi concluída e incorporada em 49. Nenhuma conclusão autoriza auditoria técnica adicional, arquitetura definitiva, implementação ou início da próxima fase.
+
+
+## Atualização de apresentação — 2026-11-17
+
+Correções autorizadas de UI/UX registradas em [117](117_CORRECOES_UI_UX_MAPA_E_JULGAMENTO.md): afiliação Calunga correta, símbolos/fichas compactos, fonte e painéis alinhados ao ATLANTICADOR, julgamento progressivo com confirmação explícita. Roteiro 103 atualizado. Prévia isolada em 61270; principal e originais preservados. Automático/reprodução temporal e ativação do principal continuam pendentes, conforme 116. Esta atualização não altera decisões do projeto nem as condições históricas dos capítulos anteriores.

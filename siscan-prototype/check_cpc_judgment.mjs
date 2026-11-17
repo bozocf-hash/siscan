@@ -62,3 +62,10 @@ test('refresh atrasado não restaura contexto abandonado',async()=>{
  await env.c.open();env.c.reason('Aula');env.c.edit('u',draft);await env.c.preview();await env.c.save();env.c.review();
  const job=env.c.decide('confirm');while(!resolve)await Promise.resolve();env.c.setPreparation(null);resolve(basis);await job;assert.equal(env.state.basis,null);
 });
+
+test('decisão atualiza o status do registro já exibido no histórico',async()=>{
+ const env=setup(async path=>path.includes('?')?{items:[{proposal_id:'p',status:'pending'}],next_cursor:null}:path.endsWith('/context')?basis:path.endsWith('/preview')?{basis,effects:[]}:path.endsWith('/decisions')?{decision_id:'d',action:'confirm'}:{proposal_id:'p',revision:1,body_sha256:'sha'});
+ await env.c.open();env.c.reason('Aula');env.c.edit('u',draft);await env.c.preview();await env.c.save();await env.c.history();
+ assert.equal(env.state.history[0].status,'pending');env.c.review();await env.c.decide('confirm');
+ assert.equal(env.state.history[0].status,'confirm');assert.equal(env.state.receipt.action,'confirm');
+});

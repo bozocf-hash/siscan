@@ -54,7 +54,7 @@ export function createCpcController({request,render,preview,beforeChange=()=>tru
 
 export function installCpcPanel({container,csrf,preview,focus,exit,installJudgmentPanel=null,onOfficial=()=>{}}){
  const el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
- const heading=el('h2','Preparação CPC'),note=el('p','Conferência do par: não executa combate nem aplica resultados.'),
+ const heading=el('h2','Preparação CPC'),note=el('p','Prepare as forças e defina os efeitos do confronto.'),
   warning=el('p','Grupos temporários; dados confirmados nesta vista não reservam disponibilidade futura.'),
   status=el('p'),selectors=el('div'),prepareButton=el('button','Preparar confronto'),refresh=el('button','Atualizar grupos CPC'),
   back=el('button','Voltar ao planejamento'),fit=el('button','Enquadrar o par'),details=el('div');
@@ -62,15 +62,15 @@ export function installCpcPanel({container,csrf,preview,focus,exit,installJudgme
  const selects={};
  for(const team of TEAMS){const label=el('label','Grupamento '+team),select=el('select');select.setAttribute('aria-label','Grupamento '+team);label.append(select);selectors.append(label);selects[team]=select;}
  for(const button of [prepareButton,refresh,back,fit])button.type='button';
- container.append(heading,note,warning,status,selectors,prepareButton,refresh,back,fit,details);
- const judgmentArea=el('section');container.append(judgmentArea);let judgment=null,lastPreparation,restoring=false,officialConsulted=false;
- let wasBusy=false,restorePreparationFocus=false;
+ const forces=el('details'),forcesTitle=el('summary','1 · Selecionar forças'),tools=el('div'),help=el('details');forces.className='siscan-cpc-forces';tools.className='siscan-cpc-tools';forces.append(forcesTitle,selectors,prepareButton,refresh,details);help.append(el('summary','Sobre esta etapa'),note,warning);tools.append(fit,back);container.append(heading,forces,status,tools);
+ const judgmentArea=el('section');container.append(judgmentArea,help);let judgment=null,lastPreparation,restoring=false,officialConsulted=false;
+ let wasBusy=false,restorePreparationFocus=false,lastForcesKey;
  function render(state){
   const preparationKey=state.preparation?.view_sha256??null;
   if(judgment&&(!state.active||preparationKey!==lastPreparation)){lastPreparation=preparationKey;officialConsulted=false;if(!restoring)judgment.setPreparation(state.preparation);}
   if(state.busy&&!wasBusy)restorePreparationFocus=document.activeElement===prepareButton;
   const completed=wasBusy&&!state.busy;wasBusy=state.busy;
-  status.textContent=state.error||(state.loading?'Consultando composições…':state.busy?'Conferindo dados e posições…':state.preparation?officialConsulted?'Par conferido. Estado oficial consultado; julgamento no painel abaixo.':'Par conferido. Revisão do instrutor pendente.':state.list?`Exercício ${state.list.exercise_id} · cenário v${state.list.scenario_version}${state.list.exercise_open?'':' · Encerrado'}`:'Atualize os grupos para conferir.');
+  status.textContent=state.error||(state.loading?'Consultando composições…':state.busy?'Conferindo dados e posições…':state.preparation?officialConsulted?'Forças prontas · estado oficial consultado.':'Forças prontas · defina os efeitos abaixo.':state.list?`Exercício ${state.list.exercise_id} · cenário v${state.list.scenario_version}${state.list.exercise_open?'':' · Encerrado'}`:'Atualize os grupos para conferir.');
   status.className=state.error?'siscan-group-error':'';
   for(const team of TEAMS){
    const select=selects[team];select.replaceChildren();const initial=el('option','Selecione '+team);initial.value='';select.append(initial);
@@ -79,8 +79,10 @@ export function installCpcPanel({container,csrf,preview,focus,exit,installJudgme
   }
   prepareButton.disabled=state.loading||state.busy||!state.list?.exercise_open||!TEAMS.every(t=>state.selection[t]);
   fit.disabled=!state.preparation?.parties.some(p=>p.members.some(m=>m.latitude!==null&&m.longitude!==null));
+  if(lastForcesKey!==preparationKey){forces.open=!state.preparation;lastForcesKey=preparationKey;}forcesTitle.textContent=state.preparation?'1 · Forças preparadas · '+state.preparation.parties.map(p=>p.designation).join(' × '):'1 · Selecionar forças';
   details.replaceChildren();
   if(state.preparation){
+   if(state.member)forces.open=true;
    for(const party of state.preparation.parties){
     const section=el('section');section.append(el('h3',`${party.team} · ${party.designation}`),el('p',`Revisão ${party.composition_revision} · ${party.domain==='aereo'?'Aéreo':'Naval'}`));
     const list=el('ul');
@@ -94,12 +96,12 @@ export function installCpcPanel({container,csrf,preview,focus,exit,installJudgme
    if(!judgment)details.append(el('p','Julgamento indisponível nesta instância; atualize o servidor.'));
    if(state.member)details.querySelector(`[data-cpc-member="${CSS.escape(state.member)}"]`)?.focus({preventScroll:true});
   }
-  if(completed){if(state.active&&restorePreparationFocus&&document.activeElement===document.body)(prepareButton.disabled?refresh:prepareButton).focus({preventScroll:true});restorePreparationFocus=false;}
+  if(completed){if(state.active&&restorePreparationFocus&&document.activeElement===document.body)(state.preparation?judgmentArea.querySelector('button:not([hidden])')||forcesTitle:prepareButton.disabled?refresh:prepareButton).focus({preventScroll:true});restorePreparationFocus=false;}
  }
  const request=async(path,options)=>{const response=await fetch(path,options?{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:JSON.stringify(options.body)}:undefined);const body=await response.json();if(!response.ok)throw Object.assign(Error(body.error||'Conferência indisponível.'),{status:response.status});return body;};
  const controller=createCpcController({request,render,preview,beforeChange:()=>judgment?.canLeave()??true});
  if(installJudgmentPanel)judgment=installJudgmentPanel({container:judgmentArea,csrf,
-  onOfficial:states=>{officialConsulted=true;status.textContent='Par conferido. Estado oficial consultado; julgamento no painel abaixo.';onOfficial(states);},
+  onOfficial:states=>{officialConsulted=true;status.textContent='Forças prontas · estado oficial consultado.';onOfficial(states);},
   onResumePair:preparation=>{restoring=true;try{return controller.restore(preparation);}finally{restoring=false;}},onForbidden:()=>controller.leave()});
  controller.canLeave=()=>judgment?.canLeave()??true;
  for(const team of TEAMS)selects[team].onchange=()=>controller.choose(team,selects[team].value);

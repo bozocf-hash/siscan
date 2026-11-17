@@ -216,3 +216,9 @@ Após login, abra “Mapa ATLANTICADOR · inserir meios adjudicados”. Clique n
 ## Representação e reposicionamento no mapa
 
 Use as abas “Camadas” e “Meios adjudicados” na lateral. Botão direito no símbolo → “Reposicionar” → clique no destino; Esc cancela. Há alternativa por coordenadas. Selecione silhuetas ou o motor Calunga e consulte o catálogo visual. Hover abre a ficha com dados cadastrados; desconhecidos são explicitados. `node check_map_visuals.mjs` verifica as silhuetas. [Escopo e evidências](../docs/recovery/78_MAPA_PAINEL_REPOSICIONAMENTO_E_REPRESENTACOES.md).
+
+## Interface compacta do mapa e CPC
+
+A correção [117](../docs/recovery/117_CORRECOES_UI_UX_MAPA_E_JULGAMENTO.md) preserva afiliação AZUL/VERMELHO no Calunga, reduz símbolos/fichas e organiza o julgamento por etapas. Em Meios, expanda **Posição e representação** para coordenadas e Calunga; confirme em **Confirmar posição**. No CPC: preparar forças → definir efeitos → revisar → salvar proposta → avançar para confirmação → confirmar aplicação. Consulte o [roteiro atualizado](../docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md). Os novos assets exigem processo atualizado; recarregar apenas o navegador não atualiza as rotas de um Python antigo.
+
+Verificações adicionais: `node --test check_map_presentation.mjs check_cpc_judgment.mjs` e `python -m unittest check_map_presentation`. Prévia de teste da correção: `http://localhost:61270/` (usuário 1, senha `somente-teste-local`); dados sintéticos e arquivo próprio, sem ativar o principal.

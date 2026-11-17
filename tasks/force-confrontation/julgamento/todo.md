@@ -80,7 +80,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-06 — Expor rotas autenticadas e CSRF
 
-- [ ] Integrar contexto/prévia, registro, revisão, decisão, índice e consulta individual ao servidor existente.
+- [x] Rotas integradas; três testes HTTP passaram, incluindo fluxo completo e replay.
 - **Aceite:** contratos estritos de corpo/query/caminho e contexto de sessão; POST com CSRF, erros 401/403/400/404/409/503 coerentes e sem falso vazio/sucesso. Nenhuma migração por requisição ou chamada HTTP interna para resolver fonte.
 - **Verificar:** novo `check_cpc_judgment_http.py`, reutilizando harness isolado: login/papel/participação/CSRF, formato/contexto injetado, fluxo completo, revisão antiga, resposta/recibo repetidos, schema/fonte indisponível e visibilidade. Regressões HTTP de grupos quando rotas compartilhadas forem afetadas. JMAP-01/03/04/05/06/09/10/12.
 - **Dependência:** JUD-05 e Checkpoint A.

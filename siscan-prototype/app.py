@@ -30,6 +30,7 @@ import fuel_limits
 import map_units
 import map_groups
 import cpc_map
+import cpc_judgment
 from unit_groups import GroupConflict, RegistroGrupamentos
 import mimetypes
 
@@ -403,6 +404,10 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         with connect() as db:
+            if path == '/api/cpc/judgments' or path.startswith('/api/cpc/judgments/'):
+                current=self.require_user(db)
+                if current:self.judgment_action(db,current[1])
+                return
             if path == '/api/cpc/groups':
                 current = self.require_user(db)
                 if current:
@@ -552,6 +557,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.engine_runtime_action(db,user,path.rsplit('/',1)[1],payload)
             elif path == '/api/engine-profile-preview':
                 self.engine_profile_action(db,user,payload)
+            elif path == '/api/cpc/judgments' or path.startswith('/api/cpc/judgments/'):
+                self.judgment_action(db,user,payload)
             elif path == '/api/cpc/preparations':
                 if urlparse(self.path).query:
                     self.send_json(400, {'error': 'Esta preparação não aceita parâmetros na URL.'})
@@ -584,6 +591,36 @@ class Handler(BaseHTTPRequestHandler):
                 except sqlite3.Error:self.send_json(503,{'error':'Não foi possível registrar o limite. Nenhuma alteração parcial foi mantida.'})
             else:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "Rota não encontrada."})
+
+    def judgment_action(self,db,user,payload=None):
+        try:
+            cpc_judgment.state.autorizar_instrutor(db,user)
+            parsed=urlparse(self.path);parts=parsed.path.split('/')[4:]
+            registry=self.server.unit_group_registry
+            if payload is None:
+                if not parts:
+                    query=parse_qs(parsed.query,keep_blank_values=True)
+                    if set(query)-{'limit','cursor'} or any(len(v)!=1 for v in query.values()):raise ValueError('Paginação inválida.')
+                    result=cpc_judgment.listing(db,user,limit=int(query.get('limit',['20'])[0]),cursor=int(query.get('cursor',['0'])[0]))
+                elif len(parts)==1 and not parsed.query:result=cpc_judgment.get(db,user,registry,parts[0])
+                else:raise KeyError('Rota não encontrada.')
+            else:
+                if parsed.query:raise ValueError('Julgamento não aceita query no comando.')
+                if not parts:result=cpc_judgment.register(db,user,registry,payload)
+                elif parts==['context']:result=cpc_judgment.context(db,user,registry,payload)
+                elif parts==['preview']:result=cpc_judgment.preview(db,user,registry,payload)
+                elif len(parts)==2 and parts[1] in ('revisions','decisions'):
+                    if 'proposal_id' in payload and payload['proposal_id']!=parts[0]:raise ValueError('ID de proposta divergente.')
+                    body=dict(payload,proposal_id=parts[0])
+                    operation=cpc_judgment.revise if parts[1]=='revisions' else cpc_judgment.decide
+                    result=operation(db,user,registry,body)
+                else:raise KeyError('Rota não encontrada.')
+            self.send_json(200,result)
+        except PermissionError as exc:self.send_json(403,{'error':str(exc)})
+        except (GroupConflict,cpc_judgment.state.Conflict) as exc:self.send_json(409,{'error':str(exc)})
+        except KeyError:self.send_json(404,{'error':'Referência de julgamento não encontrada.'})
+        except (ValueError,TypeError) as exc:self.send_json(400,{'error':str(exc)})
+        except sqlite3.Error:self.send_json(503,{'error':'Estado/julgamento indisponível; confira armazenamento e integridade.'})
 
     def cpc_map_action(self, db, user, selection=None):
         try:

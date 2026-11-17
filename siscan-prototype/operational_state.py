@@ -254,7 +254,7 @@ def _digest(value):return hashlib.sha256(engine_units.encoded(value).encode('utf
 
 def _context(db,user,write=False):
     actor=db.execute('SELECT role,team,active FROM users WHERE id=?',(user['uid'],)).fetchone()
-    if not actor or not actor['active'] or actor['role']!=user['role'] or actor['team']!=user.get('team'):
+    if not actor or not actor['active'] or actor['role']!=user['role'] or actor['team']!=dict(user).get('team'):
         raise PermissionError('Participante não autorizado.')
     return engine_units.context(db,user,write=write)
 

@@ -88,7 +88,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-07 — Disponibilizar prévia persistente isolada
 
-- [ ] Implementar modo `--serve --data-dir` do harness sem reseed de base já existente.
+- [x] Harness persistente implementado; cinco testes HTTP/harness passaram, incluindo reabertura e recusa de pasta alheia.
 - **Aceite:** primeira execução cria apenas dados/mapa/migração de teste em pasta própria identificada; reabertura verifica a titularidade da pasta/base e preserva histórico. Porta/cookie/contas próprios; não aceitar pasta/base principal ou existente sem identificação do harness. Reinício não recria grupos para fingir continuidade.
 - **Verificar:** `check_cpc_judgment_http.py` em diretórios temporários: primeiro uso/reabertura, pasta não pertencente ao harness recusada sem escrita, histórico preservado e grupos ausentes após reinício. Preparar comandos reproduzíveis de prévia; não encerrar processos alheios. JMAP-06/10/12.
 - **Dependência:** JUD-06.

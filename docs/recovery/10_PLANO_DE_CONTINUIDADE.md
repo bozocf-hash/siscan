@@ -1,6 +1,8 @@
 # 10 — Plano de continuidade
 
-**Próxima etapa — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** revisar o plano de Fase 2; a especificação 109 foi aprovada por “siga”. Após aprovação do plano, detalhar tarefas em `tasks/operational-state/todo.md`, preservando os planos anteriores. Implementação seguirá validação → migração isolada → proposta/revisão/rejeição → confirmação → recuperação, antes da ligação gráfica futura.
+**Próxima etapa — [111](111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md):** revisar a lista OST-01–10; especificação e plano aprovados. Após aprovação, implementar sequencialmente com checkpoints técnicos A–D, sem novas confirmações rotineiras. Preservar banco/processo principal, originais e planos anteriores; integrar julgamento ao mapa somente em recorte posterior.
+
+**Próxima etapa — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** plano de Fase 2 aprovado por “aprovado”; tarefas detalhadas em `tasks/operational-state/todo.md` conforme 111, aguardando revisão, preservando os planos anteriores. Implementação seguirá validação → migração isolada → proposta/revisão/rejeição → confirmação → recuperação, antes da ligação gráfica futura.
 
 **Próxima etapa — [109](109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** [SPEC-operational-state.md](../../SPEC-operational-state.md) aprovada por “siga”; plano técnico/migração proposto em 110 antes das tarefas, preservando planos anteriores. Implementar/verificar o provedor durável antes de ligar julgamento didático, prévia, confirmação e efeitos ao mapa. Seleção/conferência de 108 já entregue; não repetir seus gates.
 

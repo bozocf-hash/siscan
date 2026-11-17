@@ -1,6 +1,8 @@
 # Recuperação documental do SISCAN
 
-**Plano de estado/adjudicação — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação 109 aprovada por “siga”; plano de Fase 2 proposto em [tasks/operational-state/plan.md](../../tasks/operational-state/plan.md). Migração aditiva, histórico/recibos, confirmação transacional, recuperação e checkpoints OS-01–10. Aguarda revisão do plano antes das tarefas; nenhum código/banco alterado.
+**Tarefas de estado/adjudicação — [111](111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação e plano aprovados; OST-01–10 propostas em [tasks/operational-state/todo.md](../../tasks/operational-state/todo.md), com aceites, comandos, dependências e checkpoints A–D. Aguardar revisão da lista antes da implementação; nenhum código, banco ou processo alterado.
+
+**Plano de estado/adjudicação — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação 109 aprovada por “siga”; plano de Fase 2 proposto em [tasks/operational-state/plan.md](../../tasks/operational-state/plan.md). Migração aditiva, histórico/recibos, confirmação transacional, recuperação e checkpoints OS-01–10. Plano aprovado; lista de tarefas proposta em 111; nenhum código/banco alterado.
 
 **Estado/adjudicação durável — [109](109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** Fase 1 proposta em [SPEC-operational-state.md](../../SPEC-operational-state.md), conforme continuidade solicitada e ordem aprovada de 104. Estado individual, proposta/decisão/efeitos, autorização, transação integral, idempotência e recuperação após reinício. Especificação aprovada; plano técnico proposto em 110; nenhum código/banco alterado. Entrega 108 continua concluída.
 

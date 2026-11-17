@@ -1,6 +1,8 @@
 # 09 — Pendências e riscos
 
-**Plano durável — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação aprovada; plano de armazenamento/migração em revisão. Tratar commit implícito de `executescript`, referências a grupos voláteis, revisão por unidade e exposição adversária como riscos de implementação. Migração/concorrência/backup/restauração ainda não testados. Não há estado oficial ou confirmação gráfica implementados por este documento.
+**Tarefas duráveis — [111](111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md):** plano aprovado; lista OST-01–10 em revisão. Rollback DDL, autorização, ausência de efeitos por proposta/rejeição, aplicação única/concorrência e recuperação exigem comprovação na implementação. Nenhum teste novo executado ou banco principal migrado nesta etapa. Julgamento gráfico continua futuro.
+
+**Plano durável — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação aprovada; plano de armazenamento/migração aprovado; tarefas propostas em 111. Tratar commit implícito de `executescript`, referências a grupos voláteis, revisão por unidade e exposição adversária como riscos de implementação. Migração/concorrência/backup/restauração ainda não testados. Não há estado oficial ou confirmação gráfica implementados por este documento.
 
 **Estado/adjudicação — [109](109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação proposta, ainda não implementada. Não confundir snapshot inicial ou combustível de ensaio com estado operativo oficial. Índice absoluto/correção rastreável de perda aprovados na especificação; revisar o plano 110 antes das tarefas/migração. Persistência, confirmação integral e recuperação precisam de testes futuros; não anunciar julgamento gráfico como disponível.
 

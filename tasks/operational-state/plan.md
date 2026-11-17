@@ -1,6 +1,6 @@
 # Plano técnico: operational-state — estado e adjudicação durável
 
-**2026-11-17. Especificação de Fase 1 aprovada por “siga”; Fase 2 proposta para revisão.** Contrato: [SPEC-operational-state.md](../../SPEC-operational-state.md). Escopo/ordem de [104](../../docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) e entrega 108 preservados. Plano novo na localização já indicada pela especificação; não sobrescrever `tasks/plan.md`, `tasks/todo.md` ou os planos anteriores de confronto. Sem código, DDL ou testes executados nesta fase.
+**2026-11-17. Especificação de Fase 1 aprovada por “siga”; Fase 2 aprovada por “aprovado”; [lista de Fase 3](todo.md) proposta conforme [111](../../docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md).** Contrato: [SPEC-operational-state.md](../../SPEC-operational-state.md). Escopo/ordem de [104](../../docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) e entrega 108 preservados. Plano novo na localização já indicada pela especificação; não sobrescrever `tasks/plan.md`, `tasks/todo.md` ou os planos anteriores de confronto. Sem código, DDL ou testes executados nesta fase.
 
 ## Resultado e dependências
 
@@ -94,7 +94,7 @@ Revisão de proposta e rejeição também usam transação, pré-condições e c
 5. Recuperação em processo novo, corrupção e restauração; regressões dos provedores. **Checkpoint D:** durabilidade e rastreabilidade OS-01–10 demonstradas.
 6. Documentar contratos/limites, sincronizar apenas código/docs autorizados e versionar; manter processo/banco principal intactos e relatar separadamente sua indisponibilidade nesta fase interna.
 
-Fatiar cada item em tarefas de até cerca de cinco arquivos, com testes de comportamento antes da implementação correspondente. Os checkpoints verificam o contrato aprovado; comunicar resultados e continuar sem novas confirmações rotineiras durante a execução aprovada. Mudança material de contrato requer revisão do ponto afetado. Não escrever a lista de Fase 3 nem implementar antes de aprovação deste plano.
+Fatiar cada item em tarefas de até cerca de cinco arquivos, com testes de comportamento antes da implementação correspondente. Os checkpoints verificam o contrato aprovado; comunicar resultados e continuar sem novas confirmações rotineiras durante a execução aprovada. Mudança material de contrato requer revisão do ponto afetado. Plano aprovado; lista de Fase 3 proposta em `todo.md`. Não implementar antes da revisão dessa lista.
 
 ## Verificadores previstos
 
@@ -129,4 +129,4 @@ Cobertura planejada: OS-01/02/09 por validação/classificação e estado ausent
 
 ## Gate da Fase 2
 
-Fase 1 aprovada por “siga”. Submeter este plano concreto à revisão antes de detalhar tarefas de Fase 3. Não restam perguntas de localização: `tasks/operational-state/` já consta da especificação aprovada. Nenhum schema/código/banco/processo foi alterado; a migração descrita não foi executada ou testada ainda.
+Fase 1 aprovada por “siga” e Fase 2 aprovada por “aprovado”. [Lista de Fase 3](todo.md) proposta para revisão conforme 111, antes da implementação. Não restam perguntas de localização: `tasks/operational-state/` já consta da especificação aprovada. Nenhum schema/código/banco/processo foi alterado; a migração descrita não foi executada ou testada ainda.

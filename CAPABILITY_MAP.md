@@ -105,4 +105,9 @@ Preparação não executa nem confirma confronto. Estado/adjudicação durável,
 
 ## Atualização — 2026-11-17: plano de estado/adjudicação
 
-[110](docs/recovery/110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md) registra a aprovação da especificação `operational-state` e propõe seu [plano técnico](tasks/operational-state/plan.md). Inclui persistência aditiva, identidade/domínio comprovados, propostas/decisões/efeitos/recibos, transações, autorização e recuperação. Fase 2 aguarda revisão antes da lista de Fase 3. Nenhum código ou banco alterado; integração de julgamento ao mapa e produtor automático continuam futuros.
+[110](docs/recovery/110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md) registra a aprovação da especificação `operational-state` e propõe seu [plano técnico](tasks/operational-state/plan.md). Inclui persistência aditiva, identidade/domínio comprovados, propostas/decisões/efeitos/recibos, transações, autorização e recuperação. Fase 2 aprovada por “aprovado”; lista de Fase 3 proposta em 111 antes da implementação. Nenhum código ou banco alterado; integração de julgamento ao mapa e produtor automático continuam futuros.
+
+
+## Atualização — 2026-11-17: tarefas de estado/adjudicação
+
+[111](docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md) registra o plano aprovado e propõe [OST-01–10](tasks/operational-state/todo.md), com dependências/aceites/verificações e checkpoints A–D. Especificação e plano não aguardam nova aprovação. Revisão da lista precede código; migração somente isolada, sem implementação gráfica ou produtor automático nesta fatia.

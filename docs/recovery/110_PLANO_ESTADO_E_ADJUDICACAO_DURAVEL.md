@@ -1,5 +1,7 @@
 # 110 — Plano de estado e adjudicação durável
 
+**Atualização de gate:** plano aprovado pelo responsável por “aprovado”; lista de Fase 3 proposta em [111](111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md). O conteúdo abaixo preserva o registro da proposta anterior; a aprovação do plano não está mais pendente.
+
 **2026-11-17. Fase 1 aprovada por “siga”; Fase 2 proposta para revisão.** Plano completo em [tasks/operational-state/plan.md](../../tasks/operational-state/plan.md), baseado na [especificação aprovada](../../SPEC-operational-state.md). Preservadas as etapas de 104 e a entrega gráfica 108.
 
 O provedor interno registrará proposta/revisões, decisão, efeitos e recibo de forma durável. Estado corrente será lido do histórico confirmado, sem tabela paralela mutável. Confirmação do instrutor será um único lote transacional com revisões e idempotência; rejeição/revisão não alterará os meios.

@@ -1,6 +1,6 @@
 # Spec: operational-state — estado e adjudicação durável
 
-**2026-11-17. Fase 1 aprovada por “siga”; Fase 2 proposta em [plano técnico](tasks/operational-state/plan.md), conforme [110](docs/recovery/110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md); não implementada.** Prosseguimento solicitado por “pode seguir” após [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md). A ordem já aprovada em [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) é preservada: conferência do par → estado/adjudicação durável → julgamento didático e confirmação no mapa → produtor automático posterior. Não reabrir gates da conferência entregue.
+**2026-11-17. Fase 1 aprovada por “siga”; Fase 2 aprovada por “aprovado”, conforme [110](docs/recovery/110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md); [tarefas de Fase 3](tasks/operational-state/todo.md) propostas em [111](docs/recovery/111_TAREFAS_ESTADO_E_ADJUDICACAO_DURAVEL.md); não implementada.** Prosseguimento solicitado por “pode seguir” após [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md). A ordem já aprovada em [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) é preservada: conferência do par → estado/adjudicação durável → julgamento didático e confirmação no mapa → produtor automático posterior. Não reabrir gates da conferência entregue.
 
 ## Objetivo e premissas
 
@@ -111,4 +111,4 @@ Sempre: autorização antes da leitura sensível, validação estrita, transaç�
 
 Pontos aprovados na Fase 1: índice absoluto em vez de dano relativo quando a origem é desconhecida; correção explícita e auditável de perdas; fase inicial sem publicação gráfica. O plano técnico detalha sua realização sem ampliar os efeitos admitidos.
 
-Fase 1 aprovada por “siga”. Plano técnico/migração de Fase 2 proposto em 110 e no diretório próprio; aguarda revisão antes da lista de tarefas. Aprovação da especificação não declara implementação concluída nem migração executada no banco principal.
+Fase 1 aprovada por “siga”. Plano técnico/migração de Fase 2 aprovado por “aprovado”; lista de Fase 3 proposta em 111 e no diretório próprio, aguardando revisão antes da implementação. Aprovação da especificação não declara implementação concluída nem migração executada no banco principal.

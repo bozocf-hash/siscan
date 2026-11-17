@@ -1,6 +1,6 @@
 # 10 — Plano de continuidade
 
-**Grupamentos no mapa — [100](100_PLANO_GRUPAMENTOS_NO_MAPA.md):** especificação aprovada; revisar plano do Recorte 2 em `tasks/unit-registry/mapa/plan.md`. Depois, propor tarefas no mesmo diretório antes do código. Ordem: identidade/elegibilidade, rotas/registro, painel, realce e navegador isolado. Mantidos mapa definido, planos anteriores, ausência de persistência e autoridade do instrutor sobre resultados.
+**Grupamentos no mapa — [101](101_TAREFAS_GRUPAMENTOS_NO_MAPA.md):** revisar GMAP-01–09 em `tasks/unit-registry/mapa/todo.md`; especificação e plano já aprovados. Após aprovação, executar sequencialmente com checkpoints técnicos A/B/C, sem reabrir gates rotineiros. Manter mapa definido, instâncias elegíveis explícitas, aviso de memória temporária e testes isolados; confronto temporal/persistência continuam fora do recorte.
 
 **Preparação CPC entregue — [98](98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md):** GPREP-01–06 concluídas; dossiê de dois partidos com estados individuais, sem executar confronto. Próxima fatia sugerida: especificar seleção/consulta das composições no mesmo mapa ATLANTICADOR definido, conforme 97; resolver IDs/permissões/posições antes da integração. Reprodução temporal e adjudicação oficial são etapas próprias. Não reabrir gates concluídos nem substituir os planos abertos do catálogo.
 

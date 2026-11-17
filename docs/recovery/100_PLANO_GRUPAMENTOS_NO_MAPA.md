@@ -1,5 +1,7 @@
 # 100 — Plano dos grupamentos no mapa definido
 
+**Atualização de gate:** plano aprovado por “siga”; tarefas propostas em [101](101_TAREFAS_GRUPAMENTOS_NO_MAPA.md). Os parágrafos seguintes registram a preparação histórica da Fase 2, sem implementação.
+
 **Data: 2026-11-16. Estado: especificação de 99 aprovada por “siga”; plano proposto para revisão.** [Plano técnico](../../tasks/unit-registry/mapa/plan.md) do Recorte 2 de [unit-registry](../../SPEC-unit-registry.md), sem reabrir a composição/dossiê já entregues em 93/98. Organização por módulo/recorte preserva planos antigos.
 
 O plano liga identidades/autorização ao registro compartilhado do servidor e à aba de grupos no mapa ATLANTICADOR existente. Reutiliza sessão/CSRF, métodos públicos do registro e índice de marcadores; realce de grupo é separado da seleção de plotagem, para não mover unidades por consulta. Resposta atrasada e revogação precisam ser tratadas no servidor/cliente.

@@ -1,6 +1,6 @@
 # Plano técnico: unit-registry — grupamentos no mapa
 
-**Data: 2026-11-16. Estado: especificação do Recorte 2 aprovada por “siga”; Fase 2 proposta para revisão.** Base: [SPEC-unit-registry.md](../../../SPEC-unit-registry.md), extensão de 99. Este local preserva os planos antigos do catálogo e os recortes concluídos de composição/dossiê 93/98. Não há implementação nesta etapa.
+**Data: 2026-11-16. Estado: especificação do Recorte 2 aprovada por “siga”; Fase 2 aprovada por “siga”; lista de Fase 3 proposta para revisão.** Base: [SPEC-unit-registry.md](../../../SPEC-unit-registry.md), extensão de 99. Este local preserva os planos antigos do catálogo e os recortes concluídos de composição/dossiê 93/98. Não há implementação nesta etapa.
 
 ## Resultado
 
@@ -134,4 +134,4 @@ Antes de declarar a interface entregue, conferir navegador real com mapa prepara
 
 ## Gate da Fase 2
 
-Especificação do Recorte 2 aprovada; este plano aguarda revisão. Após aprovação, detalhar a lista de Fase 3 em interação posterior. Sem código, schema ou teste de software modificado/executado nesta preparação documental.
+Especificação e plano do Recorte 2 aprovados pelo responsável em respostas distintas. [Lista de Fase 3](todo.md) proposta conforme [101](../../../docs/recovery/101_TAREFAS_GRUPAMENTOS_NO_MAPA.md), aguardando revisão antes do código. Sem implementação ou teste de software executado nesta preparação documental.

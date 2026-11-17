@@ -1,6 +1,6 @@
 # 09 — Pendências e riscos
 
-**Interface de grupos — [100](100_PLANO_GRUPAMENTOS_NO_MAPA.md):** especificação aprovada, plano aguarda revisão. Tratar identidade/domínio das instâncias existentes, resposta atrasada, revogação e projeção segura dos recibos; separar realce de consulta da seleção de plotagem. Registro temporário exige aviso; testes HTTP/navegador precisam isolar DATA_DIR/DB_PATH além da porta. Não houve implementação gráfica nesta etapa.
+**Interface de grupos — [101](101_TAREFAS_GRUPAMENTOS_NO_MAPA.md):** especificação/plano aprovados, lista de tarefas aguarda revisão. Testes precisam cobrir sessão/CSRF, revogação, reenvio e respostas atrasadas, sem usar a base do usuário. Navegador real é obrigatório antes de declarar entrega gráfica. Código publicado não equivale a servidor ativo atualizado; não ignorar perda de grupos temporários ao reiniciar.
 
 **Preparação CPC — entrega [98](98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md):** dossiê em memória implementado e verificado; gates desta fatia concluídos. Autorizador interno não substitui autenticação real; provedor deve fornecer inventário consistente. Conferência final detecta alterações observadas, sem reserva futura/atomicidade entre fontes. Persistência, integração ao mapa existente, posições/tempo/visibilidade, execução por grupamentos e efeitos oficiais continuam pendentes de contratos próprios. Não inventar percentuais ou agregações.
 

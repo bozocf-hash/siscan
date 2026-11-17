@@ -2,7 +2,7 @@
 
 **Estado: especificação aprovada e recorte implementado em 2026-11-16.** Escopo, especificação, plano e tarefas foram aprovados em interações distintas; a lista de Fase 3 recebeu “sim”. [Plano](tasks/unit-registry/plan.md) e [tarefas](tasks/unit-registry/todo.md) preservam o trabalho aberto de `technical-catalog`. Entrega e evidências em [93](docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md), sem API/banco ou integração física.
 
-**Recorte 2 proposto em 2026-11-16:** composição/consulta gráfica no mapa ATLANTICADOR já definido, descrita ao final desta especificação e em [99](docs/recovery/99_ESPECIFICACAO_GRUPAMENTOS_NO_MAPA.md). Fase 1 desta extensão aprovada por “siga”; [plano de Fase 2](tasks/unit-registry/mapa/plan.md) proposto conforme [100](docs/recovery/100_PLANO_GRUPAMENTOS_NO_MAPA.md). A entrega 93 permanece concluída e não será reaberta.
+**Recorte 2 proposto em 2026-11-16:** composição/consulta gráfica no mapa ATLANTICADOR já definido, descrita ao final desta especificação e em [99](docs/recovery/99_ESPECIFICACAO_GRUPAMENTOS_NO_MAPA.md). Fase 1 desta extensão aprovada por “siga”; [plano de Fase 2](tasks/unit-registry/mapa/plan.md) aprovado por “siga”; [tarefas de Fase 3](tasks/unit-registry/mapa/todo.md) propostas conforme [101](docs/recovery/101_TAREFAS_GRUPAMENTOS_NO_MAPA.md). A entrega 93 permanece concluída e não será reaberta.
 
 ## Objetivo
 
@@ -240,4 +240,4 @@ Os comandos novos focados/HTTP e a ferramenta de navegador disponível serão re
 
 Não inclui persistência/DDL, migração de todos os meios reais para instâncias, revisão gráfica da composição, execução/replay, eficácia militar, indicadores coletivos ou publicação de resultados. A falta dessas integrações deve aparecer com clareza; não apresentar a tela como motor de confronto pronto.
 
-Fase 1 do recorte 2 aprovada por “siga”, incluindo armazenamento explicitamente temporário e elegibilidade limitada às instâncias/snapshots realmente disponíveis. [Plano de Fase 2](tasks/unit-registry/mapa/plan.md) proposto conforme 100, aguardando revisão antes das tarefas/código. Não reabrir gates concluídos das entregas 93 e 98.
+Fase 1 do recorte 2 aprovada por “siga”, incluindo armazenamento explicitamente temporário e elegibilidade limitada às instâncias/snapshots realmente disponíveis. [Plano de Fase 2](tasks/unit-registry/mapa/plan.md) aprovado por “siga”; [tarefas de Fase 3](tasks/unit-registry/mapa/todo.md) propostas conforme 101, aguardando revisão antes do código. Não reabrir gates concluídos das entregas 93 e 98.

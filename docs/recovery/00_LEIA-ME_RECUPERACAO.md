@@ -1,6 +1,6 @@
 # Recuperação documental do SISCAN
 
-**Grupamentos no mapa — [100](100_PLANO_GRUPAMENTOS_NO_MAPA.md):** especificação de 99 aprovada por “siga”; plano técnico em `tasks/unit-registry/mapa/plan.md` proposto para revisão. Reutiliza servidor/sessão/CSRF e mapa ATLANTICADOR, com identidade explícita e seleção de grupo separada da plotagem. Sem implementação desta extensão; entregas 93/98 preservadas.
+**Grupamentos no mapa — [101](101_TAREFAS_GRUPAMENTOS_NO_MAPA.md):** especificação e plano aprovados; GMAP-01–09 propostas para revisão. A lista cobre identidade/elegibilidade, rotas, painel, realce, navegador isolado e entrega. Mapa ATLANTICADOR definido preservado; nenhuma implementação desta extensão ainda. Entregas 93/98 e planos antigos mantidos.
 
 **Preparação CPC entregue — [98](98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md):** especificação, plano e tarefas aprovados; GPREP-01–06 concluídas. Dossiê AZUL/VERMELHO em memória, autorização interna, revisões conferidas e snapshots integrais/hash. Passaram 131 testes distintos. [97](97_CONCEPCAO_GRAFICA_DISPOSICAO_E_CONFRONTO.md) preserva o mapa ATLANTICADOR definido para futura integração gráfica; execução e interface ainda não integradas. Preparação histórica em 94–96 não representa gates pendentes.
 

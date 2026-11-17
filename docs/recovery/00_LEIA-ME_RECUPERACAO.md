@@ -1,6 +1,6 @@
 # Recuperação documental do SISCAN
 
-**Julgamento no mapa — [113](113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md):** Fase 1 proposta no Recorte 3 de [SPEC-force-confrontation.md](../../SPEC-force-confrontation.md): base oficial, julgamento/prévia, proposta/revisão, confirmação/rejeição, retomada e consulta dos efeitos no mapa existente. Consome o provedor 112; não implementa produtor automático ou migração principal. Aguarda revisão da especificação antes do plano; 108/112 continuam entregues.
+**Plano do julgamento no mapa — [114](114_PLANO_JULGAMENTO_DIDATICO_NO_MAPA.md):** especificação 113 aprovada por “sim”; Fase 2 proposta em [tasks/force-confrontation/julgamento/plan.md](../../tasks/force-confrontation/julgamento/plan.md). Marco: percurso real seleção → julgamento/prévia → registro → confirmação/rejeição → efeitos/histórico. Coordenação SQL/registro, recibos/retomada, painel/projeção e prévia persistente isolada detalhados. Aguarda revisão do plano antes das tarefas; sem código/banco alterado.
 
 **Estado/adjudicação durável entregue — [112](112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação, plano e tarefas aprovados; OST-01–10 concluídas. Provedor interno com propostas/revisões, rejeição, confirmação integral, histórico e recibos persistentes. Passaram 95 testes nomeados e o verificador assertivo de plotagem, incluindo concorrência, processo novo e backup/restauração. Sem migração do banco principal, reinício ou novos controles gráficos de julgamento. Registros 109–111 são históricos; gates desta fatia concluídos.
 

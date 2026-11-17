@@ -1,5 +1,7 @@
 # 113 — Especificação: julgamento didático no mapa
 
+**Atualização de gate:** especificação aprovada pelo responsável por “sim”; plano de Fase 2 proposto em [114](114_PLANO_JULGAMENTO_DIDATICO_NO_MAPA.md). O conteúdo abaixo preserva o registro da proposta documental; a especificação não está mais aguardando aprovação.
+
 **2026-11-17. Fase 1 proposta para revisão.** Continuidade solicitada por “pode seguir” após 112. Especificação completa no **Recorte 3** de [SPEC-force-confrontation.md](../../SPEC-force-confrontation.md), mantendo a convenção do módulo existente e a etapa 3 da ordem aprovada em 104. Entregas 108/112 permanecem concluídas.
 
 Resultado proposto: no mesmo mapa/painel ATLANTICADOR, instrutor confere estado oficial, informa alterações didáticas, visualiza antes/depois, registra/revisa proposta e confirma ou rejeita. A confirmação usa exclusivamente o provedor durável de 112. Prévia/proposta não alteram os meios. O mapa recebe somente a projeção oficial após commit, com índice/perda/origem e regras de domínio comprovado.

@@ -1,6 +1,6 @@
 # Spec: force-confrontation — preparação didática de grupamentos
 
-**Atualização de 2026-11-17 — Recorte 3 proposto:** [113](docs/recovery/113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md) especifica julgamento/prévia/confirmação/consulta no mapa, consumindo o estado durável entregue em 112. Recortes 1/2 permanecem concluídos; a proposta abaixo não amplia automaticamente suas aprovações para novas rotas, código ou migração principal.
+**Atualização de 2026-11-17 — Recorte 3 aprovado por “sim”:** [113](docs/recovery/113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md) especifica julgamento/prévia/confirmação/consulta no mapa, consumindo o estado durável entregue em 112. Recortes 1/2 permanecem concluídos. [Plano de Fase 2](tasks/force-confrontation/julgamento/plan.md) proposto conforme [114](docs/recovery/114_PLANO_JULGAMENTO_DIDATICO_NO_MAPA.md), antes das tarefas/código; sem migração principal autorizada nesta etapa.
 
 **Data: 2026-11-16. Estado: especificação, plano e tarefas aprovados; recorte implementado e verificado em [98](docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md).** A lista de Fase 3 foi aprovada por “siga”. O registro entregue em 93 permanece preservado. Esta entrega acrescenta o consumidor de composições em memória, sem execução ou interface de confronto. Mantido o mapa ATLANTICADOR já definido.
 
@@ -225,7 +225,7 @@ Escopo/ordem de 104 aprovados por “si”. Fase 1 deste Recorte 2 aprovada por 
 
 ## Recorte 3 — Julgamento didático, confirmação e estado no mapa
 
-**2026-11-17. Fase 1 proposta para revisão.** Continuidade solicitada por “pode seguir” após [112](docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md). Corresponde à etapa 3 já delimitada em 104; mantém os IDs `force-confrontation`, `operational-state` e `execution-core`, sem um segundo publicador de efeitos.
+**2026-11-17. Fase 1 aprovada por “sim”; plano de Fase 2 proposto em 114.** Continuidade solicitada por “pode seguir” após [112](docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md). Corresponde à etapa 3 já delimitada em 104; mantém os IDs `force-confrontation`, `operational-state` e `execution-core`, sem um segundo publicador de efeitos.
 
 ### Objetivo, premissas e fronteira
 
@@ -344,4 +344,4 @@ Na raiz, `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 Sempre preservar autoridade do instrutor, proveniência, visibilidade por partido e confirmação posterior à prévia. Rever mudanças de schema, ativação no principal, efeitos logísticos ou automação. Nunca publicar apuração automaticamente, recalcular silenciosamente a intenção aceita, modificar originais/DB3K ou alegar que julgamento didático valida parâmetros reais de combate.
 
-Fase 1 termina nesta proposta. Não há nova decisão funcional aberta que impeça a revisão; hipóteses específicas são captura de base própria, confirmação em duas ações e retomada/correção pelo painel existente. Após aprovação, elaborar plano técnico próprio em turno posterior, incluindo coordenação de concorrência e leitura pública dos registros. Não iniciar plano, tarefas, código ou migração desta fatia neste turno.
+Fase 1 aprovada por “sim”. Captura de base própria, confirmação em duas ações e retomada/correção pelo painel existente fazem parte do contrato aprovado. Plano de Fase 2 proposto em 114 e no diretório próprio, incluindo coordenação de concorrência e leitura pública dos registros. Revisar esse plano antes das tarefas/código; nenhuma migração foi executada nesta fase documental.

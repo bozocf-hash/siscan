@@ -120,4 +120,9 @@ Preparação não executa nem confirma confronto. Estado/adjudicação durável,
 
 ## Atualização — 2026-11-17: especificação do julgamento no mapa
 
-[113](docs/recovery/113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md) propõe o Recorte 3 de `force-confrontation`, conforme etapa 3 de 104: julgamento didático, prévia, proposta/revisão, confirmação/rejeição, retomada e projeção oficial no mapa ATLANTICADOR. Usa `operational-state` de 112, sem novo publicador, produtor automático ou autorização antecipada de migração principal. Doze aceites JMAP-01–12; Fase 1 aguarda revisão antes do plano/código. 108/112 permanecem concluídas.
+[113](docs/recovery/113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md) propõe o Recorte 3 de `force-confrontation`, conforme etapa 3 de 104: julgamento didático, prévia, proposta/revisão, confirmação/rejeição, retomada e projeção oficial no mapa ATLANTICADOR. Usa `operational-state` de 112, sem novo publicador, produtor automático ou autorização antecipada de migração principal. Doze aceites JMAP-01–12; Fase 1 aprovada por “sim”; plano proposto em 114 antes das tarefas/código. 108/112 permanecem concluídas.
+
+
+## Atualização — 2026-11-17: plano do julgamento no mapa
+
+[114](docs/recovery/114_PLANO_JULGAMENTO_DIDATICO_NO_MAPA.md) propõe o [plano de Fase 2](tasks/force-confrontation/julgamento/plan.md) após aprovação de 113. O marco parcial exige fluxo real no mapa: julgamento, prévia, registro, confirmação/rejeição e consulta/retomada de efeitos. Coordenação SQL/registro e recibos públicos antecedem HTTP/painel/projeção; checkpoints A–D e testes isolados antes de entrega. Plano aguarda revisão; nenhum código/banco alterado. Automático permanece etapa 4 de 104.

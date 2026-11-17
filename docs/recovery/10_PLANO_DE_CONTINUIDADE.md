@@ -1,5 +1,7 @@
 # 10 — Plano de continuidade
 
+**Próxima etapa — [113](113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md):** revisar o Recorte 3 de `SPEC-force-confrontation.md`. Após aprovação, elaborar plano em `tasks/force-confrontation/julgamento/`, preservando os planos anteriores. Ligar julgamento didático/prévia/confirmação/estado ao mesmo mapa pelo provedor 112; primeiro verificar em base isolada, sem ativação automática no principal.
+
 **Estado/adjudicação entregue — [112](112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md):** OST-01–10 concluídas; provedor interno pronto e verificado em isolamento. Próximo recorte de 104: especificar julgamento didático, prévia, confirmação e consulta dos efeitos no mesmo mapa, consumindo o publicador único e reconferindo fontes/composição. Planejar habilitação/migração do principal com procedimento próprio antes de uso real; não confundir código sincronizado com novas operações disponíveis no servidor ativo.
 
 **Próxima etapa — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** plano de Fase 2 aprovado por “aprovado”; tarefas detalhadas em `tasks/operational-state/todo.md` conforme 111 e concluídas em 112, preservando os planos anteriores. Implementação seguirá validação → migração isolada → proposta/revisão/rejeição → confirmação → recuperação, antes da ligação gráfica futura.

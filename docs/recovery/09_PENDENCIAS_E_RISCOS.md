@@ -1,5 +1,7 @@
 # 09 — Pendências e riscos
 
+**Integração gráfica proposta — [113](113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md):** especificação em revisão. Faltam ligar estado oficial à conferência, leitura pública de proposta/recibo e coordenação entre grupos em memória e confirmação SQL. Preservar retry após commit, privacidade por partido e origem congelada sem tratá-la como reserva. Nenhuma implementação/teste novo ou migração principal nesta etapa.
+
 **Provedor durável entregue — [112](112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md):** OST-01–10 verificadas em bancos descartáveis. Limites atuais: provedor interno sem UI/HTTP nova; principal não migrado; identidade demonstrada ainda aérea sintética. Implantação principal requer backup verificado/janela/procedimento próprio; hashes não protegem contra administrador que reescreva coerentemente todo o banco. Integração julgamento → prévia → confirmação no mapa continua futura, sem reabrir gates de 109–111.
 
 **Plano durável — [110](110_PLANO_ESTADO_E_ADJUDICACAO_DURAVEL.md):** especificação aprovada; plano de armazenamento/migração aprovado; tarefas 111 aprovadas/concluídas em 112. Tratar commit implícito de `executescript`, referências a grupos voláteis, revisão por unidade e exposição adversária como riscos de implementação. Migração/concorrência/backup/restauração ainda não testados. Não há estado oficial ou confirmação gráfica implementados por este documento.

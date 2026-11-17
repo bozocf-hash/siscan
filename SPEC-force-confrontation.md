@@ -1,5 +1,7 @@
 # Spec: force-confrontation — preparação didática de grupamentos
 
+**Atualização de 2026-11-17 — Recorte 3 proposto:** [113](docs/recovery/113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md) especifica julgamento/prévia/confirmação/consulta no mapa, consumindo o estado durável entregue em 112. Recortes 1/2 permanecem concluídos; a proposta abaixo não amplia automaticamente suas aprovações para novas rotas, código ou migração principal.
+
 **Data: 2026-11-16. Estado: especificação, plano e tarefas aprovados; recorte implementado e verificado em [98](docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md).** A lista de Fase 3 foi aprovada por “siga”. O registro entregue em 93 permanece preservado. Esta entrega acrescenta o consumidor de composições em memória, sem execução ou interface de confronto. Mantido o mapa ATLANTICADOR já definido.
 
 **Extensão de 2026-11-17:** escopo/ordem de [104](docs/recovery/104_ESCOPO_LIGACAO_MAPA_ENSAIO_E_ADJUDICACAO.md) aprovados por “si”. Recorte 2 abaixo especifica seleção do par e conferência no mapa; Fase 1 aprovada por “siga”; [plano de Fase 2](tasks/force-confrontation/mapa/plan.md) aprovado por “sim”; [tarefas de Fase 3](tasks/force-confrontation/mapa/todo.md) aprovadas por “sim” e concluídas conforme [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md). Entrega 98 preservada; sem publicação de efeitos oficiais nesta extensão.
@@ -220,3 +222,126 @@ Comandos focados novos serão definidos no plano; verificadores da extensão ain
 - Nunca modificar DB3K/originais, promover dado por estar no grupo, calcular composição otimizada ou publicar cálculo militar automaticamente como resultado oficial.
 
 Escopo/ordem de 104 aprovados por “si”. Fase 1 deste Recorte 2 aprovada por “siga”; [plano de Fase 2](tasks/force-confrontation/mapa/plan.md) aprovado por “sim”; [lista de Fase 3](tasks/force-confrontation/mapa/todo.md) aprovada por “sim” e concluída em [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md). Seleção/conferência do par implementada e verificada; julgamento, decisão e efeitos continuam explicitamente pendentes até suas entregas próprias.
+
+## Recorte 3 — Julgamento didático, confirmação e estado no mapa
+
+**2026-11-17. Fase 1 proposta para revisão.** Continuidade solicitada por “pode seguir” após [112](docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md). Corresponde à etapa 3 já delimitada em 104; mantém os IDs `force-confrontation`, `operational-state` e `execution-core`, sem um segundo publicador de efeitos.
+
+### Objetivo, premissas e fronteira
+
+O instrutor participante deve percorrer no mesmo mapa ATLANTICADOR: selecionar o par → conferir estado inicial → informar julgamento didático → visualizar antes/depois → registrar/revisar proposta → confirmar ou rejeitar → consultar estado confirmado e histórico. A prévia nunca é estado oficial; confirmar exige ação explícita posterior ao registro da proposta.
+
+Premissas propostas: reutilizar sessão/CSRF, painel/camada de consulta de 108, armazenamento e comandos de 112, Python padrão e JS nativo. Configurações elegíveis continuam limitadas às identidades/domínios demonstrados. A entrega gráfica será verificada primeiro em banco/porta/cookie isolados com migração explícita do harness; isso não habilita automaticamente o principal em 8787.
+
+Não incluir cálculo automático de confronto, detecção, consumo, deslocamento, relógio, trajetória, emprego de armas, novas regras de prontidão ou expansão de parâmetros Command. Não criar índice da força, estimativa de vitória ou perdas presumidas. O instrutor informa efeitos didáticos; a interface não os calcula por poder de combate.
+
+### Fluxo e controles
+
+1. Após preparar o par, **Abrir julgamento didático** obtém do servidor estados oficiais, revisões próprias e referências das unidades selecionadas. Estado não avaliado permanece explícito; falha/schema indisponível não vira 100%, zero ou lista vazia.
+2. No painel existente, o instrutor escolhe os meios afetados, informa alterações e justificativa. Não é necessário alterar todos os integrantes; meio omitido é preservado. Índice aceita 0–100, campo omitido preserva e ação explícita **Retirar avaliação** produz `null`; campo vazio não vira zero. Perda oferece preservar/declaração explícita, sem inferir destruição pelo índice.
+3. **Conferir prévia** mostra por meio identificação, revisão de origem, estado confirmado anterior e proposta de estado posterior. A prévia é identificada como didática e não consome recursos ou publica efeito. Ela não substitui uma proposta durável.
+4. **Registrar proposta** salva conteúdo/referências e devolve ID, revisão e hash. Ajustar cria nova revisão pela operação **Salvar revisão**; não altera registros anteriores. Confirmação permanece vinculada exatamente à revisão exibida, sem salvar ajustes silenciosamente ao confirmar.
+5. **Confirmar efeitos** abre uma revisão final no próprio painel, com antes/depois e justificativa. Somente **Confirmar aplicação** envia o comando de confirmação. Cancelar essa etapa não muda os meios. **Rejeitar proposta**, com motivo, grava decisão terminal sem efeitos.
+6. Após resposta confirmada e commit, atualizar consulta oficial pelo servidor, exibir recibo e permitir consultar histórico. Se o refresh falhar, conservar recibo e avisar que a vista precisa ser atualizada; não anunciar falha de aplicação nem reenviar com comando novo automaticamente.
+7. **Retomar julgamento** lista propostas deste exercício por referência/status/revisão para o instrutor. Recarregar a página não apaga proposta/decisão. Retomar não confirma, não recria grupos e não associa silenciosamente uma proposta a outra composição.
+8. Correção de resultado confirmado começa em **Nova proposta de correção**, referenciando explicitamente a decisão corrigida. Continua sujeita a prévia, registro e confirmação; recuperação de perda obedece à referência exigida pelo provedor de 112. Nenhum botão desfaz ou apaga o histórico.
+
+Sair/trocar seleção invalida a prévia local e respostas pendentes; proposta registrada continua durável. Antes de descartar edição local não salva, informar essa perda de edição e permitir continuar nela. Rejeitar não precisa de grupo ainda disponível, mas exige instrutor autorizado, exercício aberto e revisão vigente da proposta conforme 112. Uma proposta pendente com grupos perdidos/alterados continua consultável, porém não pode ser confirmada pela integração CPC sem nova conferência válida.
+
+### Referências e concorrência
+
+O servidor constrói uma base de julgamento com exercício/cenário, seleção AZUL/VERMELHO, revisões/hashes de composição e dossiê, manifesto de posições e revisão/estado oficial de cada integrante. `basis_sha256` cobre essa captura canônica e é separado dos hashes de 98/108. Nenhum horário aleatório é usado para simular mudança de conteúdo.
+
+O cliente envia seleção, referência/hash da base e alterações didáticas, nunca snapshots, domínio, autoridade, saldo atual ou estado anterior como prova. Servidor recupera e reconfere as fontes e congela a origem da proposta em formato identificável `siscan-cpc-didactic-origin-01`. O publicador de 112 permanece a única autoridade de aplicação; não duplicar regras de perda/revisão/idempotência no adaptador.
+
+Registrar/revisar/confirmar reconfere contexto, grupos ativos/revisões/integrantes, identidades, adjudicação, snapshots, posições e estados. Alteração observada invalida a base e exige nova conferência explícita; não substituir a prévia aceita por um antes/depois recalculado silenciosamente. Corrigir somente dados de um meio não permite ignorar que a composição escolhida mudou.
+
+O plano deverá fechar a serialização entre mudanças no registro de grupos e confirmação no servidor único: API pública de coordenação/revisões, ordem de locks e transação SQL, sem acessar `_state`/`_lock` privados. Testar alteração concorrente de composição durante a confirmação. Não declarar atomicidade distribuída entre memória/SQL, nem publicar efeitos após detectar invalidação do par. Estado e recibo seguem a transação única de 112.
+
+Comando de escrita usa UUID mantido para reenvio da mesma intenção. Replay autorizado de comando já aplicado retorna recibo durável mesmo após alteração posterior de estado ou perda dos grupos temporários; não exige restaurar a base anterior para reaplicar. Novo comando não pode usar o recibo como dispensa de disponibilidade/revisões. Plano deverá expor leitura pública/autorizada de proposta e recibo pelo provedor, sem depender de helpers privados ou SQL duplicado no frontend.
+
+### Interfaces propostas
+
+Nomes abaixo definem o contrato funcional a detalhar no plano, preservando rotas de 108:
+
+| Interface | Comportamento |
+|---|---|
+| `POST /api/cpc/judgments/context` | Seleção e referência da preparação; retorna base atual e estados autorizados, sem escrita/recibo |
+| `POST /api/cpc/judgments/preview` | Base esperada, alterações e motivo; valida e devolve prévia antes/depois, sem gravar proposta/efeito |
+| `POST /api/cpc/judgments` | Comando/base/alterações/motivo; registra proposta didática com origem construída no servidor |
+| `POST /api/cpc/judgments/{id}/revisions` | Comando, revisão/hash esperados e novo conteúdo completo conferido; cria revisão |
+| `POST /api/cpc/judgments/{id}/decisions` | Comando, revisão/hash, confirmar/rejeitar e motivo; confirmação reconfere base e aplica pelo provedor |
+| `GET /api/cpc/judgments` | Índice autorizado de propostas CPC do exercício, com paginação limitada, sem inventário/snapshots completos |
+| `GET /api/cpc/judgments/{id}` | Proposta/revisões/decisão/recibo autorizados para retomada/histórico, com distinção entre origem congelada e contexto atual |
+| Consulta de meio já existente | Acrescentar projeção oficial mínima somente quando há identidade demonstrada e armazenamento habilitado; sem expor proposta ou adversário |
+
+Todas as operações de julgamento são exclusivas do instrutor participante. POST exige sessão/CSRF e formato estrito, inclusive operações de prévia/contexto. Usar 401 sem sessão, 403 sem autoridade, 400 formato, 404 referência inexistente autorizada, 409 desatualização e 503 armazenamento/fonte/integridade indisponível. Não confundir resposta indisponível com estado não avaliado. Leituras de propostas em exercício encerrado são permitidas; novas alterações, não.
+
+Operador consulta apenas estado oficial do próprio partido pela projeção existente, sem rotas de julgamento, justificativa privada ou composição adversária. Revalidar autorização antes do replay e da consulta de origem congelada. Não mandar dados adversários para ocultação por CSS.
+
+### Representação gráfica
+
+Uma única área lateral ativa; sem janela/painel sobreposto ou mapa alternativo. Reutilizar marcadores, identificação textual, seleção, enquadramento e bloqueio de plotagem de 108. Resultado não altera coordenadas de planejamento ou camadas originais.
+
+Hover/consulta resumida do meio mostra índice oficial conhecido, condição quando definida, perda confirmada e origem temporal; valor/texto junto da cor. Para superfície demonstrada, preservar >60 combater, 40–60 navegar e <40 flutuar. Meio perdido não é exibido como apto a combater por ter índice alto. Aeronaves/submarinos/terrestres não recebem navegar/flutuar. Dados desconhecidos são declarados; sem média/estado agregado de força.
+
+Prévia fica identificada no painel como proposta; não repinta os marcadores oficiais como se já aplicada. Após confirmação, buscar projeção oficial e atualizar marcador/ficha/lista permitidos, incluindo retorno ao planejamento. Não acrescentar barras fictícias de combustível/armamento: indicadores de recursos seguem seus contratos, sem converter saldo inicial em atual ou criar limiar de 30%.
+
+Requisições antigas não restauram proposta/estado de outro contexto; controlar geração de resposta e revisão de comando. Mensagens de carga/erro/conflito/aplicação são distintas. Foco/teclado, rótulos e alternativa pela lista; tela estreita sem deixar viewport forçado no navegador do usuário. Não mudar as silhuetas neste recorte.
+
+### Armazenamento e habilitação
+
+Consumir schema aditivo de 112; não criar novas tabelas por conveniência do adaptador nem executar migração em GET/POST de usuário. Proposta/origem/decisão continuam duráveis; o registro de grupos permanece temporário. Se houver necessidade real de mudança de schema, revisar esse ponto antes de implementar.
+
+Prévia isolada deve migrar explicitamente sua base descartável e permitir confirmar/rejeitar/retomar em navegador real. A instância principal exige procedimento próprio de backup consistente verificado, janela sem escritores, migração explícita e verificação antes de habilitar rotas. Esta especificação não autoriza reiniciar o principal nem perder grupos em memória. Instância sem schema/módulo deve informar indisponibilidade e preservar o fluxo de planejamento/conferência anterior.
+
+### Estrutura, estilo e comandos previstos
+
+Adaptador novo em `siscan-prototype/cpc_judgment.py`, contratos públicos de leitura no provedor `operational_state.py`, rotas em `app.py` e módulo gráfico no diretório `static`, reutilizando `cpc-preparation.mjs`/`atlantic-bridge.mjs`. Plano/lista em `tasks/force-confrontation/julgamento/`, preservando os demais diretórios. Sem dependências novas. Payloads validados no servidor, renderização por `textContent`, comandos/UUID separados por intenção e funções pequenas conforme o backend existente.
+
+Exemplo de fronteira, sem implementação nova:
+
+```python
+# O adaptador confere a composição; o provedor existente publica o lote.
+result = operational_state.decidir_proposta(db, user, decision_payload)
+```
+
+Na pasta `prototype` de entrega (`siscan-prototype` no repositório), comandos futuros de verificação:
+
+```powershell
+$pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+& $pythonCpc check_cpc_judgment.py
+& $pythonCpc check_cpc_judgment_http.py
+& $pythonCpc check_operational_state.py
+& $pythonCpc check_operational_state_storage.py
+& $pythonCpc check_cpc_map.py
+& $pythonCpc check_map_groups_http.py
+& $pythonCpc check_map_units.py
+node check_cpc_judgment.mjs
+node check_cpc_preparation.mjs
+```
+
+Na raiz, `git diff --check`. Verificadores de julgamento ainda não existem; nenhum teste/inspeção gráfica novo foi executado nesta fase documental. Plano definirá harness e comandos de prévia isolada, sem usar dados do instrutor. Browser testing será de ações reais, não substituído por leitura de código ou teste JS.
+
+### Critérios de aceite
+
+| ID | Evidência exigida |
+|---|---|
+| JMAP-01 | Instrutor autorizado antes de fonte adversária; operador, sessão/CSRF inválidos, contexto revogado e exercício fechado recusados conforme operação |
+| JMAP-02 | Base inclui revisão de estado/grupo/posição/snapshot; mudança de qualquer fonte impede registrar/confirmar a prévia antiga sem efeitos parciais |
+| JMAP-03 | Prévia e proposta/revisão/rejeição não alteram estado oficial, posição, recursos, relógio ou snapshot |
+| JMAP-04 | Confirmação explícita aplica apenas a revisão aceita, por publicador único; cancelamento e resposta atrasada não aplicam/restauram conteúdo antigo |
+| JMAP-05 | Retry do mesmo comando não duplica efeitos; resposta perdida permite recuperar recibo; disputa de grupo/estado é serializada/recusada sem deadlock |
+| JMAP-06 | Propostas/decisões retomadas após reload/processo novo; perda dos grupos não apaga histórico nem autoriza nova confirmação pela cópia congelada |
+| JMAP-07 | Alterações de índice/perda e correção obedecem a 112, preservam ausência e não produzem classes/indicadores fictícios |
+| JMAP-08 | No mesmo mapa/painel: selecionar → julgar → prévia → registrar → confirmar/rejeitar → consultar estado/histórico; hover/lista concordam com projeção oficial |
+| JMAP-09 | Operador recebe somente estado confirmado do próprio partido; sem vazamento de proposta, motivos privados ou adversário |
+| JMAP-10 | Schema/módulo indisponível não degrada planejamento anterior nem produz falso sucesso; isolamento e ausência de migração/reinício principal comprovados |
+| JMAP-11 | Teclado/foco/tela estreita, saída/retorno ao planejamento e falha no refresh pós-commit verificados em navegador real isolado |
+| JMAP-12 | Regressões de 108/112 passam, originais/planos anteriores preservados e documentos refletem exatamente o que estiver disponível |
+
+### Limites e gate
+
+Sempre preservar autoridade do instrutor, proveniência, visibilidade por partido e confirmação posterior à prévia. Rever mudanças de schema, ativação no principal, efeitos logísticos ou automação. Nunca publicar apuração automaticamente, recalcular silenciosamente a intenção aceita, modificar originais/DB3K ou alegar que julgamento didático valida parâmetros reais de combate.
+
+Fase 1 termina nesta proposta. Não há nova decisão funcional aberta que impeça a revisão; hipóteses específicas são captura de base própria, confirmação em duas ações e retomada/correção pelo painel existente. Após aprovação, elaborar plano técnico próprio em turno posterior, incluindo coordenação de concorrência e leitura pública dos registros. Não iniciar plano, tarefas, código ou migração desta fatia neste turno.

@@ -116,3 +116,8 @@ Preparação não executa nem confirma confronto. Estado/adjudicação durável,
 ## Atualização — 2026-11-17: estado/adjudicação durável entregue
 
 [112](docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md) conclui OST-01–10 de `operational-state`: proposta/revisão/decisão/efeitos/recibo persistentes, confirmação única e transacional pelo instrutor, consulta por partido e recuperação por processo novo. Passaram 46 testes novos, 49 regressões nomeadas e o verificador assertivo de plotagem. Gates 109–111 satisfeitos. O banco/processo principal não foi migrado/reiniciado e não há novos controles gráficos ou produtor automático. Próximo recorte de 104 liga julgamento didático/prévia/confirmação/efeitos ao mesmo mapa, com procedimento próprio para habilitação do armazenamento.
+
+
+## Atualização — 2026-11-17: especificação do julgamento no mapa
+
+[113](docs/recovery/113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md) propõe o Recorte 3 de `force-confrontation`, conforme etapa 3 de 104: julgamento didático, prévia, proposta/revisão, confirmação/rejeição, retomada e projeção oficial no mapa ATLANTICADOR. Usa `operational-state` de 112, sem novo publicador, produtor automático ou autorização antecipada de migração principal. Doze aceites JMAP-01–12; Fase 1 aguarda revisão antes do plano/código. 108/112 permanecem concluídas.

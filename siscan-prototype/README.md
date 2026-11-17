@@ -1,8 +1,21 @@
 # Protótipo didático SISCAN
 
+**Versão parcial integrada — julgamento no mapa:** instrutor prepara AZUL/VERMELHO, abre **Julgamento didático**, informa alterações/motivo, confere prévia e registra a proposta. **Confirmar efeitos → Confirmar aplicação** publica o lote; **Rejeitar proposta** preserva os meios. **Retomar julgamento** recupera propostas/decisões e **Nova proposta de correção** preserva o histórico. Estado confirmado aparece no mapa/consulta autorizada. Ver [116 — Entrega](../docs/recovery/116_ENTREGA_JULGAMENTO_DIDATICO_NO_MAPA.md) e [103 — Passo a passo](../docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md).
+
+Prévia persistente de teste, na pasta `prototype` de entrega (`siscan-prototype` no repositório):
+
+```powershell
+$pythonCpc = 'C:\Users\bozoc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+& $pythonCpc check_cpc_judgment_http.py --serve --data-dir "$env:TEMP\siscan-julgamento-local"
+```
+
+Use pasta nova/vazia própria de teste; o harness recusa pasta alheia. O terminal informa URL/porta. Entre na raiz com **1** (instrutor), **2** (AZUL) ou **3** (VERMELHO), senha **somente-teste-local**, e abra `/atlanticador/editor.html`. Contas e meios são sintéticos/descartáveis. Primeira abertura cria dois grupos; reabrir a mesma pasta conserva estado/histórico e não recria grupos em memória. Use **Retomar julgamento** para consultar o histórico e componha novos grupos pela interface quando necessário. Opcional `--port NUMERO` permite reabrir na porta escolhida; não usar porta de outro serviço.
+
+O fluxo foi observado em `http://localhost:61269/atlanticador/editor.html`, com pasta `C:/Users/bozoc/AppData/Local/Temp/siscan-judgment-20261117-v1`. Essa instância é isolada; o principal em 8787 não foi migrado/reiniciado. A integração exige o schema de 112 e código atualizado; não há migração em requisição de usuário. Conferência/prévia/proposta não aplicam efeitos, e o automático entre grupamentos continua pendente.
+
 **Estado/adjudicação durável entregue:** `operational_state` registra propostas didáticas, revisões e decisões, aplicando efeitos oficiais somente por confirmação autorizada do instrutor. Cada lote tem antes/depois, revisão própria e recibo; rejeitar não altera os meios e repetir um comando não reaplica seus efeitos. Estado não avaliado não vira 100%. O armazenamento sobrevive a processo novo; ver [112 — Entrega](../docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md).
 
-Este é um provedor interno, sem novas rotas/botões no mapa. `operational_state_storage.migrate(db)` é explícita e foi verificada somente em bases descartáveis; `app.initialize` não a chama. O banco principal e o processo ativo não foram migrados/reiniciados. Antes de eventual implantação, preparar backup consistente e procedimento de entrega aprovado. Recursos de ensaio, posições e snapshots não são modificados pela confirmação.
+O provedor de 112 continua interno; o adaptador gráfico de 116 o consome pelas novas rotas de julgamento. `operational_state_storage.migrate(db)` é explícita e foi verificada somente em bases descartáveis; `app.initialize` não a chama. O banco principal e seu processo ativo não foram migrados/reiniciados. Antes de eventual implantação, preparar backup consistente e procedimento de entrega aprovado. Recursos de ensaio, posições e snapshots não são modificados pela confirmação.
 
 Na pasta `prototype`, verificar o fluxo completo isolado e a recuperação em processo novo:
 

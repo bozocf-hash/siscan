@@ -1,6 +1,6 @@
 # 103 — Roteiro do instrutor: disposição das forças e confronto
 
-**Elaborado em 2026-11-16; atualizado em 2026-11-17 pela entrega [108](108_ENTREGA_PAR_CPC_NO_MAPA.md).** O mapa definido é o ATLANTICADOR integrado ao SISCAN. Já permite organizar as forças e conferir um par AZUL/VERMELHO. **Execução de confronto por grupamentos e adjudicação de efeitos ainda não estão conectadas à tela.** “Preparar confronto” confere dados; não executa combate.
+**Atualizado em 2026-11-17 pela entrega [116](116_ENTREGA_JULGAMENTO_DIDATICO_NO_MAPA.md).** Versão parcial com julgamento didático, prévia, confirmação/rejeição e consulta dos efeitos no mapa ATLANTICADOR. “Preparar confronto” somente confere o par; o resultado oficial depende da confirmação explícita do instrutor. Confronto automático entre grupamentos ainda não está integrado.
 
 ## O que está disponível e o que ainda falta
 
@@ -11,9 +11,9 @@
 | Preparar dossiê inicial AZUL/VERMELHO com snapshots | Backend de 98 conectado à conferência gráfica em 108; referências iniciais, posições de planejamento e hashes separados |
 | Executar ensaio temporal de dois grupamentos | Ainda não integrado; o ensaio CPC existente é de unidades individuais e parâmetros sintéticos |
 | Reproduzir eventos do confronto no mapa | Concepção em 97; ainda não implementada |
-| Julgamento didático, confirmação e aplicação oficial de efeitos nos meios | Requisitos definidos; integração própria ainda pendente |
+| Julgamento didático, confirmação/rejeição e efeitos oficiais | Implementado e verificado no navegador isolado em 116; histórico persistente |
 
-Código instalado e processo ativo são coisas diferentes. A entrega gráfica pode ser conferida na prévia de teste; o servidor principal em 8787 não é reiniciado automaticamente. O roteiro pressupõe uma instância atualizada com as abas Grupos e CPC. A prévia de 108 usa dados sintéticos descartáveis, não os meios do exercício principal.
+Código instalado e processo ativo são coisas diferentes. A entrega gráfica pode ser conferida na prévia de teste; o servidor principal em 8787 não é reiniciado automaticamente. O roteiro pressupõe uma instância atualizada com as abas Grupos e CPC. A prévia de 116 usa dados sintéticos de teste, não os meios do exercício principal. Abra a raiz de `http://localhost:61269/` com usuário 1 e senha `somente-teste-local`, depois `/atlanticador/editor.html`. A porta depende do harness em execução; comandos para recriar estão no README do protótipo.
 
 ## Parte A — Passos que o instrutor já pode seguir na prévia
 
@@ -22,44 +22,52 @@ Código instalado e processo ativo são coisas diferentes. A entrega gráfica po
 3. **Escolher o partido no seletor “Partido SISCAN”.** O instrutor pode alternar AZUL/VERMELHO. Cada troca atualiza lista/realce; não junta inventários dos dois partidos. A seleção de grupo não é o agrupamento de camadas do editor.
 4. **Abrir a aba “Grupos” (nome acessível: “Grupamentos”).** Em “Nova composição”, informar designação, domínio e integrantes elegíveis; acionar “Criar grupamento”. Unidade sem instância/snapshot/domínio demonstrado aparece pendente ou indisponível. O catálogo técnico completo não representa automaticamente unidades prontas para agrupamento; a integração atual reconhece a configuração aérea sintética controlada.
 5. **Conferir o grupo criado.** Selecioná-lo na lista para realçar os marcadores já plotados. “Enquadrar integrantes” altera apenas a câmera. A lista mostra nomes/códigos do cadastro, posição disponível e pendências; clicar num integrante abre a consulta no painel. “Sem posição” não significa perda ou ausência de meio.
-6. **Repetir para o outro partido.** Para liberar integrantes de um grupo, usar “Arquivar grupamento” e “Confirmar arquivamento”. Para recompor, arquivar e criar outro; não há edição gráfica dos membros. Na prévia de 108 já existem Grupo AZUL e Grupo VERMELHO, dispensando criar novas composições para a demonstração.
+6. **Repetir para o outro partido.** Para liberar integrantes de um grupo, usar “Arquivar grupamento” e “Confirmar arquivamento”. Para recompor, arquivar e criar outro; não há edição gráfica dos membros. Na primeira abertura da prévia 116 existem grupos sintéticos; após reinício, crie novas composições pela interface. Os resultados oficiais/histórico persistem e não dependem desses grupos temporários.
 7. **Abrir CPC.** No mesmo painel lateral, selecionar explicitamente “Grupamento AZUL” e “Grupamento VERMELHO”. Nenhum grupo é escolhido automaticamente. Grupos incompatíveis ficam indisponíveis com motivo. O modo de consulta suspende as ferramentas de edição/plotagem.
 8. **Acionar Preparar confronto.** O servidor reconfere autorização, exercício, revisões, snapshots, adjudicação e posições. Aguardar “Par conferido. Revisão do instrutor pendente.” Falha exige atualizar as fontes/corrigir a composição; não há preparação parcial.
 9. **Conferir o par e enquadrar.** Usar “Enquadrar o par”; AZUL e VERMELHO aparecem juntos no mapa definido, sem mover os meios. Clicar no marcador ou no integrante abre suas referências no painel. Posição é de planejamento; configuração inicial não representa combustível/munição atuais. Dado desconhecido permanece não informado.
-10. **Voltar ao planejamento.** A consulta é removida e a perspectiva autorizada é recarregada. Trocar seleção, atualizar fontes ou sair invalida a conferência anterior. Uma preparação não reserva recursos para uso futuro.
+10. **Continuar no CPC para julgar**, seguindo a Parte B. Para encerrar a consulta, use **Voltar ao planejamento**; a camada do par sai e a perspectiva autorizada é recarregada. Trocar seleção/fontes invalida a prévia anterior. Uma preparação não reserva recursos para uso futuro.
 
-**Aqui termina o fluxo implementado.** Os grupos/histórico são temporários e se perdem ao reiniciar o servidor. Julgamento, confirmação e aplicação de perdas oficiais ainda não têm controles funcionais nesta tela.
+Grupos/histórico de composição continuam em memória e se perdem ao reiniciar o servidor. Propostas, decisões, efeitos oficiais e recibos do julgamento são duráveis na base habilitada. Nenhuma etapa cria um resultado automático de combate.
 
-## Parte B — Fluxo previsto para realizar o confronto
+## Parte B — Julgar, confirmar e consultar pela interface
 
-Os passos abaixo descrevem a experiência desejada, fundamentada em 80/81/97. **São etapas futuras, não botões já existentes.** Não substituem a especificação de execução/visibilidade/adjudicação que ainda precisa ser desenvolvida.
+1. **Abrir julgamento didático**, depois de preparar o par. Conferir estado oficial/revisão por meio. “Não avaliado” não significa zero ou 100%; configuração técnica inicial não é saldo logístico atual.
+2. **Marcar Alterar este meio** nos integrantes afetados. Em Avaliação, preservar, definir índice de 0 a 100 ou retirar avaliação explicitamente. Em Perda, preservar ou fazer declaração explícita. Meios não marcados permanecem inalterados; vazio não vira zero.
+3. **Informar a justificativa** e acionar **Conferir prévia**. Ler o antes/depois. Nada foi aplicado ou registrado como decisão nesta etapa.
+4. **Registrar proposta.** O sistema grava ID/revisão/hash, sem alterar o estado oficial. Se editar depois, confira outra prévia e use **Salvar revisão**. Ajuste não é salvo silenciosamente ao confirmar.
+5. **Confirmar efeitos** abre a revisão final. **Cancelar aplicação** retorna sem publicar mudanças. Somente **Confirmar aplicação** envia o lote oficial, reconferindo autorização, fontes, grupos e revisões. Conflito exige nova conferência; não insistir mudando o comando para contornar revisão.
+6. **Rejeitar proposta** grava decisão terminal sem aplicar efeitos. Proposta rejeitada fica no histórico; uma nova intenção deve ser outra proposta, não reabertura do registro anterior.
+7. **Conferir o recibo e a vista oficial.** Após confirmar, o mapa/ficha recebe o estado oficial autorizado. Se o refresh falhar após commit, a tela conserva o recibo e indica atualização pendente; use **Atualizar vista oficial**. Resposta perdida oferece **Reenviar mesma intenção**, mantendo o comando e sem aplicar duas vezes.
+8. **Retomar julgamento** consulta registros mesmo após reload/reinício. Proposta pendente com grupos atuais pode restaurar explicitamente o par conferido no mapa. Se os grupos foram perdidos/alterados, ela continua consultável e pode ser rejeitada, mas não confirmada pela cópia antiga.
+9. **Nova proposta de correção** referencia a decisão confirmada e segue prévia/registro/confirmação novamente. Se houver composição atual selecionada, ela é conferida pelo servidor; perda não é recuperada apenas por aumentar índice. O histórico anterior permanece intacto.
+10. **Sair ou trocar seleção.** Edição local não salva/resposta pendente gera aviso. Cancelar preserva a edição; aceitar o descarte limpa a edição local, sem apagar proposta já registrada. Operador consulta somente estado oficial do próprio partido, sem motivo privado ou aba CPC.
 
-1. **Revalidar a preparação antes de executar.** A seleção/conferência já está entregue na Parte A. A etapa futura deve vincular a preparação aos estados operativos e recursos atuais, sem tratar uma captura antiga como reserva.
-2. **Completar a situação inicial de execução.** Definir relação entre posições geográficas de planejamento e posições temporais do ensaio, estoques atuais e origem/unidades validadas. Ausências geram pendência; não substituir desconhecido por zero.
-3. **Escolher a forma de adjudicação.** No modo assistido, o sistema executa apenas regras didáticas/modelos previamente definidos e apresenta uma proposta explicável. Na arbitragem didática direta, o instrutor registra os efeitos desejados para o exercício sem precisar aceitar ou executar um cálculo automático. Ambos precisam preservar justificativa e rastreabilidade.
-4. **Acompanhar a apuração.** Quando a execução/reprodução estiver integrada, eventos registrados poderão ser consultados no mesmo mapa e numa linha do tempo: tempo, envolvidos e mudanças de estado/estoque. Animação só representa fatos existentes no registro; não inventa trajetórias ou dados de detecção. Voltar no replay não desfaz efeitos oficiais.
-5. **Revisar a proposta e decidir.** Conferir estado inicial/final, combustível, munição, avarias/perdas propostas e pendências por meio. O instrutor poderá confirmar, ajustar ou rejeitar, registrando autoria e justificativa. **Resultado automático não vira resultado oficial por terminar o ensaio.**
-6. **Aplicar e consultar o resultado oficial.** Somente após confirmação autorizada o backend publica efeitos rastreáveis, com controle de revisão e aplicação única. O mapa/ficha distinguem ensaio de estado oficial e preservam o histórico. O operador recebe somente o que sua visibilidade permitir.
+Na prévia verificada em 116, o AZUL foi confirmado em 60% e corrigido/revisado para 75%, revisão oficial 2; propostas do VERMELHO foram rejeitadas, mantendo estado não avaliado. São resultados didáticos de teste, sem consumo ou cálculo de combate.
 
 ```mermaid
 flowchart LR
-    A[Dispor e compor no mapa existente] --> B[Selecionar dois grupos e conferir dados]
-    B --> C[Ensaio assistido ou arbitragem didática]
-    C --> D[Proposta de resultado]
-    D --> E[Instrutor confirma ou ajusta]
-    E --> F[Estado oficial e histórico]
+    A[Preparar par no mapa] --> B[Informar julgamento e conferir prévia]
+    B --> C[Registrar ou salvar revisão]
+    C --> D[Revisão final do instrutor]
+    D --> E[Confirmar e publicar efeitos]
+    D --> F[Rejeitar sem efeitos]
+    E --> G[Estado oficial e histórico]
+    F --> G
 ```
 
-A e B estão entregues para composição e conferência inicial, com as limitações de 108. C–F continuam futuros; não há execução ou resultado oficial de grupamentos disponível na interface.
+## Parte C — O que continua futuro
 
-## Como ler os indicadores quando forem integrados
+Ensaio automático por grupamentos, reprodução temporal de eventos, regras/entradas reais validadas e integração logística de consumo de combate permanecem etapas próprias. O automático produzirá proposta para o mesmo caminho de revisão do instrutor, sem publicação automática por terminar o ensaio. Não confundir esta arbitragem didática com resolução física de combate.
+
+## Como ler os indicadores
 
 Para superfície, preservar os limites confirmados: acima de 60% combater; de 40% a 60%, incluindo os limites, navegar; abaixo de 40% flutuar. O índice e as avarias confirmados pelo instrutor não são deduzidos de combustível ou munição.
 
 Combustível: mínimo M definido pelo operador, sem padrão; pré-alerta fixo em M+5 pontos, vermelho em M ou menos. Percentual só com base/unidade validada. O indicador geral de armamento ainda exige método de agregação e definição do limiar: o exemplo de 30% não foi fixado como regra universal. Não somar tipos heterogêneos para fabricar o percentual.
 
-Esgotamento: superfície/terrestre imobilizam; aeronave em voo tem perda proposta para adjudicação. Ficha de grupo não recebe média automática de poder ou estado dos integrantes. Estas regras orientam a integração futura; as três barras não foram implementadas pela aba de grupos.
+Esgotamento: superfície/terrestre imobilizam; aeronave em voo tem perda proposta para adjudicação. Ficha de grupo não recebe média automática de poder ou estado dos integrantes. A entrega 116 exibe o índice oficial conhecido na consulta/tooltip. Três barras conjuntas, indicador agregado de armamento e restrições efetivas integradas ao motor continuam pendentes de seus contratos.
 
-## Próximo passo para o instrutor conseguir confrontar pela tela
+## Próximo passo
 
-Seleção do par e conferência inicial estão entregues em 108. Conforme a ordem de 104, faltam contratos de estado/adjudicação durável, julgamento didático, confirmação e aplicação única dos efeitos pelo instrutor. Ensaio temporal/replay por grupamentos exige integração própria. Manter o mesmo mapa e distinguir preparação de resultado oficial.
+O fluxo parcial de julgamento/confirmação/efeitos está entregue em 116 na prévia isolada. Conforme a etapa 4 de 104, definir regras/entradas e integrar o produtor automático de proposta por grupamentos. Ativação no principal exige backup consistente, janela, migração explícita e verificação próprios; não reiniciar a instância em uso para testar sem preservar as composições temporárias.

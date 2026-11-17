@@ -1,6 +1,6 @@
 # Tarefas: julgamento didático e efeitos no mapa
 
-**2026-11-17. Especificação e plano aprovados por “sim”; Fase 3 aprovada por “sim”; Fase 4 em execução.** Base: [especificação — Recorte 3](../../../SPEC-force-confrontation.md), [plano aprovado](plan.md) e [115](../../../docs/recovery/115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md). Entregas 108/112 e planos anteriores preservados. Após aprovação desta lista, implementar sequencialmente, com testes de comportamento antes da mudança correspondente e commits por incremento verificado.
+**2026-11-17. Especificação e plano aprovados por “sim”; Fase 3 aprovada por “sim”; Fase 4 concluída em 116.** Base: [especificação — Recorte 3](../../../SPEC-force-confrontation.md), [plano aprovado](plan.md) e [115](../../../docs/recovery/115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md). Entregas 108/112 e planos anteriores preservados. Após aprovação desta lista, implementar sequencialmente, com testes de comportamento antes da mudança correspondente e commits por incremento verificado.
 
 O aceite final é o percurso real do instrutor no mapa, não apenas backend. Checkpoints são verificações técnicas: comunicar resultados e continuar sem confirmações rotineiras durante a execução aprovada. Mudança material exige rever o ponto afetado. Não migrar o principal, reiniciar processos em uso, editar originais/DB3K ou criar produtor automático.
 
@@ -25,7 +25,7 @@ node check_cpc_preparation.mjs
 node check_map_groups.mjs
 ```
 
-Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nenhum teste executado nesta fase documental. Rodar os comandos pertinentes por incremento, sem repetir bateria por documentação ou somar novamente a mesma execução. HTTP/navegador usam banco, cookie, porta e meios descartáveis. Teste vazio e leitura de código não substituem verificação funcional/visual.
+Na raiz: `git diff --check`. Verificadores implementados e executados; 179 testes nomeados e verificador assertivo de plotagem passaram, conforme 116. Rodar os comandos pertinentes por incremento, sem repetir bateria por documentação ou somar novamente a mesma execução. HTTP/navegador usam banco, cookie, porta e meios descartáveis. Teste vazio e leitura de código não substituem verificação funcional/visual.
 
 ## JUD-01 — Consultar proposta/recibo e conferir efeitos por API pública
 
@@ -153,7 +153,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-13 — Documentar a entrega e o roteiro do instrutor
 
-- [ ] Revisar código/contratos e consolidar documentos em incrementos pequenos.
+- [x] Código/contratos revisados, README/roteiro 103/relatório 116 e controles consolidados, com limites reais explícitos.
 - **Aceite:** subpasso A atualiza README, relatório numerado livre, roteiro 103 e checklist com passos reais, contas/URL de teste e limites. Subpasso B atualiza especificação/plano/checklist com gates concluídos. Subpasso C atualiza controles 00/09/10, mapa de capacidades e checklist sem contradições com a disponibilidade observada.
 - **Verificar:** revisão do código/diff, links locais, contagens/evidências e hashes dos planos antigos. Não repetir testes por edição apenas documental. Relatar separadamente código instalado, prévia executando e principal sem migração.
 - **Dependências:** JUD-12 e Checkpoint D.
@@ -161,7 +161,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-14 — Sincronizar e publicar os incrementos
 
-- [ ] Entregar somente código/documentação autorizados na pasta SISCAN e no GitHub.
+- [x] Código/documentação sincronizados por SHA-256 e publicados no GitHub; bases/originais/processo principal preservados.
 - **Aceite:** comparar destino com base conhecida antes de copiar, verificar SHA-256, preservar alterações externas e não incluir banco, backup, credenciais ou arquivos originais. Commits por incremento verificado na branch existente; push/situação final comprovados. Manter prévia identificada se entregue e não reiniciar principal/grupos temporários.
 - **Verificar:** hashes/diff/commits/resultado do envio e URL da prévia quando em execução. Não declarar o fluxo disponível no servidor principal sem procedimento específico e observação real.
 - **Dependência:** JUD-13.
@@ -169,4 +169,4 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## Gate
 
-Especificação e plano aprovados por “sim”; revisar esta lista concreta antes da Fase 4. Depois de aprovada, executar JUD-01–14 sequencialmente, com os checkpoints técnicos previstos e sem novas confirmações rotineiras. Não antecipar migração principal, confronto automático ou ampliação de escopo.
+Especificação, plano e lista aprovados por “sim”; JUD-01–14 e checkpoints concluídos conforme 116. Não restam gates desta fatia. Não antecipar migração principal, confronto automático ou ampliação de escopo.

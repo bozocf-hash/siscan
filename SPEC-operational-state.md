@@ -1,5 +1,7 @@
 # Spec: operational-state — estado e adjudicação durável
 
+**Integração posterior — [116](docs/recovery/116_ENTREGA_JULGAMENTO_DIDATICO_NO_MAPA.md):** adaptador gráfico CPC passou a consumir este publicador e suas leituras públicas de proposta/recibo/prévia/projeção. Schema de 112 preservado, sem segundo publicador ou migração principal. As exclusões de UI/HTTP abaixo descrevem o recorte original de 112, não a ausência da integração posterior.
+
 **2026-11-17. Especificação, plano e tarefas aprovados; implementação verificada em [112](docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md).** Lista de Fase 3 aprovada por “aprovado”; OST-01–10 concluídas. Preservadas a ordem de 104 e a conferência gráfica de 108; provedor interno entregue sem migração do principal ou nova interface de julgamento.
 
 ## Objetivo e premissas

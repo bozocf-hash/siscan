@@ -1,6 +1,6 @@
 # Spec: force-confrontation — preparação didática de grupamentos
 
-**Atualização de 2026-11-17 — Recorte 3 aprovado por “sim”:** [113](docs/recovery/113_ESPECIFICACAO_JULGAMENTO_DIDATICO_NO_MAPA.md) especifica julgamento/prévia/confirmação/consulta no mapa, consumindo o estado durável entregue em 112. Recortes 1/2 permanecem concluídos. [Plano de Fase 2](tasks/force-confrontation/julgamento/plan.md) aprovado por “sim”; [tarefas de Fase 3](tasks/force-confrontation/julgamento/todo.md) propostas conforme [115](docs/recovery/115_TAREFAS_JULGAMENTO_DIDATICO_NO_MAPA.md), antes do código; sem migração principal autorizada nesta etapa.
+**Atualização de 2026-11-17 — Recorte 3 entregue:** especificação, plano e tarefas aprovados por “sim”; JUD-01–14 concluídas e verificadas em [116](docs/recovery/116_ENTREGA_JULGAMENTO_DIDATICO_NO_MAPA.md). Percurso real de julgamento/prévia/confirmacão/rejeição/estado/histórico no mesmo mapa. Banco/processo principal preservados; automático permanece etapa posterior.
 
 **Data: 2026-11-16. Estado: especificação, plano e tarefas aprovados; recorte implementado e verificado em [98](docs/recovery/98_ENTREGA_PREPARACAO_CPC_GRUPAMENTOS.md).** A lista de Fase 3 foi aprovada por “siga”. O registro entregue em 93 permanece preservado. Esta entrega acrescenta o consumidor de composições em memória, sem execução ou interface de confronto. Mantido o mapa ATLANTICADOR já definido.
 
@@ -225,7 +225,7 @@ Escopo/ordem de 104 aprovados por “si”. Fase 1 deste Recorte 2 aprovada por 
 
 ## Recorte 3 — Julgamento didático, confirmação e estado no mapa
 
-**2026-11-17. Fase 1 e plano de Fase 2 aprovados por “sim”; tarefas de Fase 3 propostas em 115.** Continuidade solicitada por “pode seguir” após [112](docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md). Corresponde à etapa 3 já delimitada em 104; mantém os IDs `force-confrontation`, `operational-state` e `execution-core`, sem um segundo publicador de efeitos.
+**2026-11-17. Especificação, plano e tarefas aprovados por “sim”; implementação verificada em 116.** Continuidade solicitada por “pode seguir” após [112](docs/recovery/112_ENTREGA_ESTADO_E_ADJUDICACAO_DURAVEL.md). Corresponde à etapa 3 já delimitada em 104; mantém os IDs `force-confrontation`, `operational-state` e `execution-core`, sem um segundo publicador de efeitos.
 
 ### Objetivo, premissas e fronteira
 
@@ -321,7 +321,7 @@ node check_cpc_judgment.mjs
 node check_cpc_preparation.mjs
 ```
 
-Na raiz, `git diff --check`. Verificadores de julgamento ainda não existem; nenhum teste/inspeção gráfica novo foi executado nesta fase documental. Plano definirá harness e comandos de prévia isolada, sem usar dados do instrutor. Browser testing será de ações reais, não substituído por leitura de código ou teste JS.
+Na raiz, `git diff --check`. Verificadores implementados e executados: 179 testes nomeados distintos e o verificador assertivo de plotagem passaram, com percurso real no navegador e recuperação em 116. Harness persistente em base/porta/cookie próprios, sem usar dados do instrutor. Testes JS/HTTP e observação de navegador foram registrados separadamente.
 
 ### Critérios de aceite
 
@@ -344,4 +344,4 @@ Na raiz, `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 Sempre preservar autoridade do instrutor, proveniência, visibilidade por partido e confirmação posterior à prévia. Rever mudanças de schema, ativação no principal, efeitos logísticos ou automação. Nunca publicar apuração automaticamente, recalcular silenciosamente a intenção aceita, modificar originais/DB3K ou alegar que julgamento didático valida parâmetros reais de combate.
 
-Fase 1 aprovada por “sim”. Captura de base própria, confirmação em duas ações e retomada/correção pelo painel existente fazem parte do contrato aprovado. Plano de Fase 2 aprovado por “sim”; lista concreta de Fase 3 proposta em 115 e no diretório próprio, incluindo coordenação de concorrência e leitura pública dos registros. Revisar essa lista antes do código; nenhuma migração foi executada nesta fase documental.
+Gates de especificação, plano e tarefas satisfeitos por aprovações distintas. JUD-01–14 e checkpoints concluídos conforme 116; não reabrir gates desta fatia. Migração executada somente em bases de teste/harness; principal preservado. Produtor automático e implantação principal continuam recortes/procedimentos próprios.

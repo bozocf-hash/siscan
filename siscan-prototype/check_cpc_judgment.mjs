@@ -29,6 +29,12 @@ test('trocar contexto descarta resposta antiga',async()=>{
 test('edição não salva impede saída sem aceite',async()=>{
  const env=setup(async()=>basis);await env.c.open();env.c.reason('rascunho');assert.equal(env.c.canLeave(),false);
 });
+test('aceitar descarte limpa a edição e a proposta da vista antes do histórico',async()=>{
+ const env=setup(async path=>path.endsWith('/context')?basis:path.endsWith('/preview')?{basis,effects:[]}:path.includes('?')?{items:[],next_cursor:null}:{proposal_id:'p',revision:1,body_sha256:'sha'}, {confirmDiscard:()=>true});
+ await env.c.open();env.c.reason('Aula');env.c.edit('u',draft);await env.c.preview();await env.c.save();
+ env.c.edit('u',{indexValue:'30'});await env.c.history();assert.equal(env.state.basis,null);assert.equal(env.state.proposal,null);
+ assert.equal(env.c.review(),false);assert.equal(await env.c.decide('confirm'),false);
+});
 test('refresh falho após commit mantém recibo oficial',async()=>{
  let contexts=0;const env=setup(async path=>{if(path.endsWith('/context')){if(++contexts>1)throw Error('refresh');return basis;}if(path.endsWith('/preview'))return {basis,effects:[]};if(path.endsWith('/decisions'))return {decision_id:'d',action:'confirm'};return {proposal_id:'p',revision:1,body_sha256:'s'};});
  await env.c.open();env.c.reason('Aula');env.c.edit('u',draft);await env.c.preview();await env.c.save();env.c.review();await env.c.decide('confirm');

@@ -62,10 +62,11 @@ export function createJudgmentController({request,render,onOfficial,confirmDisca
  const api={
   setPreparation(preparation){++generation;s=blank();s.preparation=preparation;emit();},
   canLeave(){if(s.busy){s.error='Aguarde a operação em andamento.';emit();return false;}if(!s.dirty&&!s.pending)return true;
-   const accepted=confirmDiscard('Há edição não salva ou resposta pendente. Sair preserva propostas registradas. Deseja sair?');if(accepted){s.dirty=false;s.pending=null;}return accepted;},
+   const accepted=confirmDiscard('Há edição não salva ou resposta pendente. Sair preserva propostas registradas. Deseja sair?');
+   if(accepted){const {preparation,history,nextCursor}=s;s={...blank(),preparation,history,nextCursor};emit();}return accepted;},
   async open(){if(!s.preparation||!api.canLeave())return false;const p=s.preparation;
    return read(async()=>{const base=await request('/api/cpc/judgments/context',{body:{selection:selection(p),expected_view_sha256:p.view_sha256}});
-    return()=>{s={...blank(),preparation:p,basis:base,busy:true};onOfficial(base.states);};});},
+    return()=>{s={...blank(),preparation:p,basis:base,busy:true,notice:'Base oficial conferida. Selecione os meios, informe as alterações e confira a prévia.'};onOfficial(base.states);};});},
   edit(uid,patch){if(!editing()||!s.basis?.states[uid])return;s.drafts[uid]={enabled:false,indexAction:'keep',indexValue:'',lossAction:'keep',...s.drafts[uid],...patch};changed();},
   reason(value){if(!editing())return;s.reason=value;changed();},
   async preview(){if(!editing())return false;let body;try{body=content();}catch(e){s.error=e.message;emit();return false;}
@@ -83,7 +84,7 @@ export function createJudgmentController({request,render,onOfficial,confirmDisca
   retry(){return s.pending?write(s.pending):Promise.resolve(false);},
   async refresh(){if(s.busy)return;await refreshOfficial();emit();},
   async history(cursor=0){if(!api.canLeave())return false;
-   return read(async()=>{const list=await request('/api/cpc/judgments?limit=20&cursor='+cursor);return()=>{s.history=cursor?[...s.history,...list.items]:list.items;s.nextCursor=list.next_cursor;};});},
+   return read(async()=>{const list=await request('/api/cpc/judgments?limit=20&cursor='+cursor);return()=>{s.history=cursor?[...s.history,...list.items]:list.items;s.nextCursor=list.next_cursor;s.notice=s.history.length?'Selecione um julgamento do histórico. Propostas pendentes não são efeitos oficiais.':'Nenhum julgamento registrado neste exercício.';};});},
   async resume(id){if(!api.canLeave())return false;return read(async()=>{
    const view=await request('/api/cpc/judgments/'+encodeURIComponent(id));const base=view.current.body.origin.basis;
    let value=null;
@@ -130,7 +131,8 @@ export function installJudgmentPanel({container,csrf,onOfficial,onForbidden,onRe
   notice.textContent=s.busy?'Conferindo julgamento…':s.notice||'Prepare um par para julgar, ou retome um registro existente.';error.textContent=s.error;
   const locked=s.busy||Boolean(s.pending)||Boolean(s.receipt),key=s.basis?.basis_sha256||null;
   if(key!==lastBasis){lastBasis=key;inputs.clear();form.replaceChildren();
-   for(const uid of Object.keys(s.basis?.states||{})){
+   const ordered=(s.basis?.preparation.parties||[]).flatMap(p=>p.members.map(m=>m.unit_id));
+   for(const uid of ordered){
     const field=el('fieldset'),legend=el('legend',memberName(s.basis,uid)),official=el('small'),check=el('input');check.type='checkbox';
     const mark=el('label',' Alterar este meio');mark.prepend(check);check.setAttribute('aria-label','Alterar '+memberName(s.basis,uid));
     const [indexLabel,index]=makeSelect('Avaliação · '+memberName(s.basis,uid),[['keep','Preservar avaliação'],['set','Definir índice (%)'],['clear','Retirar avaliação']]);

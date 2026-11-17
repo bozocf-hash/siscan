@@ -3,10 +3,11 @@ export async function install(map){
  let installGroupPanel=null;
  try{({installGroupPanel}=await import('/map-groups.mjs'));}
  catch(error){console.warn('Grupamentos indisponíveis nesta instância; atualize o servidor.',error);}
- let activeTab='units',groupsController=null,cpcController=null,previousTab='units',loadGeneration=0;
+ let activeTab='units',groupsController=null,cpcController=null,previousTab='units',loadGeneration=0,officialStates={},cpcPreparation=null;
  const element=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
  const me=await(await fetch('/api/me')).json();if(!me.user)throw Error('Entre no SISCAN para plotar meios.');
  let installCpcPanel=null;if(me.user.role==='instructor'){try{({installCpcPanel}=await import('/cpc-preparation.mjs'));}catch(error){console.warn('Preparação CPC indisponível nesta instância.',error);}}
+ let installJudgmentPanel=null;if(me.user.role==='instructor'){try{({installJudgmentPanel}=await import('/cpc-judgment.mjs'));}catch(error){console.warn('Julgamento indisponível nesta instância.',error);}}
  const perspective=document.querySelector('#perspective');if(perspective&&me.user.role==='student'){perspective.value=me.user.team.toLowerCase();perspective.dispatchEvent(new Event('change'));perspective.disabled=true;}
  const dock=document.querySelector('#layers-panel'),original=element('div');original.className='siscan-original-layers';
  for(const child of [...dock.children])if(!child.classList.contains('panel-heading')&&child.id!=='layer-resize')original.append(child);
@@ -18,6 +19,7 @@ export async function install(map){
  const cpcTab=element('button','CPC');cpcTab.setAttribute('aria-label','Preparação CPC');
  if(me.user.role==='instructor'){tabs.append(cpcTab);cpcTab.disabled=!installCpcPanel;if(!installCpcPanel)cpcTab.title='Atualize o servidor para preparar o par CPC.';}
  const show=which=>{
+  if(activeTab==='cpc'&&which!=='cpc'&&cpcController?.canLeave&&!cpcController.canLeave())return false;
   const entering=which==='cpc'&&activeTab!=='cpc',leaving=activeTab==='cpc'&&which!=='cpc';
   if(entering)previousTab=activeTab;
   activeTab=which;dock.querySelector('.panel-heading h2').textContent=({layers:'Camadas',units:'Meios adjudicados',groups:'Grupamentos',cpc:'Conferência CPC'})[which];
@@ -30,6 +32,7 @@ export async function install(map){
  };
  layersTab.onclick=()=>show('layers');unitsTab.onclick=()=>show('units');groupsTab.onclick=()=>show('groups');cpcTab.onclick=()=>show('cpc');
  document.querySelector('#close-layers').addEventListener('click',()=>{if(activeTab==='cpc')show(previousTab);});
+ document.querySelector('#close-layers').addEventListener('click',event=>{if(activeTab==='cpc'&&!cpcController.canLeave()){event.preventDefault();event.stopImmediatePropagation();}},true);
  document.querySelector('#toggle-layers').addEventListener('click',()=>show('layers'));
  const opener=element('button','Meios');opener.title='Abrir meios adjudicados';opener.onclick=()=>{dock.hidden=false;show('units');};document.querySelector('#tools').append(opener);
  const title=element('h2','Inserir meios adjudicados'),body=element('div');panel.append(title,body);
@@ -60,20 +63,22 @@ export async function install(map){
   }else{for(const restore of planningLocks)restore();planningLocks=[];}
  }
  function drawCpc(preparation){
+  cpcPreparation=preparation;if(!preparation)officialStates={};
   cpcMarkers.clearLayers();cpcMarkerIndex.clear();
   if(activeTab!=='cpc'||!preparation)return;
   cpcMarkers.addTo(map);
   for(const party of preparation.parties)for(const member of party.members){
    if(member.latitude===null||member.longitude===null)continue;
-   const u={...member,id:member.asset_id,category:member.domain==='aereo'?'Aeronave':''},visual=element('div');
+   const u={...member,id:member.asset_id,category:member.domain==='aereo'?'Aeronave':'',operational_state:officialStates[member.unit_id]},visual=element('div');
    visual.className='siscan-unit-icon cpc-'+party.team.toLowerCase();visual.innerHTML=iconFor(u,kindFor(u,party.team),party.team);visual.append(element('span',party.team+' · '+u.code+' · '+u.name));
    const marker=L.marker([u.latitude,u.longitude],{icon:L.divIcon({html:visual,className:'siscan-cpc-marker',iconSize:[66,58],iconAnchor:[33,24]}),title:party.team+' · '+u.code+' · '+u.name,keyboard:true}).addTo(cpcMarkers);
    marker.getElement().dataset.cpcUnit=member.unit_id;
-   marker.bindTooltip(element('div',party.team+' · '+u.code+' · '+u.name+' · posição de planejamento'),{direction:'top'});
+   const tooltip=info(u);tooltip.prepend(element('strong',party.team+' · posição de planejamento'));marker.bindTooltip(tooltip,{direction:'top',opacity:1});
    marker.on('click',event=>{event.originalEvent?.stopPropagation();cpcController.inspect(member.unit_id);});cpcMarkerIndex.set(member.unit_id,marker);
   }
  }
- if(installCpcPanel)cpcController=installCpcPanel({container:cpcPanel,csrf:me.csrf,preview:drawCpc,focus:()=>focusPoints([...cpcMarkerIndex.values()].map(m=>m.getLatLng())),exit:()=>show(previousTab)});
+ if(installCpcPanel)cpcController=installCpcPanel({container:cpcPanel,csrf:me.csrf,preview:drawCpc,focus:()=>focusPoints([...cpcMarkerIndex.values()].map(m=>m.getLatLng())),exit:()=>show(previousTab),installJudgmentPanel,
+  onOfficial:states=>{officialStates=states;if(cpcPreparation)drawCpc(cpcPreparation);}});
  style.textContent+=' .siscan-cpc-marker{background:none;border:0}.siscan-unit-icon.cpc-azul{outline:2px solid #4ab6ff;border-radius:6px}.siscan-unit-icon.cpc-vermelho{outline:2px dashed #ff7777;border-radius:6px}';
  document.addEventListener('keydown',event=>{
   if(activeTab!=='cpc')return;
@@ -85,7 +90,16 @@ export async function install(map){
  document.addEventListener('contextmenu',event=>{const icon=event.target.closest?.('.siscan-unit-marker');if(!icon)return;if(activeTab==='groups'||activeTab==='cpc'){event.preventDefault();event.stopImmediatePropagation();return;}const marker=markerIndex.get(Number(icon.dataset.siscanUnit));if(marker){event.preventDefault();event.stopImmediatePropagation();marker.openPopup();}},true);
  const preferenceKey=(u,party=team.value)=>'siscan.map.silhouette.'+me.user.id+'.'+party+'.'+u.id;
  const kindFor=(u,party=team.value)=>{try{const value=localStorage.getItem(preferenceKey(u,party));return Object.hasOwn(kinds,value)?value:classify(u);}catch{return classify(u);}};
- function info(u){const content=element('div');content.append(element('strong',u.code+' · '+u.name),element('p',u.category),element('p','Adjudicação: disponível ao partido'));content.append(element('p',u.fuel?`Combustível (ensaio sintético): ${u.fuel.remaining_kg} / ${u.fuel.capacity_kg} kg`:'Combustível: não informado'),element('p','Capacidade de combate: '+(u.combat_capability??'não informada')),element('p','Disponibilidade operacional: '+(u.operational_availability??'não informada')));return content;}
+ function officialInfo(value){
+  const section=element('div');section.append(element('strong','Estado operativo oficial'));
+  if(!value?.state){const labels={storage_not_enabled:'Armazenamento ainda não habilitado',unavailable:'Estado indisponível; confira a fonte',no_instance:'Sem instância individual demonstrada'};section.append(element('p',labels[value?.status]||'Não avaliado / atualização não solicitada'));return section;}
+  const current=value.state;
+  section.append(element('p',(current.index_percent===null?'Índice não avaliado':current.index_percent+'%')+' · '+(current.lost===null?'perda não avaliada':current.lost?'perda confirmada':'não perdido')));
+  if(current.index_percent!==null){const bar=element('progress');bar.max=100;bar.value=current.index_percent;bar.setAttribute('aria-label','Índice operativo oficial');bar.style.width='140px';bar.style.accentColor=current.lost||value.condition==='flutuar'?'#ff7777':value.condition==='navegar'?'#f9b24c':'#70cdb2';section.append(bar);}
+  if(value.condition)section.append(element('p','Condição: '+value.condition));
+  section.append(element('small','Revisão '+current.revision+(value.origin?' · '+value.origin.created_at:'')));return section;
+ }
+ function info(u){const content=element('div');content.append(element('strong',u.code+' · '+u.name),element('p',u.category),element('p','Adjudicação: disponível ao partido'));content.append(element('p',u.fuel?`Combustível (ensaio sintético): ${u.fuel.remaining_kg} / ${u.fuel.capacity_kg} kg`:'Combustível: não informado'),element('p','Capacidade de combate: '+(u.combat_capability??'não informada')),element('p','Disponibilidade operacional: '+(u.operational_availability??'não informada')));content.append(officialInfo(u.operational_state));return content;}
  function beginMove(u){selected=new Set([u.id]);moveId=u.id;pending=null;selecting=false;area.textContent='Selecionar área';map.dragging.enable();map.getContainer().style.cursor='crosshair';map.closePopup();show('units');dock.hidden=false;lat.value=u.latitude;lon.value=u.longitude;draw();message.textContent='Reposicionar '+u.code+': clique no destino ou altere as coordenadas e confirme. Esc cancela.';}
  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&moveId!==null){const unit=units.find(item=>item.id===moveId);if(unit){lat.value=unit.latitude;lon.value=unit.longitude;}map.getContainer().style.cursor='';moveId=null;pending=null;draw();message.textContent='Reposicionamento cancelado; posição preservada.';}});
  function iconFor(u,key,party=team.value){

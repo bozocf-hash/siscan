@@ -7,6 +7,13 @@ const defer=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;
 function fixture(request){const frames=[],previews=[];const controller=createCpcController({request,render:s=>frames.push(s),preview:p=>previews.push(p)});return {controller,frames,previews};}
 const choose=c=>{c.choose('AZUL','AZUL');c.choose('VERMELHO','VERMELHO');};
 
+await test('retomada restaura somente par disponível do contexto atual',async()=>{
+ const f=fixture(async()=>list());await f.controller.enter();assert.equal(f.controller.restore(pair()),true);
+ assert.equal(f.frames.at(-1).selection.AZUL,'AZUL');assert.equal(f.previews.at(-1).parties.length,2);
+ assert.equal(f.controller.restore({...pair(),scenario_version:2}),false);
+ const stale=pair();stale.parties[0].composition_revision=1;assert.equal(f.controller.restore(stale),false);
+});
+
 await test('seleção explícita prepara revisões, sem campos de efeitos',async()=>{
  let posted;const f=fixture(async(path,options)=>{if(options){posted=options.body;return pair();}return list();});
  await f.controller.enter();assert.equal(f.frames.at(-1).selection.AZUL,null);choose(f.controller);await f.controller.prepare();

@@ -118,7 +118,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-10 — Confirmar, rejeitar, retomar e corrigir pelo painel
 
-- [x] Confirmação/rejeição/correção/retomada implementadas; dez testes JS passaram, incluindo retry e resposta antiga.
+- [x] Confirmação/rejeição/correção/retomada implementadas; onze testes JS passaram, incluindo retry e resposta antiga.
 - **Aceite:** Confirmar efeitos → Confirmar aplicação envia revisão aceita; cancelar não aplica. Retry mantém UUID e intenção; após commit/refresh falho, conservar recibo e indicar vista pendente sem novo comando. Retomada/histórico e nova proposta de correção não recriam grupo, reaplicam decisão ou apagam passado.
 - **Verificar:** `check_cpc_judgment.mjs` com duplo clique, falha/resposta perdida, retry, rejeição, revisão editada, refresh falho, grupo ausente, retorno de consulta antiga e correção referenciada. Nenhum efeito disparado por reload, seleção ou abertura de histórico. JMAP-04/05/06/07/11.
 - **Dependência:** JUD-09.
@@ -126,7 +126,7 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ## JUD-11 — Mostrar efeitos oficiais no mesmo mapa
 
-- [ ] Integrar atualização de marcador/hover/lista e retorno ao planejamento.
+- [x] Projeção integrada ao mesmo mapa; retorno/tooltip verificados no navegador, inclusive operador AZUL com 75%.
 - **Aceite:** somente projeção oficial altera informações visuais do meio, com texto/valor/origem temporal; prévia não repinta como aplicada. Faixas só em superfície comprovada e perda não exibida como aptidão de combate. Preservar mapa, silhuetas, camada única, bloqueio de plotagem e dados desconhecidos explícitos.
 - **Verificar:** controlador/ponte e regressões `check_cpc_preparation.mjs`, `check_map_groups.mjs`, `check_map_units.py` pertinentes; no harness preparar percurso gráfico para JUD-12. Refresh oficial, troca de partido/saída e respostas atrasadas não restauram dados revogados ou geram movimento. JMAP-07/08/09/10/11/12.
 - **Dependências:** JUD-08/10.
@@ -134,12 +134,12 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ### Checkpoint C — Painel e mapa integrados
 
-- [ ] Controle de intenção/revisão, confirmação em duas ações, retry e falha de refresh verificados, sem aplicação implícita.
-- [ ] Projeção oficial consistente em lista/hover/planejamento, sem novo mapa, movimentação ou dados inventados.
+- [x] Intenção/revisão, duas ações, retry e refresh verificados; descarte corrigido e testado.
+- [x] Projeção oficial consistente; mapa único e posições preservadas.
 
 ## JUD-12 — Observar o marco parcial no navegador e após reinício
 
-- [ ] Verificar o percurso real completo em prévia isolada persistente e registrar evidências.
+- [x] Percurso real, revisão/correção/rejeição, reload/reinício, retomada, privacidade, foco e telas ampla/estreita verificados. Evidências em 116.
 - **Aceite:** selecionar par → abrir julgamento → prévia → registrar/revisar → confirmar/rejeitar → estado/histórico no mapa. Conferir correção, reload, teclado/foco/tela estreita e restauração de largura; operador só vê próprio estado oficial. Processo novo recupera histórico/recibo; proposta sem grupo disponível não confirma.
 - **Verificar:** navegador real com dados descartáveis e base persistente do harness, comparação SQL antes/depois e logs disponíveis. Encerrar/reiniciar apenas processo de teste identificado, nunca principal/prévia alheia. Registrar screenshots/limites e testes realmente observados, sem substituir browser por inspeção de código ou anunciar automático. JMAP-01–12 conforme matriz do plano.
 - **Dependências:** JUD-11 e Checkpoint C.
@@ -147,9 +147,9 @@ Na raiz: `git diff --check`. Verificadores de julgamento ainda não existem; nen
 
 ### Checkpoint D — Aplicativo parcial demonstrado
 
-- [ ] Percurso real, rejeição sem efeito, confirmação única, consulta e recuperação observados; JMAP-01–12 rastreados a evidência real.
-- [ ] Contagens sem dupla soma, regressões pertinentes aprovadas e dados/posições/recursos do usuário preservados.
-- [ ] Versão parcial identificada como prévia isolada; nenhum confronto automático, implantação/migração/reinício principal alegado.
+- [x] Percurso real/recuperação observados; JMAP-01–12 rastreados em 116.
+- [x] 179 testes nomeados distintos e verificador de plotagem passaram; posições/recursos preservados.
+- [x] Prévia isolada identificada; automático e principal não anunciados como entregues.
 
 ## JUD-13 — Documentar a entrega e o roteiro do instrutor
 

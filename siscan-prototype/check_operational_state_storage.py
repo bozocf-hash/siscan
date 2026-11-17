@@ -5,9 +5,85 @@ import sqlite3
 import tempfile
 import unittest
 from unittest.mock import patch
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
+import uuid
 
-from check_map_groups import seed
+from check_map_groups import seed,TEACHER
 import operational_state_storage as store
+import operational_state as state
+from check_operational_state import proposal,decision
+
+
+class TransactionTests(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory(prefix='siscan-operational-');self.addCleanup(self.temp.cleanup)
+        self.path=Path(self.temp.name)/'state.sqlite3'
+        with self.connect() as db:seed(db);store.migrate(db)
+
+    def connect(self):
+        db=sqlite3.connect(self.path,timeout=10);db.row_factory=sqlite3.Row
+        db.execute('PRAGMA foreign_keys=ON');return closing(db)
+
+    def register(self):
+        with self.connect() as db:return state.registrar_proposta(db,TEACHER,proposal(db))
+
+    def race(self,commands):
+        barrier=Barrier(2)
+        def worker(command):
+            with self.connect() as db:
+                barrier.wait(timeout=15)
+                try:return state.decidir_proposta(db,TEACHER,command)
+                except state.Conflict:return 'conflict'
+        with ThreadPoolExecutor(max_workers=2) as pool:return list(pool.map(worker,commands))
+
+    def counts(self):
+        with self.connect() as db:
+            return tuple(db.execute('SELECT count(*) FROM '+t).fetchone()[0] for t in
+                         ('operational_decisions','operational_effects'))
+
+    def test_mesmo_comando_concorrente_retorna_mesmo_recibo(self):
+        command=decision(self.register(),'confirm');results=self.race([command,command])
+        self.assertEqual(results[0],results[1]);self.assertEqual(self.counts(),(1,2))
+
+    def test_duas_decisoes_mesma_proposta_um_vencedor(self):
+        p=self.register();results=self.race([decision(p,'confirm'),decision(p,'confirm')])
+        self.assertEqual(results.count('conflict'),1);self.assertEqual(self.counts(),(1,2))
+
+    def test_duas_propostas_disputam_revisao_da_unidade(self):
+        a=self.register();b=self.register();results=self.race([decision(a,'confirm'),decision(b,'confirm')])
+        self.assertEqual(results.count('conflict'),1);self.assertEqual(self.counts(),(1,2))
+
+    def test_transacao_externa_rollback_remove_lote(self):
+        p=self.register()
+        with self.connect() as db:
+            db.execute('BEGIN IMMEDIATE');state.decidir_proposta(db,TEACHER,decision(p,'confirm'))
+            self.assertEqual(db.execute('SELECT count(*) FROM operational_effects').fetchone()[0],2)
+            with self.connect() as other:self.assertEqual(other.execute('SELECT count(*) FROM operational_effects').fetchone()[0],0)
+            db.rollback()
+        self.assertEqual(self.counts(),(0,0))
+
+    def test_commit_externo_torna_lote_duravel(self):
+        p=self.register()
+        with self.connect() as db:
+            db.execute('BEGIN IMMEDIATE');state.decidir_proposta(db,TEACHER,decision(p,'confirm'));db.commit()
+        self.assertEqual(self.counts(),(1,2))
+
+    def test_replay_apos_outro_estado_nao_aplica_novamente(self):
+        command=decision(self.register(),'confirm')
+        with self.connect() as db:first=state.decidir_proposta(db,TEACHER,command)
+        with self.connect() as db:
+            second=state.registrar_proposta(db,TEACHER,proposal(db,{'index_percent':40}))
+            state.decidir_proposta(db,TEACHER,decision(second,'confirm'))
+            self.assertEqual(state.decidir_proposta(db,TEACHER,command),first)
+        self.assertEqual(self.counts(),(2,4))
+
+    def test_comando_entre_operacoes_ou_contexto_nao_reutiliza(self):
+        with self.connect() as db:
+            body=proposal(db);p=state.registrar_proposta(db,TEACHER,body)
+            command=decision(p,'confirm');command['command_id']=body['command_id']
+            with self.assertRaises(state.Conflict):state.decidir_proposta(db,TEACHER,command)
+        self.assertEqual(self.counts(),(0,0))
 
 
 class MigrationTests(unittest.TestCase):

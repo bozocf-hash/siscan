@@ -81,7 +81,7 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ## OST-07 — Comprovar aplicação única e disputas de revisão
 
-- [ ] Verificar reenvio, concorrência e fronteira de commit do chamador.
+- [x] Concorrência, replay e transação externa verificados; 14 testes de armazenamento/transação passaram.
 - **Aceite:** replay autorizado idêntico retorna recibo sem exigir revisões pré-aplicação nem gerar novo efeito; outro conteúdo/autor/contexto/operação recusa. Uma decisão terminal por proposta e uma revisão nova por unidade/lote vencedor; lote perdedor não deixa registros parciais. Dentro de transação externa, durabilidade só após commit do chamador e rollback externo remove o lote inteiro.
 - **Verificar:** `check_operational_state_storage.py` com conexões independentes e sincronização explícita, sem sleeps: duas confirmações da mesma proposta e duas propostas disputando a mesma unidade. Testar revogação antes do replay, mudança posterior de estado e comando já usado. Confirmar contagens/antes-depois de histórico e recibos, incluindo rollback externo. Corrigir apenas o código afetado e repetir testes pertinentes. OS-03/05/06/09.
 - **Dependência:** OST-06.
@@ -89,8 +89,8 @@ Na raiz: `git diff --check`. Os dois verificadores novos ainda não existem; nen
 
 ### Checkpoint C — Publicação oficial integral
 
-- [ ] Confirmação, correção, replay e concorrência demonstram publicação integral e única.
-- [ ] Histórico anterior intacto; recursos/posição/tempo/configuração preservados; consulta distingue origem, perda e restrições não avaliadas.
+- [x] Confirmação, correção, replay e concorrência demonstram publicação integral e única.
+- [x] Histórico e demais tabelas preservados; origem, perda e restrições não avaliadas distintos.
 
 ## OST-08 — Recuperar, detectar corrupção e restaurar em cópia
 

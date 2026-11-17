@@ -96,3 +96,8 @@ Primeira especificação da ligação em [105](docs/recovery/105_ESPECIFICACAO_P
 [108](docs/recovery/108_ENTREGA_PAR_CPC_NO_MAPA.md) conclui o Recorte 2 de `force-confrontation`: seleção explícita de grupos AZUL/VERMELHO pelo instrutor e consulta simultânea no mapa ATLANTICADOR. Revalidação de identidade/revisões/snapshots/adjudicação/posições, manifesto geográfico separado e ausência de efeitos verificados. Passaram 73 testes nomeados, dois verificadores assertivos e inspeção gráfica isolada. Gates de 104–107 satisfeitos; [roteiro 103](docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md) atualizado.
 
 Preparação não executa nem confirma confronto. Estado/adjudicação durável, julgamento didático e confirmação/aplicação oficial seguem próximos contratos de 104; execução/replay por grupamentos continua futura. Registro temporário e elegibilidade aérea sintética do provedor preservados; nenhuma aprovação de eficácia Command ou alteração dos planos independentes de catálogo.
+
+
+## Atualização — 2026-11-17: especificação de estado/adjudicação
+
+[109](docs/recovery/109_ESPECIFICACAO_ESTADO_E_ADJUDICACAO_DURAVEL.md) propõe a Fase 1 de `operational-state`, seguindo a etapa 2 já aprovada em 104. [SPEC-operational-state.md](SPEC-operational-state.md) define estado por unidade, proposta/decisão/efeitos duráveis, acesso por partido, confirmação transacional e recuperação. Não importa o algoritmo CPC; futuros consumidores usam o mesmo provedor de publicação. Especificação aguarda revisão antes de plano/código/migração; conferência no mapa de 108 permanece entregue. Não aprova valores Command, regras de armamento ou implementação antecipada.

@@ -21,3 +21,6 @@ Evidência local fora do Git: `C:/Users/bozoc/.codex/visualizations/2026/11/07/0
 ## Continuidade
 
 A aprovação estética final cabe ao responsável. Associação a perfis exatos de cada classe real depende de arte e identificação específicas; esta entrega não transforma a ilustração genérica em evidência técnica do catálogo. Calunga, fluxo de julgamento e contratos do motor permanecem como em 117. Banco principal e originais preservados.
+
+
+Escala e desenho do helicóptero revisados posteriormente em [119](119_HELICOPTERO_E_ESCALA_COMPACTA.md); os tamanhos descritos nesta entrega 118 são históricos.

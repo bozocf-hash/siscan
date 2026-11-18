@@ -72,3 +72,5 @@ Sincronização concluída: 18 arquivos conferidos previamente contra a base Git
 Permanecem necessários: política de ações/alvos/iniciativa, resolvedor de múltiplos meios, adaptação geográfica explícita, parâmetros/dados validados para cada domínio, contabilização defensiva aplicável, tradução do ensaio em proposta e proveniência durável própria. A decisão oficial continua sempre com o instrutor. O formulário não persiste perfis nem converte seu preenchimento em aprovação de dados técnicos.
 
 Roteiro atualizado em [103](103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md). A entrega fecha a conferência das entradas; a implementação do confronto automático continua uma capacidade seguinte, não anunciada como concluída.
+
+**Continuidade posterior em 2026-11-18:** [125](125_ENSAIO_AUTOMATICO_CONTROLADO_CPC.md) acrescenta ação separada de execução do par aéreo sintético ao painel. Este documento preserva o escopo/evidências da entrega 124; a consulta de prontidão continua sem efeitos ou execução. N×M e publicação de proposta automática permanecem pendentes.

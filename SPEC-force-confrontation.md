@@ -444,3 +444,19 @@ Revisões de especificação, plano e tarefas concluídas, com autorização de 
 
 
 Plano técnico do Recorte 4-A: [tasks/force-confrontation/prontidao/plan.md](tasks/force-confrontation/prontidao/plan.md), aprovado por “prossiga” após 122. Lista detalhada em [tasks/force-confrontation/prontidao/todo.md](tasks/force-confrontation/prontidao/todo.md), aprovada por “sim” após 123; READY-01–12 concluídas em 124.
+
+## Recorte 4-B — Execução do ensaio controlado do par
+
+**2026-11-18 · Implementado e verificado em [125](docs/recovery/125_ENSAIO_AUTOMATICO_CONTROLADO_CPC.md).** Continuidade autorizada por “siga”, mantendo a dispensa expressa de novas solicitações da skill. Contrato, tarefas e evidências deste recorte estão em 125; especificação e verificações técnicas preservadas.
+
+A consulta de prontidão de 4-A continua sem execução. Nova ação separada **Executar ensaio controlado**, disponível depois de entradas prontas e política explicitamente escolhida pelo instrutor. Apenas o par aéreo sintético demonstrado, uma unidade por partido; política `siscan-cpc-controlled-policy-01` seleciona um estoque ar-ar ou nenhuma ação ofensiva por unidade e ordem simultânea ou iniciativa de AZUL/VERMELHO. Uma tentativa por minuto, condicionada à detecção, alcance, disponibilidade e estoque. Sem escolha otimizada de alvos/armas, coeficientes presumidos ou parâmetros físicos reais.
+
+`POST /api/cpc/controlled-trial` exige instrutor, sessão/CSRF, exercício aberto, seleção/revisões e hashes de vista/base/hipóteses conferidas. Reconferir antes/depois da execução. Entradas estritas, teto de 64.000 bytes e duração de 1–120 minutos por limite de processamento; interromper no primeiro minuto com perda proposta de participante. Em voo, consumo positivo obrigatório. Instanciar unidades/estoques/cenário/RNG locais; nunca usar saldos oficiais como defaults.
+
+Resposta `siscan-cpc-controlled-trial-01`: referências, política e metadados/versionamento, estados inicial/final, balanço, duração solicitada/efetiva, motivo de término e eventos. Reproduzir resultados com mesma entrada/semente/versões, distinguindo UUID próprio de cada execução. `simulation_started=true` e `official_effects_applied=false`. Sem DDL, registro automático de proposta, conversão de pontos em percentual, alterações de recursos, posições ou perdas oficiais.
+
+Formulário compacto no mesmo painel/mapa, seletores inicialmente vazios, resumo por código de cadastro, lista limitada a 100 eventos e download JSON completo. Hipótese/política editada, nova conferência, troca de par/fontes ou saída invalida o resultado; resposta atrasada não o restaura. A decisão oficial continua no julgamento existente, sem mascarar sugestão automática como origem didática humana.
+
+AUTO-RUN-01–04 concluídos: adaptador e reprodução testados; HTTP autorizado/CSRF/limites/conflitos/indisponibilidade; interface e invalidação; regressões e navegador isolado, documentação e entrega versionada. Passaram 165 testes Python CPC + 49 JS e verificadores de plotagem/silhuetas. Caso real de navegação completou 60 minutos, quatro mísseis, combustível 600→480 kg por meio e 494 eventos; hipóteses de teste, sem validade física real. Fonte, domínio e limites em 125.
+
+Principal 8787 e originais preservados; prévia própria em 61274. Permanecem pendentes: múltiplos meios N×M/outros domínios, regras defensivas aplicáveis, dados reais validados, adaptação geográfica e origem durável para produtor de proposta automática. O ensaio não aplica seus resultados ao exercício.

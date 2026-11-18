@@ -22,7 +22,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-02 — Consulta HTTP protegida e somente leitura
 
-- [ ] Implementada e verificada.
+- [x] Rota de diagnóstico inicial implementada; três testes HTTP passaram (sessão/CSRF/papel, leitura sem efeitos e recusas).
 - **Aceite:** `POST /api/cpc/trial-readiness` exige sessão/participação de instrutor, exercício aberto e CSRF, payload estrito e limite existente de corpo; query string recusada. Diagnóstico negativo válido retorna 200; erros seguem o contrato e não incluem detalhes adversários. Nenhuma migração ou recibo de aplicação é criado.
 - **Verificar:** teste HTTP focado para 200 negativo, 400/401/403/404/409/503, revogação, corpo excedido, rota/query e dados de domínio preservados; reenvio de consulta não cria proposta/evento. Validação de perfil completo depende de READY-04/05. AUTO-READY-01/02/09/12.
 - **Dependência:** READY-01.

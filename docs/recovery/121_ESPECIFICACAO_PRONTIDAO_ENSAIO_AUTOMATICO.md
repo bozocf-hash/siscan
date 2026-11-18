@@ -1,10 +1,10 @@
 # 121 — Prontidão para o ensaio automático controlado
 
-**Estado: especificação aprovada pelo responsável por “sim”, em resposta à revisão solicitada.** Continuidade autorizada por “pode continuar”, após a correção 120. A aprovação permite elaborar o plano, sem aprovar parâmetros reais ou iniciar implementação.
+**Estado atual: especificação, plano e tarefas aprovados; implementação concluída em [124](124_ENTREGA_PRONTIDAO_ENSAIO_CPC.md).** Este registro preserva a etapa original de especificação, aprovada por “sim”; a continuidade foi autorizada por “pode continuar”, após 120. As aprovações posteriores permitiram implementar o recorte, sem aprovar parâmetros reais.
 
 Contrato canônico: [SPEC-force-confrontation.md — Recorte 4-A](../../SPEC-force-confrontation.md#recorte-4-a--prontidão-para-o-ensaio-automático-controlado). Não duplicar o contrato neste registro.
 
-## Resultado visível proposto
+## Resultado visível entregue
 
 No CPC, depois de preparar o par, o instrutor consulta **Conferir prontidão do ensaio**. Recebe entradas incompletas, recorte não suportado ou prontidão para ensaio controlado, com motivos por meio. O julgamento didático continua funcionando. Prontidão não executa combate e não aplica resultado.
 
@@ -24,7 +24,7 @@ Foco desta especificação: tornar essas lacunas verificáveis para o instrutor 
 
 Especificação inclui fronteiras de entrada/saída, permissões, doze critérios AUTO-READY, limites de dados/recorte e estratégia de teste. Na etapa de especificação não foram escritos plano, tarefas, código, DDL, parâmetros de combate ou novas telas. Não foram executados testes nem iniciado/reiniciado servidor: edição exclusivamente documental e inspeção de código. Originais, bancos e planos anteriores preservados.
 
-Conforme a skill [Spec Driven Development](C:/Users/bozoc/.codex/skills/spec-driven-development/SKILL.md), a revisão da especificação precede a elaboração do plano. A revisão solicitada é concreta: aceitar esta primeira fatia de prontidão ou ajustar seu escopo.
+Na etapa original, a revisão da especificação precedeu o plano conforme a skill Spec Driven Development. Essas revisões foram concluídas; durante a implementação o responsável dispensou solicitações adicionais da skill. Não existe gate pendente desta fatia.
 
 
-Continuidade: plano de Fase 2 aprovado após [122](122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md), com lista de Fase 3 proposta em [123](123_TAREFAS_PRONTIDAO_ENSAIO_AUTOMATICO.md). Os limites e evidências acima permanecem; a aprovação não transforma o diagnóstico em motor automático.
+Continuidade: plano de Fase 2 aprovado após [122](122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md), lista de Fase 3 aprovada após [123](123_TAREFAS_PRONTIDAO_ENSAIO_AUTOMATICO.md), READY-01–12 concluídas e verificadas em [124](124_ENTREGA_PRONTIDAO_ENSAIO_CPC.md). Os limites acima permanecem; o diagnóstico não é o motor automático.

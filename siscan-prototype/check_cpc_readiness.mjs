@@ -1,0 +1,23 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createReadinessController} from './static/cpc-readiness.mjs';
+const prep={view_sha256:'v',exercise_id:1,scenario_version:1,parties:['AZUL','VERMELHO'].map(team=>({team,group_id:team,composition_revision:1,members:[{unit_id:team}]}))};
+const result=()=>({schema_version:'siscan-cpc-trial-readiness-01',view_sha256:'v',exercise_id:1,scenario_version:1,units:[],excluded:[],issues:[],warnings:[],ready_for_controlled_trial:false,official_calculation_ready:false,simulation_started:false,official_effects_applied:false});
+function setup(request,options={}){let state;const c=createReadinessController({request,render:s=>state=s,...options});c.setPreparation(prep);return {c,get state(){return state;}};}
+test('consulta envia referências e não cria comando de aplicação',async()=>{
+ let sent;const e=setup(async(p,o)=>{sent=[p,o.body];return result();});await e.c.check();
+ assert.equal(sent[0],'/api/cpc/trial-readiness');assert.equal(sent[1].expected_view_sha256,'v');assert.equal('command_id'in sent[1],false);assert.ok(e.state.result);
+});
+test('editar e sair descarta resposta atrasada',async()=>{
+ let resolve;const e=setup(()=>new Promise(r=>resolve=r));const job=e.c.check();e.c.edit({label:'novo'});resolve(result());await job;
+ assert.equal(e.state.result,null);assert.equal(e.state.busy,false);e.c.setPreparation(null);assert.equal(e.state.hypotheses,null);
+});
+test('cancelar descarte conserva hipótese e consulta',()=>{
+ const e=setup(async()=>result(),{confirmDiscard:()=>false});e.c.edit({label:'teste'});assert.equal(e.c.canLeave(),false);assert.equal(e.state.hypotheses.label,'teste');
+});
+test('403 limpa dados privados e comunica revogação',async()=>{
+ let forbidden=0;const e=setup(async()=>{throw Object.assign(Error('Negado'),{status:403});},{onForbidden:()=>forbidden++});await e.c.check();assert.equal(e.state.preparation,null);assert.equal(e.state.result,null);assert.equal(forbidden,1);
+});
+test('resposta de outro cenário e falha não viram prontidão',async()=>{
+ const e=setup(async()=>({...result(),scenario_version:2}));await e.c.check();assert.equal(e.state.result,null);assert.ok(e.state.error);
+});

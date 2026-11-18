@@ -30,7 +30,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-03 — Primeiro diagnóstico visível no CPC
 
-- [ ] Implementado e verificado.
+- [x] Painel inicial ligado; cinco testes JS novos passaram e o percurso negativo foi observado em navegador isolado na porta 61272.
 - **Aceite:** depois da preparação, **Conferir prontidão do ensaio** abre uma única área de diagnóstico com resumo e detalhes por meio; sem perfil, mostra as pendências reais. Módulo/rota indisponível informa limitação e preserva preparação/julgamento. Operador não recebe botão/dados privados; não há botão de executar combate.
 - **Verificar:** testes JS para consulta, erro, 401/403 e retorno ao julgamento; HTTP verifica autenticação/MIME/cache do novo asset. Fazer smoke no harness isolado e conferir pendências do caso sintético. AUTO-READY-01/03/05/06/11.
 - **Dependência:** READY-02.
@@ -38,7 +38,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ### Checkpoint A — Caminho negativo utilizável
 
-- [ ] Instrutor percorre preparar → consultar → compreender motivos → voltar ao julgamento, sem alterar o exercício.
+- [x] Percurso negativo observado no mesmo mapa: dois meios e pendências por partido, sem efeitos no exercício.
 - [ ] Autoridade, cardinalidade, perdas e falhas de fonte estão distintos e verificados.
 - [ ] Registrar resultados e continuar a implementação autorizada; não anunciar confronto automático ou perfil completo entregue.
 

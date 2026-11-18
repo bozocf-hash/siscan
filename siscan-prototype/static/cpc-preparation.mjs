@@ -75,12 +75,13 @@ export function installCpcPanel({container,csrf,preview,focus,exit,installJudgme
  const selects={};
  for(const team of TEAMS){const label=el('label','Grupamento '+team),select=el('select');select.setAttribute('aria-label','Grupamento '+team);label.append(select);selectors.append(label);selects[team]=select;}
  for(const button of [prepareButton,refresh,back,fit])button.type='button';
- const forces=el('details'),forcesTitle=el('summary','1 · Selecionar forças'),tools=el('div'),help=el('details');forces.className='siscan-cpc-forces';tools.className='siscan-cpc-tools';forces.append(forcesTitle,selectors,prepareButton,refresh,details);help.append(el('summary','Sobre esta etapa'),note,warning);tools.append(fit,back);container.append(heading,forces,status,tools);
- const judgmentArea=el('section');container.append(judgmentArea,help);let judgment=null,lastPreparation,restoring=false,officialConsulted=false;
+ const forces=el('details'),forcesTitle=el('summary','1 · Selecionar forças'),tools=el('div'),help=el('details');forces.className='siscan-cpc-forces';tools.className='siscan-cpc-tools';forces.append(forcesTitle,selectors,prepareButton,refresh,details);help.append(el('summary','Sobre esta etapa'),note,warning);const readinessButton=el('button','Conferir prontidão do ensaio');readinessButton.type='button';readinessButton.disabled=true;tools.append(fit,readinessButton,back);container.append(heading,forces,status,tools);
+ const judgmentArea=el('section');container.append(judgmentArea,help);let judgment=null,readiness=null,currentPreparation=null,lastPreparation,restoring=false,officialConsulted=false;const readinessArea=el('section');readinessArea.hidden=true;judgmentArea.before(readinessArea);
  let wasBusy=false,restorePreparationFocus=false,lastForcesKey;
  function render(state){
+  currentPreparation=state.preparation;readinessButton.disabled=!readiness||!state.preparation;
   const preparationKey=state.preparation?.view_sha256??null;
-  if(judgment&&(!state.active||preparationKey!==lastPreparation)){lastPreparation=preparationKey;officialConsulted=false;if(!restoring)judgment.setPreparation(state.preparation);}
+  if((judgment||readiness)&&(!state.active||preparationKey!==lastPreparation)){lastPreparation=preparationKey;officialConsulted=false;if(!restoring)judgment?.setPreparation(state.preparation);readiness?.setPreparation(state.preparation);readinessArea.hidden=true;judgmentArea.hidden=false;}
   if(state.busy&&!wasBusy)restorePreparationFocus=document.activeElement===prepareButton;
   const completed=wasBusy&&!state.busy;wasBusy=state.busy;
   status.textContent=state.error||(state.loading?'Consultando composições…':state.busy?'Conferindo dados e posições…':state.preparation?officialConsulted?'Forças prontas · estado oficial consultado.':'Forças prontas · defina os efeitos abaixo.':state.list?`Exercício ${state.list.exercise_id} · cenário v${state.list.scenario_version}${state.list.exercise_open?'':' · Encerrado'}`:'Atualize os grupos para conferir.');
@@ -112,11 +113,16 @@ export function installCpcPanel({container,csrf,preview,focus,exit,installJudgme
   if(completed){if(state.active&&restorePreparationFocus&&document.activeElement===document.body)(state.preparation?judgmentArea.querySelector('button:not([hidden])')||forcesTitle:prepareButton.disabled?refresh:prepareButton).focus({preventScroll:true});restorePreparationFocus=false;}
  }
  const request=async(path,options)=>{const response=await fetch(path,options?{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:JSON.stringify(options.body)}:undefined);const body=await response.json();if(!response.ok)throw Object.assign(Error(body.error||'Conferência indisponível.'),{status:response.status});return body;};
- const controller=createCpcController({request,render,preview,readStates:p=>readCpcOfficialStates(p,request),beforeChange:()=>judgment?.canLeave()??true});
+ const controller=createCpcController({request,render,preview,readStates:p=>readCpcOfficialStates(p,request),beforeChange:()=>!readinessArea.hidden?(readiness?.canLeave()??true):(judgment?.canLeave()??true)});
  if(installJudgmentPanel)judgment=installJudgmentPanel({container:judgmentArea,csrf,
-  onOfficial:states=>{officialConsulted=true;status.textContent='Forças prontas · estado oficial consultado.';onOfficial(states);},
+  onOfficial:states=>{readiness?.invalidate();officialConsulted=true;status.textContent='Forças prontas · estado oficial consultado.';onOfficial(states);},
   onResumePair:preparation=>{restoring=true;try{return controller.restore(preparation);}finally{restoring=false;}},onForbidden:()=>controller.leave()});
- controller.canLeave=()=>judgment?.canLeave()??true;
+ controller.canLeave=()=>!readinessArea.hidden?(readiness?.canLeave()??true):(judgment?.canLeave()??true);
+ import('./cpc-readiness.mjs').then(({installReadinessPanel})=>{
+  readiness=installReadinessPanel({container:readinessArea,csrf,onForbidden:()=>controller.leave(),onBack:()=>{readinessArea.hidden=true;judgmentArea.hidden=false;readinessButton.focus();}});
+  readiness.setPreparation(currentPreparation);readinessButton.disabled=!currentPreparation;
+ }).catch(()=>{readinessButton.title='Prontidão indisponível nesta instância; atualize o servidor.';});
+ readinessButton.onclick=()=>{if(readinessArea.hidden&&judgment&&!judgment.canLeave())return;judgmentArea.hidden=true;readinessArea.hidden=false;readiness.check();};
  for(const team of TEAMS)selects[team].onchange=()=>controller.choose(team,selects[team].value);
  refresh.onclick=()=>controller.enter();prepareButton.onclick=()=>controller.prepare();back.onclick=exit;fit.onclick=focus;
  return controller;

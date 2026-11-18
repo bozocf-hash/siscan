@@ -15,11 +15,12 @@ test('editar e sair descarta resposta atrasada',async()=>{
 test('cancelar descarte conserva hipótese e consulta',()=>{
  const e=setup(async()=>result(),{confirmDiscard:()=>false});e.c.edit({label:'teste'});assert.equal(e.c.canLeave(),false);assert.equal(e.state.hypotheses.label,'teste');
 });
-test('403 limpa dados privados e comunica revogação',async()=>{
- let forbidden=0;const e=setup(async()=>{throw Object.assign(Error('Negado'),{status:403});},{onForbidden:()=>forbidden++});await e.c.check();assert.equal(e.state.preparation,null);assert.equal(e.state.result,null);assert.equal(forbidden,1);
+test('401/403 limpam dados privados e comunicam revogação',async()=>{
+ for(const status of [401,403]){let forbidden=0;const e=setup(async()=>{throw Object.assign(Error('Negado'),{status});},{onForbidden:()=>forbidden++});await e.c.check();assert.equal(e.state.preparation,null);assert.equal(e.state.result,null);assert.equal(forbidden,1);}
 });
 test('resposta de outro cenário e falha não viram prontidão',async()=>{
  const e=setup(async()=>({...result(),scenario_version:2}));await e.c.check();assert.equal(e.state.result,null);assert.ok(e.state.error);
+ const failed=setup(async()=>{throw Error('Tempo limite de consulta');});await failed.c.check();assert.equal(failed.state.result,null);assert.equal(failed.state.busy,false);assert.ok(failed.state.error);
 });
 
 test('campos preservam zero e falso, branco não vira zero e origem exige declaração',async()=>{

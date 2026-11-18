@@ -86,6 +86,9 @@ class ReadinessTests(unittest.TestCase):
         base=deepcopy(self.base);base['preparation']['parties'][0]['members'].append(dict(base['preparation']['parties'][0]['members'][0],unit_id='outro'))
         base['states']['outro']=deepcopy(base['states'][uid]);result=ready.diagnosticar(base)
         self.assertEqual(result['status'],'unsupported')
+        base=deepcopy(self.base);base['preparation']['parties'][0]['members'][0]['domain']='superficie'
+        result=ready.diagnosticar(base);self.assertEqual(result['status'],'unsupported')
+        self.assertTrue(any(i['field']=='domain' for i in result['issues']))
 
     def test_arquivamento_real_durante_diagnostico_recusa_resultado(self):
         original=ready.diagnosticar;before=list(self.db.iterdump())

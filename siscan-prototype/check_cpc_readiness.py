@@ -1,6 +1,7 @@
 """Prontidão: SQLite descartável, hipóteses explícitas e nenhuma execução."""
 from copy import deepcopy
 import random
+import uuid
 import sqlite3
 import unittest
 from unittest.mock import patch
@@ -85,5 +86,26 @@ class ReadinessTests(unittest.TestCase):
         base=deepcopy(self.base);base['preparation']['parties'][0]['members'].append(dict(base['preparation']['parties'][0]['members'][0],unit_id='outro'))
         base['states']['outro']=deepcopy(base['states'][uid]);result=ready.diagnosticar(base)
         self.assertEqual(result['status'],'unsupported')
+
+    def test_arquivamento_real_durante_diagnostico_recusa_resultado(self):
+        original=ready.diagnosticar;before=list(self.db.iterdump())
+        def changed(*args):
+            result=original(*args);ref=self.selection['AZUL']
+            self.registry.arquivar_grupamento(dict(exercise_id=1,team='AZUL'),dict(command_id=str(uuid.uuid4()),group_id=ref['group_id'],expected_revision=1))
+            return result
+        with patch.object(ready,'diagnosticar',side_effect=changed):
+            with self.assertRaises(GroupConflict):self.query()
+        self.assertEqual(before,list(self.db.iterdump()));self.assertFalse(self.db.in_transaction)
+    def test_unavailable_estoques_e_geometria_invalidos(self):
+        h=full_profile(self.base);h['units'][0]['parameters']['velocidade']={'value':None,'unit':'kn','source':'unavailable'}
+        self.assertFalse(self.query(dict(self.body,hypotheses=h))['ready_for_controlled_trial'])
+        for mutate in [lambda h:h['units'][0]['armamentos'].append(deepcopy(h['units'][0]['armamentos'][0])),
+                       lambda h:h['scenario']['fatores_assinatura'].append(deepcopy(h['scenario']['fatores_assinatura'][0])),
+                       lambda h:h['scenario'].update(distance_nm=datum(500,'NM')),
+                       lambda h:h.update(units='invalido')]:
+            h=full_profile(self.base);mutate(h)
+            with self.assertRaises(ValueError):self.query(dict(self.body,hypotheses=h))
+        h=full_profile(self.base);h['units'][0]['armamentos']=[]
+        self.assertTrue(self.query(dict(self.body,hypotheses=h))['ready_for_controlled_trial'])
 
 if __name__=='__main__':unittest.main()

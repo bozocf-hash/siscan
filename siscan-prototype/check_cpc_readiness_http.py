@@ -1,6 +1,8 @@
 """API de prontidão com sessão/CSRF e banco descartável."""
 import unittest
 import sqlite3
+from http.client import HTTPConnection
+import app
 from check_map_groups_http import sandbox,database,request
 from check_cpc_map import seed_pairs
 from check_map_groups import TEACHER
@@ -43,5 +45,19 @@ class ReadinessHttpTests(unittest.TestCase):
   body=dict(self.body,hypotheses=full_profile(base));status,result=request(self.env,'/api/cpc/trial-readiness',user=1,body=body)
   self.assertEqual(status,200);self.assertTrue(result['ready_for_controlled_trial']);self.assertFalse(result['official_effects_applied'])
   with database(self.env.db_path) as db:self.assertEqual(list(db.iterdump()),before)
+
+ def test_limite_de_corpo_e_revogacao(self):
+  self.assertEqual(request(self.env,'/api/cpc/trial-readiness',user=1,body=dict(self.body,hypotheses={'label':'x'*64001}))[0],400)
+  with database(self.env.db_path) as db:db.execute('DELETE FROM assignments WHERE user_id=1')
+  self.assertEqual(self.post()[0],403)
+ def test_asset_autenticado_e_mime(self):
+  for user in (None,1,2):
+   with self.subTest(user=user):
+    conn=HTTPConnection('127.0.0.1',self.env.port,timeout=5)
+    try:
+     conn.request('GET','/cpc-readiness.mjs',headers={'Cookie':f'{app.COOKIE_NAME}=map-test-{user}'} if user else {})
+     response=conn.getresponse();response.read();self.assertEqual(response.status,200 if user else 401)
+     if user:self.assertTrue(response.getheader('Content-Type').startswith('text/javascript'));self.assertEqual(response.getheader('Cache-Control'),'no-store')
+    finally:conn.close()
 
 if __name__=='__main__':unittest.main()

@@ -82,7 +82,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-08 — Robustez da captura e privacidade
 
-- [ ] Verificada, com correções necessárias concluídas.
+- [x] Testes com arquivamento real durante diagnóstico, schema indisponível, limite de corpo e revogação passaram; SAVEPOINT liberado e SQL preservado. Total focado: 11 testes de serviço e 6 HTTP.
 - **Aceite:** fonte/schema/integridade indisponível retorna indisponibilidade, não pendência vazia. Mudança de grupos observada na reconferência recusa o diagnóstico; IDs do pedido não contornam autorização. Sucesso, negativa e exceção mantêm domínio/registro/RNG intactos, sem depender de locks privados ou de alteração global do parser.
 - **Verificar:** injetar mudança de revisão/arquivamento entre consultas públicas, corrupção e falha na leitura; testar liberação do SAVEPOINT, limites do perfil e mensagens sem vazamento. Usar sincronização controlada, sem sleeps como prova de concorrência. AUTO-READY-01/02/09/12.
 - **Dependência:** READY-05 e READY-07.
@@ -90,8 +90,8 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ### Checkpoint C — Diagnóstico seguro sob falha
 
-- [ ] Troca/falha não restaura dados antigos, não expõe o adversário ao operador e não deixa contexto parcialmente aceito.
-- [ ] Hash, fonte e ausência de efeitos estão demonstrados por comportamento, não só por inspeção de código.
+- [x] Troca/falha não restaura dados antigos, não expõe o adversário ao operador e não deixa contexto parcialmente aceito.
+- [x] Hash, fonte e ausência de efeitos estão demonstrados por comportamento, não só por inspeção de código.
 
 ## READY-09 — Percurso real do instrutor em ambiente isolado
 

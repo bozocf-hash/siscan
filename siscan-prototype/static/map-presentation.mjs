@@ -7,3 +7,6 @@ export function judgmentStage(s){
  if(s.proposal&&!s.dirty)return 'unavailable';
  return s.basis?'edit':'start';
 }
+
+// Uma proposta ou um índice baixo não equivalem a perda adjudicada.
+export const isConfirmedLost=official=>official?.state?.lost===true;

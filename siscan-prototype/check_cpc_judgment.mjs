@@ -69,3 +69,11 @@ test('decisão atualiza o status do registro já exibido no histórico',async()=
  assert.equal(env.state.history[0].status,'pending');env.c.review();await env.c.decide('confirm');
  assert.equal(env.state.history[0].status,'confirm');assert.equal(env.state.receipt.action,'confirm');
 });
+
+test('perda confirmada sai da camada mesmo se a consulta seguinte falhar',async()=>{
+ let contexts=0;const published=[];
+ const env=setup(async path=>{if(path.endsWith('/context')){if(++contexts>1)throw Error('rede');return basis;}if(path.endsWith('/preview'))return {basis,effects:[]};if(path.endsWith('/decisions'))return {decision_id:'d',action:'confirm',effects:[{unit_id:'u',after:{revision:1,index_percent:0,lost:true}}]};return {proposal_id:'p',revision:1,body_sha256:'sha'};},{onOfficial:s=>published.push(s)});
+ await env.c.open();env.c.reason('Perda didática');env.c.edit('u',{enabled:true,indexAction:'keep',lossAction:'lost'});await env.c.preview();await env.c.save();
+ assert.equal(published.length,1);assert.notEqual(published[0].u.state.lost,true);
+ env.c.review();await env.c.decide('confirm');assert.equal(published.at(-1).u.state.lost,true);assert.equal(env.state.refreshPending,true);
+});

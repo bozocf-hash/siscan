@@ -62,6 +62,10 @@ flowchart LR
 
 Ensaio automático por grupamentos, reprodução temporal de eventos, regras/entradas reais validadas e integração logística de consumo de combate permanecem etapas próprias. O automático produzirá proposta para o mesmo caminho de revisão do instrutor, sem publicação automática por terminar o ensaio. Não confundir esta arbitragem didática com resolução física de combate.
 
+## Meios com perda confirmada
+
+Conforme [120](120_RETIRADA_DE_MEIOS_COM_PERDA_CONFIRMADA_DO_MAPA.md), confirmar **Declarar perda** retira o meio do mapa ativo do CPC e do planejamento. Ele permanece no histórico e na lista, identificado como **PERDA CONFIRMADA**, com seleção bloqueada. Prévia/proposta não retira marcador; índice zero também não declara perda automaticamente. Ao reabrir/preparar o par, o estado oficial é consultado novamente. Retorno exige correção explícita da perda pelo instrutor.
+
 ## Como ler os indicadores
 
 Para superfície, preservar os limites confirmados: acima de 60% combater; de 40% a 60%, incluindo os limites, navegar; abaixo de 40% flutuar. O índice e as avarias confirmados pelo instrutor não são deduzidos de combustível ou munição.

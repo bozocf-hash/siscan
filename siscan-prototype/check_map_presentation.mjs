@@ -16,3 +16,9 @@ test('julgamento revela somente a etapa correspondente ao estado',()=>{
  assert.equal(judgmentStage({receipt:{},confirming:true}),'result');
  assert.equal(judgmentStage({basis:{},proposal:{},dirty:true}),'edit');
 });
+
+test('somente perda oficial explicitamente confirmada retira o meio do mapa',async()=>{
+ const {isConfirmedLost}=await import('./static/map-presentation.mjs');
+ assert.equal(isConfirmedLost({state:{lost:true}}),true);
+ for(const value of [undefined,null,{}, {state:{lost:false}}, {state:{lost:null,index_percent:0}}, {state:{lost:'true'}}, {changes:{lost:true}}, {condition:'flutuar'}])assert.equal(isConfirmedLost(value),false);
+});

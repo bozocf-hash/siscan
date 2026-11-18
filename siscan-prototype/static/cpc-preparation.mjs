@@ -1,6 +1,18 @@
 // Conferência de duas composições; sem execução ou publicação de resultados.
 const TEAMS=['AZUL','VERMELHO'];
-export function createCpcController({request,render,preview,beforeChange=()=>true}){
+export async function readCpcOfficialStates(preparation,request){
+ const entries=await Promise.all(preparation.parties.map(async party=>{
+  const data=await request('/api/map-units?team='+party.team);
+  if(data.team!==party.team||!Array.isArray(data.units))throw Error('Estado oficial do partido indisponível.');
+  return party.members.map(member=>{
+   const unit=data.units.find(u=>u.id===member.asset_id);
+   if(!unit||unit.operational_state?.status==='unavailable')throw Error('Meio ou estado oficial indisponível; atualize os grupos.');
+   return [member.unit_id,unit.operational_state||{status:'unavailable'}];
+  });
+ }));
+ return Object.fromEntries(entries.flat());
+}
+export function createCpcController({request,render,preview,readStates=async()=>({}),beforeChange=()=>true}){
  let generation=0;
  const empty=active=>({active,list:null,selection:{AZUL:null,VERMELHO:null},preparation:null,member:null,loading:false,busy:false,error:''});
  let state=empty(false);
@@ -39,7 +51,8 @@ export function createCpcController({request,render,preview,beforeChange=()=>tru
       result.official_calculation_ready!==false||result.official_effects_applied!==false||!Array.isArray(result.parties)||
       result.parties.length!==2||!TEAMS.every(t=>result.parties.some(p=>p.team===t&&p.group_id===selection[t].group_id&&
         p.composition_revision===selection[t].expected_revision&&Array.isArray(p.members))))throw Error('A preparação devolvida não corresponde ao par selecionado.');
-   state.preparation=result;state.busy=false;preview(structuredClone(result));emit();return true;
+   const states=await readStates(result);if(token!==generation)return false;
+   state.preparation=result;state.busy=false;preview(structuredClone(result),states);emit();return true;
   }catch(error){if(token===generation){clearView();state.busy=false;state.list=null;state.selection={AZUL:null,VERMELHO:null};state.error=error.message;emit();}return false;}
  }
  return {enter,choose,prepare,
@@ -99,7 +112,7 @@ export function installCpcPanel({container,csrf,preview,focus,exit,installJudgme
   if(completed){if(state.active&&restorePreparationFocus&&document.activeElement===document.body)(state.preparation?judgmentArea.querySelector('button:not([hidden])')||forcesTitle:prepareButton.disabled?refresh:prepareButton).focus({preventScroll:true});restorePreparationFocus=false;}
  }
  const request=async(path,options)=>{const response=await fetch(path,options?{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:JSON.stringify(options.body)}:undefined);const body=await response.json();if(!response.ok)throw Object.assign(Error(body.error||'Conferência indisponível.'),{status:response.status});return body;};
- const controller=createCpcController({request,render,preview,beforeChange:()=>judgment?.canLeave()??true});
+ const controller=createCpcController({request,render,preview,readStates:p=>readCpcOfficialStates(p,request),beforeChange:()=>judgment?.canLeave()??true});
  if(installJudgmentPanel)judgment=installJudgmentPanel({container:judgmentArea,csrf,
   onOfficial:states=>{officialConsulted=true;status.textContent='Forças prontas · estado oficial consultado.';onOfficial(states);},
   onResumePair:preparation=>{restoring=true;try{return controller.restore(preparation);}finally{restoring=false;}},onForbidden:()=>controller.leave()});

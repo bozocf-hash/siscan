@@ -51,7 +51,11 @@ export function createJudgmentController({request,render,onOfficial,confirmDisca
    s.pending=null;s.dirty=false;s.confirming=false;s.error='';
    if(pending.kind==='decide'){
     s.receipt=result;s.history=s.history.map(item=>item.proposal_id===s.proposal.proposal_id?{...item,status:result.action}:item);s.notice=result.action==='confirm'?'Efeitos confirmados pelo instrutor.':'Proposta rejeitada; meios preservados.';
-    if(result.action==='confirm')await refreshOfficial();
+    if(result.action==='confirm'){
+     // O recibo já é oficial; falha na leitura seguinte não deve manter um meio perdido no mapa.
+     if(result.effects?.length){const states=structuredClone(s.basis.states);for(const effect of result.effects)states[effect.unit_id]={...states[effect.unit_id],state:effect.after,condition:null,origin:null};onOfficial(states);}
+     await refreshOfficial();
+    }
    }else{s.proposal=result;s.notice='Proposta registrada. Os efeitos ainda não foram aplicados.';}
    if(token===generation){s.busy=false;emit();}return true;
   }catch(error){if(token===generation){s.busy=false;s.error=error.message;

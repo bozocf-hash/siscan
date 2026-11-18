@@ -113,3 +113,6 @@ Documentos 16–34 distinguem código identificado de funcionamento comprovado. 
 ## Atualização de apresentação — 2026-11-17
 
 Correções autorizadas de UI/UX registradas em [117](117_CORRECOES_UI_UX_MAPA_E_JULGAMENTO.md): afiliação Calunga correta, símbolos/fichas compactos, fonte e painéis alinhados ao ATLANTICADOR, julgamento progressivo com confirmação explícita. Roteiro 103 atualizado. Prévia isolada em 61270; principal e originais preservados. Automático/reprodução temporal e ativação do principal continuam pendentes, conforme 116. Esta atualização não altera decisões do projeto nem as condições históricas dos capítulos anteriores.
+
+
+Correção posterior de comportamento: [120 — Retirada de meios com perda confirmada do mapa](120_RETIRADA_DE_MEIOS_COM_PERDA_CONFIRMADA_DO_MAPA.md). Estado oficial confirmado controla visibilidade; cadastro, posição e histórico são preservados.

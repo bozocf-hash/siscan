@@ -4,7 +4,7 @@ import {createCpcController} from './static/cpc-preparation.mjs';
 const list=()=>({exercise_id:1,scenario_version:1,exercise_open:true,storage:'memory',parties:['AZUL','VERMELHO'].map(team=>({team,groups:[{group_id:team,designation:team,composition_revision:2,preparable:true}]}))});
 const pair=()=>({exercise_id:1,scenario_version:1,schema_version:'siscan-cpc-map-preparation-01',parties:['AZUL','VERMELHO'].map(team=>({team,group_id:team,composition_revision:2,members:[]})),simulation_started:false,official_calculation_ready:false,official_effects_applied:false});
 const defer=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {resolve,reject,promise};};
-function fixture(request){const frames=[],previews=[];const controller=createCpcController({request,render:s=>frames.push(s),preview:p=>previews.push(p)});return {controller,frames,previews};}
+function fixture(request,readStates){const frames=[],previews=[];const controller=createCpcController({request,readStates,render:s=>frames.push(s),preview:p=>previews.push(p)});return {controller,frames,previews};}
 const choose=c=>{c.choose('AZUL','AZUL');c.choose('VERMELHO','VERMELHO');};
 
 await test('retomada restaura somente par disponível do contexto atual',async()=>{
@@ -55,4 +55,23 @@ await test('exercício encerrado não prepara; erro não é lista vazia',async()
 await test('resposta não pode substituir o grupo escolhido',async()=>{
  const bad=pair();bad.parties[0].group_id='OUTRO';const f=fixture(async(path,o)=>o?bad:list());
  await f.controller.enter();choose(f.controller);await f.controller.prepare();assert.equal(f.frames.at(-1).preparation,null);assert.equal(f.previews.at(-1),null);
+});
+
+await test('preparação consulta estados atuais dos dois partidos sem alterar o dossiê',async()=>{
+ const {readCpcOfficialStates}=await import('./static/cpc-preparation.mjs');
+ const p=pair();p.parties.forEach((party,i)=>party.members=[{unit_id:party.team,asset_id:i+1}]);const original=structuredClone(p),calls=[];
+ const states=await readCpcOfficialStates(p,async path=>{calls.push(path);const team=path.endsWith('AZUL')?'AZUL':'VERMELHO';return {team,units:[{id:team==='AZUL'?1:2,operational_state:{state:{lost:team==='AZUL'}}}]};});
+ assert.deepEqual(calls.sort(),['/api/map-units?team=AZUL','/api/map-units?team=VERMELHO']);
+ assert.equal(states.AZUL.state.lost,true);assert.equal(states.VERMELHO.state.lost,false);assert.deepEqual(p,original);
+});
+await test('sair enquanto os estados são consultados não restaura marcadores antigos',async()=>{
+ const pending=defer();const f=fixture(async(path,o)=>o?pair():list(),()=>pending.promise);
+ await f.controller.enter();choose(f.controller);const loading=f.controller.prepare();await Promise.resolve();
+ assert.equal(f.frames.at(-1).preparation,null);f.controller.leave();pending.resolve({AZUL:{state:{lost:true}}});await loading;
+ assert.equal(f.frames.at(-1).active,false);assert.equal(f.previews.at(-1),null);
+});
+await test('falha ao conferir estado oficial não publica uma camada presumida',async()=>{
+ const f=fixture(async(path,o)=>o?pair():list(),async()=>{throw Error('Estado indisponível');});
+ await f.controller.enter();choose(f.controller);assert.equal(await f.controller.prepare(),false);
+ assert.equal(f.previews.at(-1),null);assert.match(f.frames.at(-1).error,/Estado indisponível/);
 });

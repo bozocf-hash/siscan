@@ -26,7 +26,7 @@ Controles de execução somente após prontidão positiva; nenhum estoque/ordem 
 
 - [x] AUTO-RUN-01: testes primeiro; adaptador do motor com validação de política, limite, hashes e reprodução; nenhuma mutação de domínio ou RNG global. Oito testes de serviço passaram.
 - [x] AUTO-RUN-02: HTTP protegido; validação, conflito/revogação/fonte indisponível, sem migração ou reinício principal. Três testes HTTP passaram, incluindo comparação integral do banco antes/depois.
-- [ ] AUTO-RUN-03: execução e resumo no painel atual; edição e respostas atrasadas invalidadas; download transitório.
+- [x] AUTO-RUN-03: execução e resumo no painel atual; edição e respostas atrasadas invalidadas; download transitório. Três testes JS novos passaram; execução/exportação e invalidação também observadas no navegador.
 - [ ] AUTO-RUN-04: navegador isolado, regressões, documentação, sincronização protegida e commits no repositório autorizado.
 
 Testes: unittest `check_cpc_controlled_trial*.py`, node:test da prontidão e regressões CPC existentes, verificadores de mapa/silhuetas. Comparar SQL/entradas/RNG, estoque gasto, combustível, eventos/perdas, determinismo sem IDs de execução e mudança real de grupo durante cálculo. Harness próprio, pasta/cookie/porta novos; preservar 61273 e principal 8787. Registrar evidências reais no fechamento deste documento.

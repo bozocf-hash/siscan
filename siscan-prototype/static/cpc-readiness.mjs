@@ -1,15 +1,16 @@
-// Consulta de entradas: não executa combate nem publica efeitos.
+// Conferência e ensaio sintético transitório: nunca publica efeitos oficiais.
 export function createReadinessController({request,render,onForbidden=()=>{},confirmDiscard=()=>true}){
- const blank=()=>({preparation:null,hypotheses:null,result:null,busy:false,dirty:false,error:'',invalid:false});let s=blank(),generation=0,formGeneration=0;
+ const blank=()=>({preparation:null,hypotheses:null,result:null,trial:null,trialBusy:false,busy:false,dirty:false,error:'',invalid:false});let s=blank(),generation=0,formGeneration=0;
  const emit=()=>render(structuredClone(s));
- const invalidate=()=>{++generation;s.result=null;s.busy=false;s.error='';emit();};
+ const invalidate=()=>{++generation;s.result=null;s.trial=null;s.trialBusy=false;s.busy=false;s.error='';emit();};
  const api={
   setPreparation(p){++generation;s={...blank(),formVersion:++formGeneration};s.preparation=p?structuredClone(p):null;emit();},
   edit(value){s.hypotheses=structuredClone(value);s.invalid=false;s.dirty=true;invalidate();},invalidate,
-  inputError(message){++generation;s.result=null;s.busy=false;s.dirty=true;s.invalid=true;s.error=message;emit();},
+  inputError(message){++generation;s.result=null;s.trial=null;s.trialBusy=false;s.busy=false;s.dirty=true;s.invalid=true;s.error=message;emit();},
+  editPolicy(){++generation;s.trial=null;s.trialBusy=false;s.busy=false;s.error='';s.dirty=true;emit();},
   canLeave(){if(s.dirty&&!confirmDiscard('As hipóteses são transitórias. Descartar a edição e sair?'))return false;const p=s.preparation;api.setPreparation(p);return true;},
   async check(){
-   if(!s.preparation||s.busy||s.invalid)return false;const p=s.preparation,token=++generation;s.busy=true;s.error='';s.result=null;emit();
+   if(!s.preparation||s.busy||s.invalid)return false;const p=s.preparation,token=++generation;s.busy=true;s.error='';s.result=null;s.trial=null;s.trialBusy=false;emit();
    const body={selection:Object.fromEntries(p.parties.map(t=>[t.team,{group_id:t.group_id,expected_revision:t.composition_revision}])),expected_view_sha256:p.view_sha256};
    if(s.hypotheses!==null)body.hypotheses=structuredClone(s.hypotheses);
    try{
@@ -17,6 +18,18 @@ export function createReadinessController({request,render,onForbidden=()=>{},con
     if(value.schema_version!=='siscan-cpc-trial-readiness-01'||value.exercise_id!==p.exercise_id||value.scenario_version!==p.scenario_version||value.view_sha256!==p.view_sha256||value.official_calculation_ready!==false||value.simulation_started!==false||value.official_effects_applied!==false||typeof value.ready_for_controlled_trial!=='boolean'||!['units','excluded','issues','warnings'].every(k=>Array.isArray(value[k]))||value.ready_for_controlled_trial&&value.issues.length)throw Error('A resposta não corresponde ao par e ao contrato de prontidão.');
     s.result=value;s.busy=false;emit();return true;
    }catch(e){if(token===generation){if([401,403].includes(e.status)){s=blank();onForbidden();}s.error=e.message;s.busy=false;emit();}return false;}
+  },
+  async runTrial(policy){
+   if(!s.result?.ready_for_controlled_trial||!s.hypotheses||s.busy||s.trialBusy||s.invalid)return false;
+   const basis=structuredClone(s.result),p=s.preparation,selected=structuredClone(policy),token=++generation;
+   s.trial=null;s.trialBusy=true;s.error='';emit();
+   const body={selection:Object.fromEntries(p.parties.map(t=>[t.team,{group_id:t.group_id,expected_revision:t.composition_revision}])),expected_view_sha256:p.view_sha256,expected_basis_sha256:basis.basis_sha256,expected_hypotheses_sha256:basis.hypotheses_sha256,hypotheses:structuredClone(s.hypotheses),policy:selected};
+   try{
+    const value=await request('/api/cpc/controlled-trial',{body});if(token!==generation)return false;
+    const returned=value.metadata?.policy;
+    if(value.schema_version!=='siscan-cpc-controlled-trial-01'||value.exercise_id!==p.exercise_id||value.scenario_version!==p.scenario_version||value.view_sha256!==p.view_sha256||value.basis_sha256!==basis.basis_sha256||value.hypotheses_sha256!==basis.hypotheses_sha256||value.official_effects_applied!==false||value.simulation_started!==true||!['initial','final','events'].every(k=>Array.isArray(value[k]))||!Number.isInteger(value.minutes_completed)||value.minutes_completed<1||value.minutes_completed>120||!returned||returned.schema_version!==selected.schema_version||returned.initiative!==selected.initiative||!returned.weapons||Object.keys(returned.weapons).length!==Object.keys(selected.weapons).length||Object.keys(selected.weapons).some(k=>returned.weapons[k]!==selected.weapons[k]))throw Error('O resultado não corresponde às entradas conferidas do ensaio.');
+    s.trial=value;s.trialBusy=false;emit();return true;
+   }catch(e){if(token===generation){if([401,403].includes(e.status)){s=blank();onForbidden();}s.error=e.message;s.trialBusy=false;emit();}return false;}
   }
  };return api;
 }
@@ -33,8 +46,9 @@ export function installReadinessPanel({container,csrf,onBack,onForbidden}){
   check=el('button','Conferir entradas'),back=el('button','Voltar ao julgamento');
  heading.tabIndex=-1;notice.setAttribute('role','status');error.setAttribute('role','alert');error.className='siscan-group-error';check.type=back.type='button';
  form.append(el('summary','Definir hipóteses do ensaio'));form.hidden=true;
- container.append(heading,el('small','Conferência didática. Não executa combate nem aplica resultado.'),notice,error,summary,form,check,back);
- let controller,formKey=null,formData=null,lookup=new Map(),wasBusy=false;
+ const trialArea=el('section'),trialControls=el('details'),trialSummary=el('div'),trialNotice=el('p');trialArea.hidden=true;trialNotice.setAttribute('role','status');trialArea.append(trialNotice,trialControls,trialSummary);
+ container.append(heading,el('small','Hipóteses e ensaios didáticos separados do estado oficial.'),notice,error,summary,form,trialArea,check,back);
+ let controller,formKey=null,formData=null,lookup=new Map(),wasBusy=false,trialKey=null,trialInputs=null;
  const button=(text,host,action)=>{const b=el('button',text);b.type='button';b.onclick=action;host.append(b);return b;};
  function section(host,title){const d=el('details');d.append(el('summary',title));d.ontoggle=()=>{if(d.open)for(const other of host.children)if(other!==d&&other.tagName==='DETAILS')other.open=false;};host.append(d);return d;}
  function field(host,spec,label=spec.label){
@@ -95,19 +109,56 @@ export function installReadinessPanel({container,csrf,onBack,onForbidden}){
   if(!node&&i.field.startsWith('armamentos'))node=lookup.get(i.unit_id+'|armamentos');
   if(node){for(let p=node;p&&p!==form;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true;node.focus();node.scrollIntoView({block:'nearest'});}
  }
+ function showTrial(s){
+  trialArea.hidden=!s.result?.ready_for_controlled_trial;
+  if(trialArea.hidden){trialKey=null;trialInputs=null;trialControls.replaceChildren();trialSummary.replaceChildren();return;}
+  const key=s.result.basis_sha256+'|'+s.result.hypotheses_sha256;
+  if(key!==trialKey){
+   trialKey=key;trialControls.replaceChildren(el('summary','Configurar ensaio controlado'));trialInputs={weapons:new Map()};
+   trialControls.append(el('small','Uma tentativa por minuto com o estoque escolhido. Até 120 min; encerra na primeira perda. Geometria local hipotética.'));
+   const orderLabel=el('label','Ordem das ações'),order=el('select');order.setAttribute('aria-label','Ordem das ações do ensaio');
+   for(const [v,t] of [['','Selecionar…'],['simultaneous','Simultâneas'],['AZUL','Iniciativa AZUL'],['VERMELHO','Iniciativa VERMELHO']]){const o=el('option',t);o.value=v;order.append(o);}order.onchange=()=>controller.editPolicy();orderLabel.append(order);trialControls.append(orderLabel);trialInputs.order=order;
+   for(const unit of s.result.units){
+    const label=el('label',unit.team+' · '+unit.code),select=el('select');select.setAttribute('aria-label','Estoque do ensaio · '+unit.code);
+    const options=[['','Selecionar…'],['none','Nenhuma ação ofensiva'],...(s.hypotheses.units.find(u=>u.unit_id===unit.unit_id)?.armamentos||[]).filter(w=>w.tipo==='missil_ar_ar').map((w,i)=>[w.estoque_id,'Estoque ar-ar '+(i+1)+' · '+w.quantidade.value+' itens'])];
+    for(const [v,t] of options){const o=el('option',t);o.value=v;select.append(o);}select.onchange=()=>controller.editPolicy();label.append(select);trialControls.append(label);trialInputs.weapons.set(unit.unit_id,select);
+   }
+   trialInputs.run=button('Executar ensaio controlado',trialControls,()=>controller.runTrial({schema_version:'siscan-cpc-controlled-policy-01',initiative:trialInputs.order.value,weapons:Object.fromEntries([...trialInputs.weapons].map(([id,input])=>[id,input.value==='none'?null:input.value]))}));
+   trialControls.open=true;
+  }
+  trialInputs.run.disabled=s.trialBusy||!trialInputs.order.value||[...trialInputs.weapons.values()].some(i=>!i.value);
+  for(const input of [trialInputs.order,...trialInputs.weapons.values()])input.disabled=s.trialBusy;
+  trialNotice.textContent=s.trialBusy?'Executando ensaio sintético…':s.trial?'Ensaio encerrado · sem efeitos oficiais':'Execução opcional; confira a política antes de iniciar.';
+  trialSummary.replaceChildren();
+  if(!s.trial)return;
+  const r=s.trial;trialControls.open=false;trialSummary.append(el('h4','Resultado sugerido do ensaio'),el('p',r.minutes_completed+' de '+r.minutes_requested+' min · '+(r.stop_reason==='participant_loss'?'encerrado por perda proposta':'duração concluída')));
+  for(const final of r.final){
+   const initial=r.initial.find(u=>u.unidade_id===final.unidade_id),unit=r.units.find(u=>u.unit_id===final.unidade_id),d=el('details');
+   d.append(el('summary',unit.team+' · '+unit.code+' · '+(r.balance.perdas_propostas.includes(final.unidade_id)?'perda proposta':({em_voo:'em voo',evadindo:'evadindo',pousado:'pousado'})[final.estado_voo])),
+    el('p','Vida: '+initial.pontos_de_vida+' → '+final.pontos_de_vida+' pontos'),el('p','Combustível: '+initial.combustivel_kg+' → '+final.combustivel_kg+' kg'));
+   for(const [i,stock] of final.armamentos.entries()){const before=initial.armamentos.find(w=>w.estoque_id===stock.estoque_id);d.append(el('p','Estoque hipotético '+(i+1)+': '+before.quantidade+' → '+stock.quantidade+' itens'));}trialSummary.append(d);
+  }
+  trialSummary.append(el('p','Perdas propostas: '+r.balance.quantidade_perdas_propostas+' · mísseis gastos: '+r.balance.misseis_gastos));
+  const events=el('details');events.append(el('summary','Histórico · '+r.events.length+' eventos'));
+  for(const e of r.events.slice(0,100))events.append(el('p',e.minuto+' min · '+e.tipo+(e.unidade_id?' · '+(r.units.find(u=>u.unit_id===e.unidade_id)?.code||e.unidade_id):'')));
+  if(r.events.length>100)events.append(el('small','Exibidos os primeiros 100 eventos. O JSON inclui o histórico completo.'));trialSummary.append(events);
+  button('Baixar relatório JSON',trialSummary,()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(r,null,2)],{type:'application/json'})),a=el('a');a.href=url;a.download='ensaio-cpc-'+r.metadata.execucao_id+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  trialSummary.append(el('small','A decisão continua com o instrutor. Pontos do ensaio não são índice operativo oficial.'));
+ }
  controller=createReadinessController({request:async(path,options)=>{
   const abort=new AbortController(),timer=setTimeout(()=>abort.abort(),15000);
   try{const response=await fetch(path,{method:'POST',signal:abort.signal,headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:JSON.stringify(options.body)});const data=await response.json();if(!response.ok)throw Object.assign(Error(data.error||'Prontidão indisponível.'),{status:response.status});return data;}finally{clearTimeout(timer);}
  },onForbidden,confirmDiscard:message=>window.confirm(message),render:s=>{
-  const completed=wasBusy&&!s.busy;wasBusy=s.busy;
+  const completed=wasBusy&&!(s.busy||s.trialBusy);wasBusy=s.busy||s.trialBusy;
   const key=s.preparation?s.preparation.view_sha256+'|'+s.formVersion:null;if(key!==formKey){formKey=key;formData=null;lookup.clear();while(form.children.length>1)form.lastChild.remove();form.hidden=true;}
-  check.disabled=s.busy||!s.preparation||s.invalid;notice.textContent=s.busy?'Conferindo fontes…':s.result?({incomplete:'Entradas incompletas',unsupported:'Recorte não suportado',ready:'Entradas prontas para ensaio controlado'})[s.result.status]:s.dirty?'Hipóteses alteradas · conferir novamente.':'Confira as entradas do par preparado.';notice.className='readiness-status';notice.dataset.state=s.result?.status||'';error.textContent=s.error;summary.replaceChildren();
+  check.disabled=s.busy||s.trialBusy||!s.preparation||s.invalid;notice.textContent=s.busy?'Conferindo fontes…':s.result?({incomplete:'Entradas incompletas',unsupported:'Recorte não suportado',ready:'Entradas prontas para ensaio controlado'})[s.result.status]:s.dirty?'Hipóteses alteradas · conferir novamente.':'Confira as entradas do par preparado.';notice.className='readiness-status';notice.dataset.state=s.result?.status||'';error.textContent=s.error;summary.replaceChildren();
   if(s.result){
    if(!formData&&s.result.requirements)buildForm(s.result);
-   const group=(title,items)=>{if(!items.length)return;const d=el('details');d.append(el('summary',title+' · '+items.length+(title==='Avisos'?' avisos':' pendências')));for(const i of items){const p=el('p',i.message);d.append(p,el('small',i.action));if(i.category==='missing_data'||i.code==='missing_signature_factor')button('Ver campo',d,()=>focusIssue(i));}summary.append(d);};
+   const group=(title,items)=>{if(!items.length)return;const d=el('details');d.append(el('summary',title+' · '+items.length+(title==='Avisos'?'':items.length===1?' pendência':' pendências')));for(const i of items){const p=el('p',i.message);d.append(p,el('small',i.action));if(i.category==='missing_data'||i.code==='missing_signature_factor')button('Ver campo',d,()=>focusIssue(i));}summary.append(d);};
    for(const unit of s.result.units)group(unit.team+' · '+unit.code,s.result.issues.filter(i=>i.unit_id===unit.unit_id));group('Cenário',s.result.issues.filter(i=>!i.unit_id));group('Avisos',s.result.warnings);for(const u of s.result.excluded)summary.append(el('p',u.code+' · '+u.reason));
-   if(s.result.ready_for_controlled_trial){summary.append(el('p','Entradas consistentes para o recorte controlado. Nenhum confronto foi executado.'));form.open=false;if(completed)container.parentElement.scrollTop=0;}
+   if(s.result.ready_for_controlled_trial){summary.append(el('p','Entradas consistentes para o recorte controlado.'));if(completed){form.open=false;container.parentElement.scrollTop=0;}}
   }
+  showTrial(s);
   if(completed&&document.activeElement===document.body)heading.focus({preventScroll:true});
  }});
  check.onclick=()=>controller.check();back.onclick=()=>{if(controller.canLeave())onBack();};return controller;

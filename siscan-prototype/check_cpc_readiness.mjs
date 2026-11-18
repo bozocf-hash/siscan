@@ -40,3 +40,22 @@ test('aceitar descarte reinicia os controles mesmo no mesmo par',()=>{
  const e=setup(async()=>result());const version=e.state.formVersion;e.c.edit({label:'descartar'});assert.equal(e.c.canLeave(),true);
  assert.equal(e.state.hypotheses,null);assert.notEqual(e.state.formVersion,version);
 });
+
+const readyResult=()=>({...result(),ready_for_controlled_trial:true,basis_sha256:'basis',hypotheses_sha256:'hypotheses'});
+const policy={schema_version:'siscan-cpc-controlled-policy-01',initiative:'simultaneous',weapons:{AZUL:null,VERMELHO:null}};
+const trialResult=()=>({schema_version:'siscan-cpc-controlled-trial-01',exercise_id:1,scenario_version:1,view_sha256:'v',basis_sha256:'basis',hypotheses_sha256:'hypotheses',official_effects_applied:false,simulation_started:true,initial:[],final:[],events:[],balance:{},minutes_completed:1,metadata:{policy}});
+test('ensaio envia hashes conferidos e conserva somente resultado não oficial',async()=>{
+ let sent;const e=setup(async(p,o)=>{if(p.endsWith('trial-readiness'))return readyResult();sent=[p,o.body];return trialResult();});
+ e.c.edit({label:'Hipóteses explícitas'});await e.c.check();assert.equal(await e.c.runTrial(policy),true);
+ assert.equal(sent[0],'/api/cpc/controlled-trial');assert.equal(sent[1].expected_basis_sha256,'basis');assert.equal(sent[1].expected_hypotheses_sha256,'hypotheses');assert.equal('command_id'in sent[1],false);assert.ok(e.state.trial);
+ e.c.editPolicy();assert.equal(e.state.trial,null);assert.ok(e.state.result);
+});
+test('edição e reconferência descartam ensaio atrasado e resultado anterior',async()=>{
+ let resolve;const e=setup(async p=>p.endsWith('trial-readiness')?readyResult():new Promise(r=>resolve=r));
+ e.c.edit({label:'Hipóteses'});await e.c.check();const pending=e.c.runTrial(policy);e.c.edit({label:'outra'});resolve(trialResult());await pending;assert.equal(e.state.trial,null);assert.equal(e.state.trialBusy,false);
+ assert.equal(await e.c.runTrial(policy),false);
+});
+test('ensaio recusa resposta de outra base e apaga contexto em 403',async()=>{
+ const e=setup(async p=>p.endsWith('trial-readiness')?readyResult():({...trialResult(),basis_sha256:'outra'}));e.c.edit({label:'hipótese'});await e.c.check();await e.c.runTrial(policy);assert.equal(e.state.trial,null);assert.ok(e.state.error);
+ const denied=setup(async p=>{if(p.endsWith('trial-readiness'))return readyResult();throw Object.assign(Error('Negado'),{status:403});});denied.c.edit({label:'hipótese'});await denied.c.check();await denied.c.runTrial(policy);assert.equal(denied.state.preparation,null);assert.equal(denied.state.trial,null);
+});

@@ -1,8 +1,8 @@
 # Plano técnico — prontidão do ensaio CPC controlado
 
-**Data: 2026-11-17. Estado: Fase 2 aprovada por “prossiga”; Fase 3 proposta em 123.** Especificação do Recorte 4-A aprovada pelo responsável por “sim”, após 121. A aprovação abrange conferência de entradas, não execução automática ou parâmetros de combate.
+**Data do plano: 2026-11-17. Estado atual: Fase 2 aprovada por “prossiga”; Fase 3 aprovada por “sim”; READY-01–12 concluídas em [124](../../../docs/recovery/124_ENTREGA_PRONTIDAO_ENSAIO_CPC.md).** Especificação do Recorte 4-A aprovada pelo responsável por “sim”, após 121. A aprovação abrange conferência de entradas, não execução automática ou parâmetros de combate. Solicitações adicionais da skill dispensadas expressamente pelo responsável durante a implementação.
 
-Contrato: [SPEC-force-confrontation — Recorte 4-A](../../../SPEC-force-confrontation.md). Registro: [121](../../../docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md). Este diretório segue a convenção já usada em `mapa/` e `julgamento/`, preservando os planos incompletos `tasks/plan.md` e `tasks/todo.md`. Lista detalhada de Fase 3 em [todo.md](todo.md), proposta para revisão; implementação não iniciada.
+Contrato: [SPEC-force-confrontation — Recorte 4-A](../../../SPEC-force-confrontation.md). Registro: [121](../../../docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md). Este diretório segue a convenção já usada em `mapa/` e `julgamento/`, preservando os planos incompletos `tasks/plan.md` e `tasks/todo.md`. Lista detalhada de Fase 3 em [todo.md](todo.md), aprovada e concluída; os tópicos seguintes preservam o desenho do plano, com evidências de execução em 124.
 
 ## Marco verificável
 
@@ -113,7 +113,7 @@ Esta é a ordem do plano, não a lista detalhada da Fase 3.
 | 6 | Percurso real no navegador, documentação de entrega, sincronização e Git | Documentação em lotes de até 5; nenhum original ou banco principal |
 | Checkpoint final | Doze critérios demonstrados; relatório distingue execução de teste, observação visual e funcionalidades ainda ausentes | AUTO-READY-01–12 |
 
-A Fase 3 detalha aceites, dependências, verificações e arquivos em [todo.md](todo.md), ainda proposto para revisão. A aprovação do plano não equivale à aprovação da lista ou da implementação.
+A Fase 3 detalha aceites, dependências, verificações e arquivos em [todo.md](todo.md). Plano e lista receberam aprovações distintas; a lista aprovada autorizou a implementação, concluída em 124.
 
 ## Verificação planejada
 
@@ -138,7 +138,7 @@ git diff --check
 
 Sem build ou pacote a instalar. Harness de navegador: reutilizar o contexto público `persistent_server` de `check_cpc_judgment_http.py`, pasta temporária nova e porta livre. Não reiniciar os processos 61270/61271 nem o principal em 8787 para verificar esta fatia. Inspecionar instrutor e operador separadamente, campos/erros/estado positivo em 320 e desktop, foco e console; salvar evidência e remover override de viewport.
 
-Nesta Fase 2 não há arquivos de produção/verificadores novos, execução de testes ou servidor. Documentar resultados apenas na implementação, sem antecipar número de testes ou sucesso.
+Na etapa original de Fase 2 não houve código novo, testes ou servidor. Na implementação posterior passaram 154 testes Python e 46 JS, além dos verificadores de plotagem/silhuetas; evidências do percurso e da preservação em 124. O principal não foi reiniciado/migrado.
 
 ## Riscos e tratamento
 
@@ -154,6 +154,6 @@ Nesta Fase 2 não há arquivos de produção/verificadores novos, execução de 
 | Novo módulo derrubar o julgamento | Carregamento recuperável, compatibilidade e regressões |
 | Consulta alterar eventos/estoques/RNG | Provedores de leitura, nenhum loop/gerenciador e comparação de dados antes/depois |
 
-## Gate de Fase 2
+## Aprovação e encerramento
 
-Revisar a divisão, captura de fontes, formato de hipóteses e experiência do instrutor. A skill Spec Driven Development exige validação de cada fase antes da seguinte. Plano aprovado por “prossiga”, permitindo detalhar a lista da Fase 3, agora proposta em 123; não aprova implementação, parâmetros reais, origem automática durável, migração ou ampliação do resolvedor para grupamentos.
+Plano aprovado por “prossiga”, lista aprovada por “sim” após 123 e implementação concluída em 124. A dispensa expressa de novas solicitações da skill não dispensou testes e revisão técnica. Não foram implementados execução automática, origem automática durável, migração principal ou ampliação do resolvedor para grupamentos.

@@ -1,6 +1,6 @@
 # 124 — Entrega da prontidão das entradas do ensaio CPC
 
-**2026-11-17 · Recorte 4-A implementado e verificado.** Especificação, plano e tarefas aprovados; o responsável também dispensou novas solicitações da skill Spec Driven Development para executar este recorte. O diagnóstico foi implementado sequencialmente, mantendo as verificações técnicas. Contrato: [SPEC-force-confrontation](../../SPEC-force-confrontation.md#recorte-4-a--prontidão-para-o-ensaio-automático-controlado); execução das tarefas em [READY-01–12](../../tasks/force-confrontation/prontidao/todo.md).
+**Execução em 2026-11-17; encerramento em 2026-11-18 · Recorte 4-A implementado e verificado.** Especificação, plano e tarefas aprovados; o responsável também dispensou novas solicitações da skill Spec Driven Development para executar este recorte. O diagnóstico foi implementado sequencialmente, mantendo as verificações técnicas. Contrato: [SPEC-force-confrontation](../../SPEC-force-confrontation.md#recorte-4-a--prontidão-para-o-ensaio-automático-controlado); execução das tarefas em [READY-01–12](../../tasks/force-confrontation/prontidao/todo.md).
 
 ## O que o instrutor recebe
 

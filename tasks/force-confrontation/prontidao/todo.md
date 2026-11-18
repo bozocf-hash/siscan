@@ -1,6 +1,6 @@
 # Tarefas — prontidão do ensaio CPC controlado
 
-**2026-11-17. Estado: Fase 3 aprovada por “sim”; implementação em andamento.** Especificação aprovada por “sim”; plano aprovado por “prossiga” após a solicitação de revisão. Base: [plano aprovado](plan.md), [SPEC-force-confrontation — Recorte 4-A](../../../SPEC-force-confrontation.md), [121](../../../docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md) e [122](../../../docs/recovery/122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md). O responsável também dispensou as solicitações de aprovação da skill Spec Driven Development para a continuidade deste recorte.
+**2026-11-17. Estado: Fase 3 aprovada por “sim”; READY-01–12 concluídas.** Especificação aprovada por “sim”; plano aprovado por “prossiga” após a solicitação de revisão. Base: [plano aprovado](plan.md), [SPEC-force-confrontation — Recorte 4-A](../../../SPEC-force-confrontation.md), [121](../../../docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md) e [122](../../../docs/recovery/122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md). O responsável também dispensou as solicitações de aprovação da skill Spec Driven Development para a continuidade deste recorte. Evidências e limites na [entrega 124](../../../docs/recovery/124_ENTREGA_PRONTIDAO_ENSAIO_CPC.md).
 
 Após aprovação desta lista, executar sequencialmente com teste de comportamento falhando antes da mudança, verificação por incremento e commits coerentes. Checkpoints são verificações técnicas: comunicar evidências e continuar na execução autorizada, sem pedir aprovação a cada teste. Mudança material de contrato exige rever o ponto afetado. Preservar os planos anteriores, originais, DB3K, bases/processos em uso e decisões do instrutor.
 
@@ -8,7 +8,7 @@ Após aprovação desta lista, executar sequencialmente com teste de comportamen
 
 Na raiz do repositório, Python em `C:/Users/bozoc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`. Nos comandos abaixo, `$pythonCpc` representa esse executável. Criar os verificadores antes de executá-los; contagem zero não é prova. Usar unittest, node:test, SQLite temporário e harness isolado existente. Não instalar dependências ou iniciar `app.py` na base principal.
 
-Comandos focados previstos: `& $pythonCpc -m unittest discover -s siscan-prototype -p 'check_cpc_readiness.py'`, `& $pythonCpc -m unittest discover -s siscan-prototype -p 'check_cpc_readiness_http.py'` e `node --test siscan-prototype/check_cpc_readiness.mjs`. Esses três arquivos ainda não existem. Regressões existentes estão relacionadas em READY-10. Na raiz, `git diff --check`.
+Comandos focados executados: `& $pythonCpc -m unittest discover -s siscan-prototype -p 'check_cpc_readiness.py'`, `& $pythonCpc -m unittest discover -s siscan-prototype -p 'check_cpc_readiness_http.py'` e `node --test siscan-prototype/check_cpc_readiness.mjs`. Passaram 11 testes de serviço, 6 HTTP e 8 JS; incluídos nas regressões de READY-10. Na raiz, `git diff --check`.
 
 Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes JS/Python/HTTP de inspeção real do navegador. Não antecipar número de testes ou prontidão positiva. Até READY-05, um perfil ainda não validado integralmente nunca pode produzir resultado pronto; os primeiros incrementos são conferidos em harness isolado, sem ativação principal.
 
@@ -95,7 +95,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-09 — Percurso real do instrutor em ambiente isolado
 
-- [ ] Executado e registrado.
+- [x] Percurso completo em 61273, pasta/base/processo próprios; instrutor e operador conferidos separadamente, 320 px e desktop sem transbordamento. Captura, console, descarte, edição e contagens SQL registrados em 124.
 - **Aceite:** harness com pasta/cookie/base próprios e porta livre; nenhuma reinicialização dos processos existentes ou uso da base principal. Percorrer diagnóstico sem hipóteses → perfil parcial → perfil completo → edição invalida → nova conferência → retorno ao julgamento. Operador não tem acesso à prontidão do par; perda confirmada continua fora do conjunto ativo.
 - **Verificar:** navegador real em 320 px e desktop, rótulos/unidades, foco, mensagens, console e mapa único; salvar captura de evidência e remover viewport forçado. Comparar banco antes/depois das consultas; separar escritas legítimas de fixture/login de efeitos do diagnóstico. AUTO-READY-01–12.
 - **Dependência:** READY-08.
@@ -103,7 +103,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-10 — Regressões e revisão da entrega
 
-- [ ] Executadas e conferidas.
+- [x] 154 testes Python CPC + 46 JS passaram; verificadores de plotagem/silhuetas e diff conferidos. Revisão de correção, fronteiras, simplicidade, privacidade e custo concluída, com limites explícitos em 124.
 - **Aceite:** verificadores novos têm casos reais e contagem não nula; regressões preservam julgamento, perdas no mapa, grupos, plotagem e silhuetas. Revisão de correção, simplicidade, fronteiras, privacidade e custo conclui sem riscos materiais pendentes do recorte. Não enfraquecer testes para obter sucesso.
 - **Verificar:** descoberta Python `check_cpc_readiness*.py` e `check_cpc_*.py`; JS `check_cpc_readiness.mjs`, `check_cpc_judgment.mjs`, `check_cpc_preparation.mjs`, `check_map_presentation.mjs`, `check_map_groups.mjs`; verificadores `check_map_units.py`, `check_map_visuals.mjs`; `git diff --check`. Rodar checks pertinentes por incremento e consolidar antes da entrega, sem recontar a mesma execução.
 - **Dependência:** READY-09.
@@ -111,7 +111,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-11 — Relatório de entrega e roteiro do instrutor
 
-- [ ] Atualizados com evidências reais.
+- [x] Entrega 124, roteiro 103 e README atualizados com nomes dos controles, percurso, comandos e limites observados.
 - **Aceite:** documento de entrega no próximo número livre distingue diagnóstico de execução, origem hipotética de dado aprovado e preservação de saldos/estado. Roteiro e README usam os nomes reais dos controles e explicam limitações do par/dados, hipótese transitória e como conferir a prévia correta.
 - **Verificar:** links/nomes/estados coerentes com a interface observada; registrar comandos/contagens realmente executados, evidência e limites, sem anunciar confronto automático. AUTO-READY-11/12.
 - **Dependência:** READY-10.
@@ -119,7 +119,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-12 — Controles, sincronização e versão
 
-- [ ] Concluídos e conferidos.
+- [x] Controles atualizados; sincronização protegida e versão conferidas no encerramento. Sem arquivos de banco, senhas reais ou originais no diff.
 - **Aceite:** especificação/índice/registro do plano/tarefas refletem exatamente o entregue; aprovações históricas e planos incompletos anteriores preservados. Sincronizar para `C:/Users/bozoc/Documents/siscan` com conferência de divergência antes de sobrescrever; salvar commits por incremento e enviar ao repositório autorizado. Bancos, senhas, temporários e originais ficam fora do Git.
 - **Verificar:** diff/hashes dos arquivos, links, status Git e remoto; comprovar que a pasta principal recebeu os arquivos esperados sem modificação de dados. Não afirmar que processo antigo foi atualizado apenas porque o arquivo foi sincronizado. AUTO-READY-12.
 - **Dependência:** READY-11.
@@ -127,10 +127,10 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ### Checkpoint final — Prontidão entregue e limites claros
 
-- [ ] AUTO-READY-01–12 mapeados a evidências reais, com fatos observados separados de hipóteses/limitações.
-- [ ] Instrutor consegue usar a conferência; o fluxo didático anterior continua funcionando.
-- [ ] Relatório final indica o que foi implementado, testado e o que ainda falta para executar o confronto automático.
+- [x] AUTO-READY-01–12 mapeados a evidências reais em 124, com fatos observados separados de hipóteses/limitações.
+- [x] Instrutor consegue usar a conferência; o fluxo didático anterior continua funcionando.
+- [x] Relatório indica o que foi implementado, testado e o que ainda falta para executar o confronto automático.
 
-## Aprovação solicitada
+## Aprovação e encerramento
 
-Esta lista é a Fase 3. A aprovação permitirá implementar READY-01–12 e percorrer seus checkpoints sem novas confirmações rotineiras, dentro deste recorte. Não autoriza execução automática, DDL, mudança de regras/coeficientes, ampliação N×M ou migração/reinício principal. A skill Spec Driven Development determina validar a fase atual antes da implementação.
+Esta lista de Fase 3 foi aprovada por “sim”. O responsável dispensou solicitações adicionais da skill e autorizou continuidade com acesso completo. READY-01–12 foram executadas com verificações e commits sequenciais. Isso não transforma o diagnóstico entregue em execução automática, ampliação N×M ou migração/reinício principal. Planos anteriores e decisões do instrutor preservados.

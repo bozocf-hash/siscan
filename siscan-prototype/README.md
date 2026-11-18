@@ -1,5 +1,16 @@
 # Protótipo didático SISCAN
 
+**Prontidão das entradas CPC entregue — 124:** depois de preparar o par, use **Prontidão** → **Definir hipóteses do ensaio** → **Conferir entradas**. Formulário com unidades, origem hipotética expressa e pendências por campo; nenhuma hipótese numérica vem preenchida. Hipóteses transitórias, um meio aéreo sintético por partido, sem execução de combate ou aplicação de resultados. **Voltar ao julgamento** preserva o fluxo anterior. [Entrega e verificações](../docs/recovery/124_ENTREGA_PRONTIDAO_ENSAIO_CPC.md) e [passo a passo — Parte C](../docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md).
+
+Prévia completa verificada: `http://localhost:61273/`, diretório `%TEMP%/siscan-readiness-20261117-v1`. Instrutor **1**, senha sintética **somente-teste-local**; entre na raiz e abra o mapa. O processo principal 8787 e prévias anteriores não foram atualizados/reiniciados. Para uma nova instância isolada com o código atual, na pasta do protótipo:
+
+```powershell
+$pythonCpc = 'C:/Users/bozoc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+& $pythonCpc check_cpc_judgment_http.py --serve --data-dir "$env:TEMP/siscan-prontidao-local-nova"
+```
+
+Use pasta própria nova e porta livre; o harness informa a URL. Reutilizar pasta preserva o histórico SQL, mas não recria grupos em memória. Para verificar somente a prontidão: `python -m unittest check_cpc_readiness check_cpc_readiness_http` e `node --test check_cpc_readiness.mjs`. A entrega completa passou em 154 testes Python CPC e 46 JavaScript, além dos verificadores de plotagem e silhuetas; comandos completos no documento 124. Atualizar arquivos sem iniciar processo novo não acrescenta rotas ao servidor Python antigo.
+
 **Versão parcial integrada — julgamento no mapa:** instrutor prepara AZUL/VERMELHO, abre **Julgamento didático**, informa alterações/motivo, confere prévia e registra a proposta. **Confirmar efeitos → Confirmar aplicação** publica o lote; **Rejeitar proposta** preserva os meios. **Retomar julgamento** recupera propostas/decisões e **Nova proposta de correção** preserva o histórico. Estado confirmado aparece no mapa/consulta autorizada. Ver [116 — Entrega](../docs/recovery/116_ENTREGA_JULGAMENTO_DIDATICO_NO_MAPA.md) e [103 — Passo a passo](../docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md).
 
 Prévia persistente de teste, na pasta `prototype` de entrega (`siscan-prototype` no repositório):

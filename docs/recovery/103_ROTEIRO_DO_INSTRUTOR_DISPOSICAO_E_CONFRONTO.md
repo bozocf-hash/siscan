@@ -25,8 +25,8 @@ Código instalado e processo ativo são coisas diferentes. A entrega gráfica po
 6. **Repetir para o outro partido.** Para liberar integrantes de um grupo, usar “Arquivar grupamento” e “Confirmar arquivamento”. Para recompor, arquivar e criar outro; não há edição gráfica dos membros. Na primeira abertura da prévia 116 existem grupos sintéticos; após reinício, crie novas composições pela interface. Os resultados oficiais/histórico persistem e não dependem desses grupos temporários.
 7. **Abrir CPC.** No mesmo painel lateral, selecionar explicitamente “Grupamento AZUL” e “Grupamento VERMELHO”. Nenhum grupo é escolhido automaticamente. Grupos incompatíveis ficam indisponíveis com motivo. O modo de consulta suspende as ferramentas de edição/plotagem.
 8. **Acionar Preparar confronto.** O servidor reconfere autorização, exercício, revisões, snapshots, adjudicação e posições. Aguardar “Forças prontas · defina os efeitos abaixo.” Falha exige atualizar as fontes/corrigir a composição; não há preparação parcial.
-9. **Conferir o par e enquadrar.** Usar “Enquadrar o par”; AZUL e VERMELHO aparecem juntos no mapa definido, sem mover os meios. Clicar no marcador ou no integrante abre suas referências no painel. Posição é de planejamento; configuração inicial não representa combustível/munição atuais. Dado desconhecido permanece não informado.
-10. **Continuar no CPC para julgar**, seguindo a Parte B. Para encerrar a consulta, use **Voltar ao planejamento**; a camada do par sai e a perspectiva autorizada é recarregada. Trocar seleção/fontes invalida a prévia anterior. Uma preparação não reserva recursos para uso futuro.
+9. **Conferir o par e enquadrar.** Usar **Enquadrar** (nome acessível “Enquadrar o par”); AZUL e VERMELHO aparecem juntos no mapa definido, sem mover os meios. Clicar no marcador ou no integrante abre suas referências no painel. Posição é de planejamento; configuração inicial não representa combustível/munição atuais. Dado desconhecido permanece não informado.
+10. **Continuar no CPC para julgar**, seguindo a Parte B. Para encerrar a consulta, use **Planejamento** (nome acessível “Voltar ao planejamento”); a camada do par sai e a perspectiva autorizada é recarregada. Trocar seleção/fontes invalida a prévia anterior. Uma preparação não reserva recursos para uso futuro.
 
 Grupos/histórico de composição continuam em memória e se perdem ao reiniciar o servidor. Propostas, decisões, efeitos oficiais e recibos do julgamento são duráveis na base habilitada. Nenhuma etapa cria um resultado automático de combate.
 
@@ -58,7 +58,19 @@ flowchart LR
     F --> G
 ```
 
-## Parte C — O que continua futuro
+## Parte C — Conferir entradas do ensaio controlado
+
+Entrega [124](124_ENTREGA_PRONTIDAO_ENSAIO_CPC.md), disponível na prévia isolada `http://localhost:61273/` (instrutor **1**, senha sintética **somente-teste-local**). Login na raiz e abrir o mapa. O processo principal 8787 foi preservado e não recebeu ativação desta funcionalidade.
+
+1. **Preparar o par**, conforme a Parte A. Na barra compacta, abrir **Prontidão** (nome acessível **Conferir prontidão do ensaio**).
+2. **Ler as pendências** por meio/cenário. Sem hipóteses, o sistema mantém os campos desconhecidos; não preenche valores nem começa o combate.
+3. **Expandir Definir hipóteses do ensaio.** Informar nome/revisão, duração, semente, escala abstrata comum e referência da geometria local. Declarar os fatores didáticos exatos para as assinaturas usadas.
+4. **Preencher cada meio por seção:** condição inicial, sensores, logística, cenário local e armamentos. Conferir as unidades dos rótulos. Informar quantidade, Pk, dano e alcance de cada estoque hipotético; alternativamente, declarar expressamente **Sem armamento neste ensaio**. Zero é um valor; vazio é ausência.
+5. **Confirmar hipóteses didáticas** somente quando essa origem expressa corresponder aos valores informados. Eles não são dados físicos Command aprovados nem saldos oficiais. Coordenadas locais em NM não reposicionam meios no mapa.
+6. **Conferir entradas.** Corrigir erros e usar **Ver campo** nas pendências. Apenas o par aéreo sintético atualmente suportado pode atingir prontidão; outro domínio/composição recebe limite explícito. **Entradas prontas para ensaio controlado** confirma consistência das entradas, sem executar confronto ou aplicar efeitos. Ausência de munição pode produzir aviso mesmo com entradas completas.
+7. **Editar ou voltar.** Editar remove o resultado anterior. **Voltar ao julgamento** retorna à Parte B; havendo edição, cancelar o descarte conserva os valores e aceitar limpa as hipóteses transitórias. Recarregar a página também perde o perfil local. Não há gravação automática.
+
+## Parte D — O que continua futuro
 
 Ensaio automático por grupamentos, reprodução temporal de eventos, regras/entradas reais validadas e integração logística de consumo de combate permanecem etapas próprias. O automático produzirá proposta para o mesmo caminho de revisão do instrutor, sem publicação automática por terminar o ensaio. Não confundir esta arbitragem didática com resolução física de combate.
 
@@ -76,4 +88,4 @@ Esgotamento: superfície/terrestre imobilizam; aeronave em voo tem perda propost
 
 ## Próximo passo
 
-O fluxo parcial de julgamento/confirmação/efeitos está entregue em 116 na prévia isolada. Conforme a etapa 4 de 104, definir regras/entradas e integrar o produtor automático de proposta por grupamentos. Ativação no principal exige backup consistente, janela, migração explícita e verificação próprios; não reiniciar a instância em uso para testar sem preservar as composições temporárias.
+O julgamento/confirmação/efeitos de 116 e a conferência de entradas de 124 estão entregues em prévias isoladas. Conforme a etapa 4 de 104, ainda é necessário definir política de ações e integrar execução e produtor automático de proposta por grupamentos. Ativação no principal exige backup consistente, janela, migração explícita e verificação próprios; não reiniciar a instância em uso para testar sem preservar as composições temporárias.

@@ -67,3 +67,7 @@
 
 #tools .siscan-means-opener { font:12px 'Segoe UI',system-ui,sans-serif; width:auto; padding:4px 10px; }
 @media(max-width:700px) { #tools { max-width:100%; overflow-x:auto; } #tools .siscan-means-opener { flex-shrink:0; } }
+
+#layers-panel .siscan-silhouette-gallery button { display:grid; justify-items:center; align-content:center; gap:4px; min-height:84px; width:100%; margin:0; padding:8px; }
+#layers-panel .siscan-silhouette-gallery svg { width:112px; max-width:100%; height:64px; }
+#layers-panel .siscan-silhouette-gallery span { font-size:11px; color:var(--text); }

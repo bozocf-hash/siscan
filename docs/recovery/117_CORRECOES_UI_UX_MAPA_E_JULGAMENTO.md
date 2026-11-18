@@ -46,3 +46,6 @@ Esta correção melhora apresentação e operação do julgamento didático exis
 Na revisão foi corrigida também uma corrida: se o carregamento assíncrono Calunga terminava depois da entrada no CPC, tentava redesenhar marcadores de planejamento já removidos. A conclusão agora atualiza somente a camada do modo vigente. Troca rápida reproduzida novamente em uma aba nova, com console final sem erros/avisos. Enquadramento considera a área coberta pelo painel inferior: a 390 × 844, ambos os marcadores ficaram entre y=239 e 277, acima do painel em y=386.
 
 Operador AZUL verificado em sessão separada: um meio próprio, seletor de partido bloqueado e nenhuma aba CPC. Na base de teste, `integrity_check=ok`, nenhuma violação de FK, duas posições, zero comandos de plotagem, zero execuções e zero estados de recursos. Nenhuma simulação foi acionada pela correção visual.
+
+
+Complemento visual posterior: [118 — Redesenho das silhuetas navais e aéreas](118_SILHUETAS_NAVAIS_E_AEREAS.md).

@@ -44,7 +44,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-04 — Identificação e parâmetros do perfil didático
 
-- [ ] Implementados e verificados.
+- [x] Validação de perfil implementada; casos parciais, tipos, identidades, unidades e origem verificados.
 - **Aceite:** reconhecer formato/metadados e descritores com valor/unidade/origem; campo ausente gera pendência e valor/tipo inválido gera erro. IDs pertencem ao par e não se repetem; nota/rótulo do cliente não aprovam fonte. Validar condição inicial, domínio e parâmetros individuais sem defaults, preservando zero explícito e perdas oficiais.
 - **Verificar:** testes Python/HTTP para perfil omitido, parcial e malformado; booleanos numéricos, negativos onde inválidos, NaN/Infinity, origem alegada, chaves extras e identidade estranha. Nenhuma hipótese limpa perda ou altera avaliação oficial. AUTO-READY-03/04/06/07/09.
 - **Dependência:** READY-02; integração visual posterior a READY-03.
@@ -52,7 +52,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-05 — Conferência completa das entradas do par controlado
 
-- [ ] Implementada e verificada.
+- [x] Conferência completa do par aéreo controlado implementada; nove testes Python e quatro HTTP passaram, incluindo prontidão positiva sem escritas.
 - **Aceite:** validar estoques individuais, Pk/dano/alcance, contabilização defensiva quando aplicável, logística, condição aérea, escala abstrata e geometria local/fatores de assinatura. Coordenadas com sinal são válidas; não há conversão geográfica implícita, interpolação ou criação de recursos. Só perfil completo e coerente do recorte suportado pode retornar prontidão positiva, sempre sintética e sem execução.
 - **Verificar:** testes positivos/negativos de todas as famílias de campos, incluindo quantidade/taxa/probabilidade zero, estoque duplicado/compartilhado, unidade/escala incompatível, fator ausente, geometria inconsistente e situação inicial impeditiva. Testar hash canônico e cópias. Um caso completo aéreo sintético precisa passar por HTTP sem efeitos no banco/RNG. AUTO-READY-04/05/07/08/09.
 - **Dependência:** READY-04.

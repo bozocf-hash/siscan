@@ -11,6 +11,17 @@ import operational_state_storage as storage
 import cpc_judgment
 import cpc_readiness as ready
 
+def datum(value,unit):return dict(value=value,unit=unit,source='didactic_assumption')
+def full_profile(base):
+ units=[]
+ for i,p in enumerate(base['preparation']['parties']):
+  uid=p['members'][0]['unit_id'];params={key:datum(value,unit) for key,value,unit in [
+   ('availability',True,'1'),('pontos_de_vida',100,'point'),('assinatura_radar',1,'m2'),('alcance_radar',50,'NM'),('probabilidade_deteccao',0.5,'1'),
+   ('combustivel_atual',600,'kg'),('taxa_consumo_combustivel',2,'kg/min'),('velocidade',100,'kn'),('x',i*10,'NM'),('y',0,'NM'),('rumo',90,'deg'),('rumo_evasao',270,'deg'),
+   ('raio_de_acao',200,'NM'),('teto_operacional',10000,'m'),('combustivel_minimo_retorno',100,'kg'),('estado_voo','em_voo','state')]}
+  units.append(dict(unit_id=uid,parameters=params,armamentos=[dict(estoque_id=uid+'-missil',tipo='missil_ar_ar',quantidade=datum(2,'item'),pk=datum(0.4,'1'),dano=datum(10,'point'),alcance_maximo=datum(20,'NM'))]))
+ return dict(schema_version=ready.PROFILE,label='Hipóteses exclusivamente sintéticas de teste',revision=1,scenario=dict(duration_minutes=datum(60,'min'),seed=datum(7,'1'),point_scale=datum('pontos-de-teste','scale'),reference=datum('plano-local-de-teste','local'),fatores_assinatura=[dict(assinatura_radar=datum(1,'m2'),fator=datum(0.5,'1'))]),units=units)
+
 class ReadinessTests(unittest.TestCase):
     def setUp(self):
         self.db=sqlite3.connect(':memory:');seed(self.db);storage.migrate(self.db)
@@ -43,5 +54,36 @@ class ReadinessTests(unittest.TestCase):
         with patch.object(cpc_judgment,'context',side_effect=context):
             with self.assertRaises(ready.state.Conflict):self.query()
         self.assertEqual(self.db.execute('SELECT count(*) FROM operational_proposals').fetchone()[0],0)
+
+    def test_perfil_completo_e_hash_reproduzivel_sem_efeitos(self):
+        h=full_profile(self.base);before=list(self.db.iterdump());result=self.query(dict(self.body,hypotheses=h))
+        self.assertTrue(result['ready_for_controlled_trial']);self.assertEqual(result['status'],'ready');self.assertEqual(result['issues'],[])
+        self.assertEqual(before,list(self.db.iterdump()));self.assertIsNotNone(result['hypotheses_sha256'])
+        h2=dict(reversed(list(h.items())));self.assertEqual(self.query(dict(self.body,hypotheses=h2))['hypotheses_sha256'],result['hypotheses_sha256'])
+    def test_parcial_zero_e_coordenada_negativa(self):
+        h=full_profile(self.base);params=h['units'][0]['parameters'];params['x']['value']=-10;params['taxa_consumo_combustivel']['value']=0;params['probabilidade_deteccao']['value']=0
+        h['scenario']['seed']['value']=0;h['units'][0]['armamentos'][0]['quantidade']['value']=0
+        result=self.query(dict(self.body,hypotheses=h));self.assertTrue(result['ready_for_controlled_trial']);self.assertTrue(result['warnings'])
+        del params['pontos_de_vida'];result=self.query(dict(self.body,hypotheses=h));self.assertFalse(result['ready_for_controlled_trial']);self.assertTrue(any(i['field']=='pontos_de_vida' for i in result['issues']))
+    def test_tipos_unidades_origens_estritos(self):
+        for mutate in [lambda h:h.update(extra=1),lambda h:h.update(revision=True),lambda h:h.update(units=h['units']*2),
+                       lambda h:h['units'][0].update(unit_id='estranho'),lambda h:h['units'][0]['parameters']['velocidade'].update(value=True),
+                       lambda h:h['units'][0]['parameters']['combustivel_atual'].update(unit='litros'),lambda h:h['units'][0]['parameters']['pontos_de_vida'].update(source='aprovado'),
+                       lambda h:h['units'][0]['armamentos'][0]['quantidade'].update(value=0.5),lambda h:h['units'][0]['parameters']['velocidade'].update(value=float('nan')),lambda h:h['units'][0]['parameters']['velocidade'].update(value=10**400)]:
+            with self.subTest(mutate=mutate):
+                h=full_profile(self.base);mutate(h)
+                with self.assertRaises(ValueError):self.query(dict(self.body,hypotheses=h))
+        with self.assertRaises(ValueError):self.query(dict(self.body,hypotheses=None))
+    def test_fator_exato_e_estado_inicial_impeditivo(self):
+        h=full_profile(self.base);h['scenario']['fatores_assinatura'][0]['assinatura_radar']['value']=2
+        self.assertFalse(self.query(dict(self.body,hypotheses=h))['ready_for_controlled_trial'])
+        h=full_profile(self.base);h['units'][0]['parameters']['availability']['value']=False
+        self.assertTrue(any(i['category']=='operational_condition' for i in self.query(dict(self.body,hypotheses=h))['issues']))
+    def test_perda_e_limite_nao_sao_contornados_por_hipotese(self):
+        base=deepcopy(self.base);uid=base['preparation']['parties'][0]['members'][0]['unit_id'];base['states'][uid]['state']['lost']=True
+        result=ready.diagnosticar(base,full_profile(self.base));self.assertFalse(result['ready_for_controlled_trial']);self.assertEqual(result['excluded'][0]['unit_id'],uid)
+        base=deepcopy(self.base);base['preparation']['parties'][0]['members'].append(dict(base['preparation']['parties'][0]['members'][0],unit_id='outro'))
+        base['states']['outro']=deepcopy(base['states'][uid]);result=ready.diagnosticar(base)
+        self.assertEqual(result['status'],'unsupported')
 
 if __name__=='__main__':unittest.main()

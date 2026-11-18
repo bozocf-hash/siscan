@@ -116,3 +116,6 @@ Correções autorizadas de UI/UX registradas em [117](117_CORRECOES_UI_UX_MAPA_E
 
 
 Correção posterior de comportamento: [120 — Retirada de meios com perda confirmada do mapa](120_RETIRADA_DE_MEIOS_COM_PERDA_CONFIRMADA_DO_MAPA.md). Estado oficial confirmado controla visibilidade; cadastro, posição e histórico são preservados.
+
+
+Continuidade proposta: [121 — Prontidão para o ensaio automático controlado](121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md), contrato em SPEC-force-confrontation, Recorte 4-A. Especificação aguardando revisão; sem plano ou implementação novos.

@@ -345,3 +345,99 @@ Na raiz, `git diff --check`. Verificadores implementados e executados: 179 teste
 Sempre preservar autoridade do instrutor, proveniência, visibilidade por partido e confirmação posterior à prévia. Rever mudanças de schema, ativação no principal, efeitos logísticos ou automação. Nunca publicar apuração automaticamente, recalcular silenciosamente a intenção aceita, modificar originais/DB3K ou alegar que julgamento didático valida parâmetros reais de combate.
 
 Gates de especificação, plano e tarefas satisfeitos por aprovações distintas. JUD-01–14 e checkpoints concluídos conforme 116; não reabrir gates desta fatia. Migração executada somente em bases de teste/harness; principal preservado. Produtor automático e implantação principal continuam recortes/procedimentos próprios.
+
+
+## Recorte 4-A — Prontidão para o ensaio automático controlado
+
+**Estado: especificação proposta para revisão; código não iniciado.** Continuidade da etapa 4 aprovada em 104, preservando os recortes já entregues. Capacidade `force-confrontation`, sem criar novo domínio ou mapa de módulos. Documento de leitura: [121](docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md).
+
+### Objetivo e premissas
+
+Antes de ligar execução automática ao mapa, o instrutor deve conferir a prontidão das entradas do par escolhido e entender, por meio, o que falta. Esta entrega retorna diagnóstico; não resolve combate, registra proposta ou aplica efeitos. A autoridade final permanece no instrutor. Especificação e dados descritivos do Command não constituem validação de probabilidades, dano ou autonomia real.
+
+Evidências diretas no código: `GerenciadorDeCombate._validar_rodada` aceita ações somente do par atacante/defensor; `SimulacaoTemporal.avancar_turno` recebe ações declaradas, sem uma política autônoma de escolha de alvos; `CenarioTatico` usa geometria cartesiana em milhas náuticas; `engine_units.configuration_domain` reconhece apenas a configuração aérea sintética controlada. O armazenamento de adjudicação atual aceita somente `source='didactic'`. Portanto, nesta fase não há suporte demonstrado a confronto automático de grupamentos, transformação geográfica do mapa, parâmetros reais ou origem persistida de ensaio automático.
+
+Premissas propostas: reutilizar contexto/dossiê/identidades e o motor existentes; diagnóstico exclusivo do instrutor; hipóteses explicitamente identificadas; nenhum valor físico padrão criado para completar lacunas; nenhuma alteração de schema ou dependência. Começar pelo caso de duas unidades individuais, uma de cada partido, contidas nos grupos selecionados. Os grupos continuam com seus integrantes; cardinalidade maior aparece como limite do motor atual, sem selecionar um integrante silenciosamente.
+
+### Experiência do instrutor
+
+Depois de preparar o par no painel CPC, **Conferir prontidão do ensaio** apresenta um resumo: **Entradas incompletas**, **Recorte não suportado** ou **Pronto para ensaio controlado**. Os detalhes ficam expansíveis por meio, com campo, motivo, origem e providência necessária. Manter painel compacto e o mesmo mapa, sem abrir janelas sobrepostas.
+
+O estado pronto significa somente que as entradas cumprem o contrato do ensaio sintético de pares. Não significa que o combate foi simulado, que haverá engajamento ou que os dados estão aprovados para previsão real. Não acrescentar botão habilitado que finja iniciar uma simulação nesta entrega. Julgamento didático e confirmação continuam disponíveis pelos caminhos existentes.
+
+### Entrada e fontes
+
+Propor `POST /api/cpc/trial-readiness`, sessão de instrutor atribuído ao exercício, CSRF e payload estrito. Entrada: `selection` com IDs/revisões dos grupos, `expected_view_sha256` da preparação e `hypotheses` opcional. Ausência de hipóteses é consulta válida e produz pendências, nunca preenchimento automático.
+
+O servidor recupera a base atual pelo provedor de julgamento/contexto e reconfere seleção, cenário, adjudicação, snapshots, posições e estado oficial. O cliente não envia estados oficiais, snapshots ou provas de autorização como fonte confiável. Hash esperado divergente recusa a consulta por conflito, sem substituir silenciosamente o par.
+
+Quando informado, `hypotheses` é um objeto de versão de formato explícita, identificação/versão declarada e parâmetros por `unit_id` pertencente ao par, além dos parâmetros do cenário. O hash canônico é calculado no servidor. A versão declarada identifica a hipótese, sem dar aprovação técnica. Cada grandeza deve declarar unidade e origem: dado aprovado para a finalidade, hipótese didática expressa ou indisponível. Proibir chaves extras, referências a outros meios, NaN/Infinity, booleanos usados como números e identificação duplicada. Perfil incompleto retorna pendências; valores inválidos retornam erro de validação. Limites de tamanho/quantidade serão compatíveis com os limites existentes, sem entrada ilimitada.
+
+Snapshot técnico inicial não é saldo atual. Posição geográfica não é distância cartesiana do ensaio. A ausência de um adaptador geográfico explícito impede afirmar que os movimentos do ensaio refletem as posições do mapa. Nesta conferência, geometria local didática pode ser fornecida explicitamente, com origem/unidade e aviso de que não é trajetória geográfica. Não converter graus em NM por um fator constante implícito.
+
+### Matriz de conferência
+
+| Grupo de entrada | Conferência exigida | Lacuna / limite |
+|---|---|---|
+| Contexto e identidade | Mesmo exercício/cenário; grupos/revisões; instância/configuração/snapshot individual | Identidade incompatível recusa consulta; referência indisponível informa motivo |
+| Perdas oficiais | `lost === true` exclui a unidade do conjunto ativo, conforme 120 | Não restaurar por hipótese; partido sem integrante utilizável bloqueia o ensaio |
+| Quantidade e domínio | Um integrante utilizável por partido; configuração/domínio demonstrados | Mais integrantes ou domínio ainda não reconhecido: `unsupported_by_current_engine` |
+| Condição inicial | Pontos de vida abstratos e escala do ensaio explicitamente declarados | Não transformar índice desconhecido em 100% nem copiar DamagePoints como equivalente |
+| Estado inicial não avaliado | Hipótese didática de disponibilidade identificada separadamente, quando necessária | Não altera `lost=null` ou avaliação oficial; não pode contrariar perda confirmada |
+| Detecção | Alcance NM, probabilidade didática 0–1, assinatura m² e fatores declarados | Alcance de sensor no catálogo não gera probabilidade por inferência |
+| Estoques e armamentos | Estoques individuais, quantidade inteira, tipo aceito, alcance NM, Pk e dano abstrato declarados | Não somar paióis e configuração alternativa como estoque atual; zero explícito é válido |
+| Defesa | Estoque defensivo e custo inteiro por tentativa, eficácia didática quando aplicável | Probabilidade isolada não cria munição defensiva ou tentativa ilimitada |
+| Logística | Combustível kg, taxa kg/min, velocidade nós; reserva e situação de voo para aéreo | Saldo ausente não é tanque cheio; capacidade não substitui saldo; alerta M+5 separado da reserva de retorno |
+| Geometria e tempo | Posições locais/pares de distâncias coerentes em NM, rumos, duração e semente explícitos | Conversão do mapa e política autônoma de ações ainda precisam de contratos próprios |
+
+Essa matriz não introduz regras de alvos, prioridade, salvas, first strike, eficácia de defesa, perda percentual ou agregação de poder. São contratos a fechar para a execução seguinte. Valores zero válidos não viram ausência por teste de truthiness; zero munição pode gerar aviso de impossibilidade de engajar, sem adulterar o inventário. A capacidade de executar uma validação não equivale a capacidade de combater.
+
+### Saída e semântica
+
+Envelope JSON proposto: `schema_version='siscan-cpc-trial-readiness-01'`, exercício/cenário, seleção, referências da base/preparação, hash das hipóteses quando fornecidas, escopo `controlled_pair`, unidades incluídas/excluídas, lista de pendências e avisos, `ready_for_controlled_trial` e `official_calculation_ready=false`.
+
+Cada pendência tem código estável, escopo global ou `unit_id`, campo, motivo e providência. Ausência de dado, entrada inválida, fonte indisponível, recorte não suportado e condição operacional conhecida são estados diferentes. Não anunciar lista vazia como leitura bem-sucedida após erro. Um resultado negativo válido é HTTP 200 com os motivos; erro de formato 400, falta de sessão 401, autoridade 403, referência autorizada inexistente 404, conflito 409 e fonte/integridade indisponível 503, conforme convenções atuais.
+
+O diagnóstico não altera banco de domínio, relógio, RNG do motor, posições, munição, combustível, propostas, decisões ou eventos de combate. Não existe UUID de aplicação para essa consulta. Resultados em memória não constituem relatório persistido. Futura execução deverá congelar origem, parâmetros e rubrica, produzir relatório e preservar revisão humana; não mascarar resultado automático como origem didática já suportada pelo schema atual.
+
+Operadores não recebem esta resposta com o adversário. No cliente, sair, trocar grupo, editar hipóteses ou atualizar fontes invalida o diagnóstico anterior e descarta respostas atrasadas. Uma consulta positiva não reserva recursos nem autoriza execução futura sem nova conferência.
+
+### Estrutura, estilo e verificação
+
+Locais candidatos, a confirmar somente no plano: `siscan-prototype/cpc_readiness.py` para a validação/diagnóstico; adaptador HTTP em `app.py`; painel existente em `static/cpc-preparation.mjs`; verificadores `check_cpc_readiness.py` e de HTTP/JS seguindo os padrões locais. Nenhum arquivo novo foi criado nesses caminhos nesta especificação.
+
+Reutilizar funções públicas de contexto e provedores, sem importar fixtures em produção, acessar locks/estado privados ou duplicar o publicador. Manter estilo Python por funções pequenas, parâmetros explícitos, `dict`/JSON canônico, tipagem nas fronteiras e exceções de validação conhecidas. Exemplo já existente no provedor: `result['basis_sha256']=digest(result)`; o cliente não inventa o hash da fonte.
+
+Comandos existentes de regressão, na raiz (não executados por esta edição documental):
+
+```powershell
+$pythonCpc = 'C:/Users/bozoc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+& $pythonCpc -m unittest discover -s siscan-prototype -p 'check_cpc_*.py'
+node --test siscan-prototype/check_cpc_judgment.mjs siscan-prototype/check_cpc_preparation.mjs siscan-prototype/check_map_presentation.mjs siscan-prototype/check_map_groups.mjs
+git diff --check
+```
+
+Os verificadores novos terão comandos específicos no plano quando existirem. Não usar descoberta vazia como evidência. Sem build frontend ou dependência nova. Verificação em navegador usará harness isolado de `check_cpc_judgment_http.py`, diretório temporário novo e porta livre; não iniciar `app.py` na base principal como teste.
+
+### Critérios de aceite
+
+| ID | Comportamento verificável |
+|---|---|
+| AUTO-READY-01 | Instrutor consulta par autorizado; operador/outro exercício é recusado antes de expor integrantes |
+| AUTO-READY-02 | Fonte e base são reconferidas; referência/hash divergente recusa diagnóstico sem substituir seleção |
+| AUTO-READY-03 | Dado ausente gera pendência por campo/unidade; não são criados Pk, dano, saldo ou índice padrão |
+| AUTO-READY-04 | Perfil didático completo válido é identificado como hipótese; readiness nunca aprova dados físicos/Command |
+| AUTO-READY-05 | Grupo acima do limite de par/domínio não reconhecido aparece como não suportado, sem redução silenciosa |
+| AUTO-READY-06 | Perda confirmada fica fora do conjunto ativo; hipótese não restaura perda; partido vazio bloqueia |
+| AUTO-READY-07 | Zero explícito e unidade de contabilização são preservados; NaN, booleano numérico e unidade incompatível são recusados |
+| AUTO-READY-08 | Geometria local não é anunciada como conversão das posições geográficas; pendências de execução ficam visíveis |
+| AUTO-READY-09 | Consulta válida, negativa e falha não alteram estado, recursos, posições, propostas ou RNG |
+| AUTO-READY-10 | Nova seleção/edição/saída invalida consulta; resposta atrasada não restaura resultado antigo |
+| AUTO-READY-11 | Painel compacto, acessível por teclado e lista, preserva julgamento didático e o mapa definidos |
+| AUTO-READY-12 | Testes de unidade, HTTP/CSRF, preservação de dados e navegador isolado demonstram os critérios e limites |
+
+### Limites e revisão solicitada
+
+Este recorte entrega conferência de entradas para o primeiro ensaio controlado; não entrega disparos automáticos, combate multimeios, reprodução de trajetórias ou aplicação de consumos no exercício. Depois dele ainda devem ser especificados: política de ações/alvos/iniciativa, ampliação do resolvedor para grupos, adaptador geográfico, tradução de resultado em sugestão de efeitos e origem durável do ensaio automático. Não alterar o schema `didactic` de 112 por conveniência.
+
+Revisão solicitada: aprovar a prontidão como primeira fatia da ligação automática, com demonstração inicial limitada ao par controlado e hipóteses visíveis, antes de integrar execução por grupos. A skill Spec Driven Development determina: “Do not advance to the next phase until the current one is validated.” A aprovação deste documento permitirá elaborar o plano; não aprova parâmetros reais, migração ou implementação de etapas posteriores.

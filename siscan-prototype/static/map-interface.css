@@ -71,3 +71,11 @@
 #layers-panel .siscan-silhouette-gallery button { display:grid; justify-items:center; align-content:center; gap:2px; min-height:60px; width:100%; margin:0; padding:6px; }
 #layers-panel .siscan-silhouette-gallery svg { width:64px; max-width:100%; height:38px; }
 #layers-panel .siscan-silhouette-gallery span { font-size:11px; color:var(--text); }
+
+#layers-panel .siscan-readiness fieldset { min-width:0; margin:8px 0; padding:8px; border:1px solid var(--line); border-radius:5px; }
+#layers-panel .siscan-readiness legend { font-size:12px; padding:0 4px; }
+#layers-panel .siscan-readiness input:not([type=checkbox]),#layers-panel .siscan-readiness select { display:block; width:100%; }
+#layers-panel .siscan-readiness>details>summary { color:var(--gold); font-weight:600; }
+
+#layers-panel .readiness-status { padding:6px 8px; border-left:2px solid var(--line); }
+#layers-panel .readiness-status[data-state=ready] { color:var(--gold); border-color:var(--gold); font-weight:600; }

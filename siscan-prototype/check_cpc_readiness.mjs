@@ -21,3 +21,21 @@ test('403 limpa dados privados e comunica revogação',async()=>{
 test('resposta de outro cenário e falha não viram prontidão',async()=>{
  const e=setup(async()=>({...result(),scenario_version:2}));await e.c.check();assert.equal(e.state.result,null);assert.ok(e.state.error);
 });
+
+test('campos preservam zero e falso, branco não vira zero e origem exige declaração',async()=>{
+ const {hypothesisDatum}=await import('./static/cpc-readiness.mjs');
+ assert.equal(hypothesisDatum('',{kind:'number',unit:'kg'},true),undefined);
+ assert.deepEqual(hypothesisDatum('0',{kind:'number',unit:'kg'},true),{value:0,unit:'kg',source:'didactic_assumption'});
+ assert.equal(hypothesisDatum('false',{kind:'boolean',unit:'1'},true).value,false);
+ assert.equal(hypothesisDatum('2',{kind:'number',unit:'kg'},false).source,undefined);
+ assert.throws(()=>hypothesisDatum('0.5',{kind:'integer',unit:'item'},true));
+});
+test('entrada inválida bloqueia envio de perfil anterior',async()=>{
+ let calls=0;const e=setup(async()=>{calls++;return result();});e.c.edit({label:'válido'});e.c.inputError('Número inválido');
+ assert.equal(await e.c.check(),false);assert.equal(calls,0);assert.equal(e.state.result,null);
+});
+
+test('aceitar descarte reinicia os controles mesmo no mesmo par',()=>{
+ const e=setup(async()=>result());const version=e.state.formVersion;e.c.edit({label:'descartar'});assert.equal(e.c.canLeave(),true);
+ assert.equal(e.state.hypotheses,null);assert.notEqual(e.state.formVersion,version);
+});

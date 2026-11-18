@@ -39,8 +39,8 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 ### Checkpoint A — Caminho negativo utilizável
 
 - [x] Percurso negativo observado no mesmo mapa: dois meios e pendências por partido, sem efeitos no exercício.
-- [ ] Autoridade, cardinalidade, perdas e falhas de fonte estão distintos e verificados.
-- [ ] Registrar resultados e continuar a implementação autorizada; não anunciar confronto automático ou perfil completo entregue.
+- [x] Autoridade, cardinalidade, perdas e falhas de fonte estão distintos e verificados nos testes Python/HTTP.
+- [x] Resultados registrados; continuidade autorizada sem anúncio de confronto automático.
 
 ## READY-04 — Identificação e parâmetros do perfil didático
 
@@ -60,7 +60,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-06 — Formulário progressivo de hipóteses
 
-- [ ] Implementado e verificado.
+- [x] Formulário progressivo observado no navegador com perfil parcial e completo; valores zero, falso e ausência cobertos por testes JS.
 - **Aceite:** campos por Condição inicial, Sensores, Armamentos, Logística e Cenário, com unidade/origem e valores inicialmente não preenchidos. Não exigir JSON cru nem abrir todas as seções simultaneamente. O instrutor pode preencher o perfil, consultar e localizar o campo indicado por uma pendência; a tela identifica claramente hipótese e prontidão das entradas.
 - **Verificar:** testes JS de coleta/presença dos valores sem tratar zero como vazio, perfil parcial/completo e mensagens vindas do servidor. Inspeção preliminar em tela estreita/desktop, teclado, foco e leitura dos rótulos. AUTO-READY-03/04/07/08/11.
 - **Dependência:** READY-03 e READY-05.
@@ -68,13 +68,13 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ### Checkpoint B — Perfis e diagnóstico completo
 
-- [ ] Perfil parcial explica lacunas; perfil completo do caso controlado tem prontidão positiva; perfil inválido não é aceito.
-- [ ] Formulário mantém o mapa legível e o julgamento utilizável, sem defaults numéricos ou selos de validação fictícios.
-- [ ] Nenhuma dessas operações avança tempo ou altera estoques, perdas, posições ou propostas.
+- [x] Perfil parcial explica lacunas; perfil completo do caso controlado tem prontidão positiva; perfil inválido não é aceito.
+- [x] Formulário mantém o mapa legível e o julgamento utilizável, sem defaults numéricos ou selos de validação fictícios.
+- [x] Nenhuma dessas operações avança tempo ou altera estoques, perdas, posições ou propostas.
 
 ## READY-07 — Invalidação, saída e respostas atrasadas
 
-- [ ] Implementadas e verificadas.
+- [x] Edição/resposta atrasada/403/descarte verificados por testes JS; cancelamento e descarte aceito observados na interface, incluindo reinicialização dos campos no mesmo par.
 - **Aceite:** editar hipóteses, trocar seleção/fontes, sair ou perder autorização invalida diagnóstico. Resposta antiga não o restaura; timeout/erro nunca vira pronto. Troca entre prontidão e julgamento respeita edição não salva e retorno explícito, com aviso compreensível quando houver descarte e sem confirmação duplicada. Hipóteses continuam somente em memória.
 - **Verificar:** testes JS com promises controladas para edição/troca/saída durante consulta, 401/403, falha/timeout, reentrada e retorno ao julgamento; conservar regressões de edição/decisão anteriores. AUTO-READY-10/11/12.
 - **Dependência:** READY-06.

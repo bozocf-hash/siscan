@@ -118,7 +118,7 @@ Correções autorizadas de UI/UX registradas em [117](117_CORRECOES_UI_UX_MAPA_E
 Correção posterior de comportamento: [120 — Retirada de meios com perda confirmada do mapa](120_RETIRADA_DE_MEIOS_COM_PERDA_CONFIRMADA_DO_MAPA.md). Estado oficial confirmado controla visibilidade; cadastro, posição e histórico são preservados.
 
 
-Continuidade proposta: [121 — Prontidão para o ensaio automático controlado](121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md), contrato em SPEC-force-confrontation, Recorte 4-A. Especificação aprovada por “sim”; plano proposto posteriormente em 122, com implementação ainda não iniciada.
+Continuidade proposta: [121 — Prontidão para o ensaio automático controlado](121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md), contrato em SPEC-force-confrontation, Recorte 4-A. Especificação aprovada por “sim”; plano aprovado após 122 e lista de tarefas proposta em 123, com implementação ainda não iniciada.
 
 
-Atualização de gate: a especificação 121/Recorte 4-A foi aprovada por “sim”. [122 — Plano de prontidão](122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md) está proposto para revisão, em tasks/force-confrontation/prontidao/plan.md; lista detalhada e implementação não iniciadas.
+Atualização de gate: a especificação 121/Recorte 4-A foi aprovada por “sim”. [122 — Plano de prontidão](122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md) foi aprovado por “prossiga”. [123 — Tarefas de prontidão](123_TAREFAS_PRONTIDAO_ENSAIO_AUTOMATICO.md) está proposto para revisão em tasks/force-confrontation/prontidao/todo.md; implementação não iniciada.

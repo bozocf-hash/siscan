@@ -27,4 +27,4 @@ Especificação inclui fronteiras de entrada/saída, permissões, doze critério
 Conforme a skill [Spec Driven Development](C:/Users/bozoc/.codex/skills/spec-driven-development/SKILL.md), a revisão da especificação precede a elaboração do plano. A revisão solicitada é concreta: aceitar esta primeira fatia de prontidão ou ajustar seu escopo.
 
 
-Continuidade: plano de Fase 2 proposto em [122](122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md). Os limites e evidências acima permanecem; a aprovação não transforma o diagnóstico em motor automático.
+Continuidade: plano de Fase 2 aprovado após [122](122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md), com lista de Fase 3 proposta em [123](123_TAREFAS_PRONTIDAO_ENSAIO_AUTOMATICO.md). Os limites e evidências acima permanecem; a aprovação não transforma o diagnóstico em motor automático.

@@ -349,7 +349,7 @@ Gates de especificação, plano e tarefas satisfeitos por aprovações distintas
 
 ## Recorte 4-A — Prontidão para o ensaio automático controlado
 
-**Estado: especificação aprovada pelo responsável por “sim” após 121; plano de Fase 2 proposto em 122; código não iniciado.** Continuidade da etapa 4 aprovada em 104, preservando os recortes já entregues. Capacidade `force-confrontation`, sem criar novo domínio ou mapa de módulos. Documento de leitura: [121](docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md).
+**Estado: especificação aprovada pelo responsável por “sim” após 121; plano de Fase 2 aprovado por “prossiga”; lista de Fase 3 proposta em 123; código não iniciado.** Continuidade da etapa 4 aprovada em 104, preservando os recortes já entregues. Capacidade `force-confrontation`, sem criar novo domínio ou mapa de módulos. Documento de leitura: [121](docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md).
 
 ### Objetivo e premissas
 
@@ -443,4 +443,4 @@ Este recorte entrega conferência de entradas para o primeiro ensaio controlado;
 Revisão desta especificação concluída por “sim”: prontidão aprovada como primeira fatia da ligação automática, com demonstração inicial limitada ao par controlado e hipóteses visíveis, antes de integrar execução por grupos. A skill Spec Driven Development determina: “Do not advance to the next phase until the current one is validated.” A aprovação deste documento permitirá elaborar o plano; não aprova parâmetros reais, migração ou implementação de etapas posteriores.
 
 
-Plano técnico do Recorte 4-A: [tasks/force-confrontation/prontidao/plan.md](tasks/force-confrontation/prontidao/plan.md), proposto para revisão em 122. Lista detalhada e implementação ainda não iniciadas.
+Plano técnico do Recorte 4-A: [tasks/force-confrontation/prontidao/plan.md](tasks/force-confrontation/prontidao/plan.md), aprovado por “prossiga” após 122. Lista detalhada em [tasks/force-confrontation/prontidao/todo.md](tasks/force-confrontation/prontidao/todo.md), proposta em 123; implementação não iniciada.

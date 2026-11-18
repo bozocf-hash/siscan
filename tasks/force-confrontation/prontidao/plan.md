@@ -1,8 +1,8 @@
 # Plano técnico — prontidão do ensaio CPC controlado
 
-**Data: 2026-11-17. Estado: Fase 2 proposta para revisão.** Especificação do Recorte 4-A aprovada pelo responsável por “sim”, após 121. A aprovação abrange conferência de entradas, não execução automática ou parâmetros de combate.
+**Data: 2026-11-17. Estado: Fase 2 aprovada por “prossiga”; Fase 3 proposta em 123.** Especificação do Recorte 4-A aprovada pelo responsável por “sim”, após 121. A aprovação abrange conferência de entradas, não execução automática ou parâmetros de combate.
 
-Contrato: [SPEC-force-confrontation — Recorte 4-A](../../../SPEC-force-confrontation.md). Registro: [121](../../../docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md). Este diretório segue a convenção já usada em `mapa/` e `julgamento/`, preservando os planos incompletos `tasks/plan.md` e `tasks/todo.md`. A lista detalhada será criada aqui em `todo.md` na Fase 3, depois da revisão deste plano; não existe nesta etapa.
+Contrato: [SPEC-force-confrontation — Recorte 4-A](../../../SPEC-force-confrontation.md). Registro: [121](../../../docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md). Este diretório segue a convenção já usada em `mapa/` e `julgamento/`, preservando os planos incompletos `tasks/plan.md` e `tasks/todo.md`. Lista detalhada de Fase 3 em [todo.md](todo.md), proposta para revisão; implementação não iniciada.
 
 ## Marco verificável
 
@@ -97,7 +97,7 @@ Formulário por seções expansíveis: Condição inicial, Sensores, Armamentos,
 
 Controlador recebe preparação/revisão e perfil; edição, troca de grupo, atualização de fonte e saída invalidam o resultado e sua geração. Resposta antiga não restaura diagnóstico ou dados de outro contexto. 401/403 limpa dados privados e comunica revogação ao painel proprietário; erro não vira resultado pronto. Requisições usam timeout e foco/aria-live conforme os adaptadores existentes. Hipóteses ficam em memória, sem localStorage ou persistência automática.
 
-## Fatias propostas e checkpoints
+## Fatias aprovadas e checkpoints
 
 Esta é a ordem do plano, não a lista detalhada da Fase 3.
 
@@ -113,7 +113,7 @@ Esta é a ordem do plano, não a lista detalhada da Fase 3.
 | 6 | Percurso real no navegador, documentação de entrega, sincronização e Git | Documentação em lotes de até 5; nenhum original ou banco principal |
 | Checkpoint final | Doze critérios demonstrados; relatório distingue execução de teste, observação visual e funcionalidades ainda ausentes | AUTO-READY-01–12 |
 
-A Fase 3 detalhará aceites, dependências, verificações e arquivos de cada tarefa em `tasks/force-confrontation/prontidao/todo.md`. Não executar fatias só porque constam neste plano proposto.
+A Fase 3 detalha aceites, dependências, verificações e arquivos em [todo.md](todo.md), ainda proposto para revisão. A aprovação do plano não equivale à aprovação da lista ou da implementação.
 
 ## Verificação planejada
 
@@ -156,4 +156,4 @@ Nesta Fase 2 não há arquivos de produção/verificadores novos, execução de 
 
 ## Gate de Fase 2
 
-Revisar a divisão, captura de fontes, formato de hipóteses e experiência do instrutor. A skill Spec Driven Development exige validação de cada fase antes da seguinte. A aprovação deste plano habilita detalhar a lista da Fase 3; não aprova implementação, parâmetros reais, origem automática durável, migração ou ampliação do resolvedor para grupamentos.
+Revisar a divisão, captura de fontes, formato de hipóteses e experiência do instrutor. A skill Spec Driven Development exige validação de cada fase antes da seguinte. Plano aprovado por “prossiga”, permitindo detalhar a lista da Fase 3, agora proposta em 123; não aprova implementação, parâmetros reais, origem automática durável, migração ou ampliação do resolvedor para grupamentos.

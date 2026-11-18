@@ -349,7 +349,7 @@ Gates de especificação, plano e tarefas satisfeitos por aprovações distintas
 
 ## Recorte 4-A — Prontidão para o ensaio automático controlado
 
-**Estado: especificação proposta para revisão; código não iniciado.** Continuidade da etapa 4 aprovada em 104, preservando os recortes já entregues. Capacidade `force-confrontation`, sem criar novo domínio ou mapa de módulos. Documento de leitura: [121](docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md).
+**Estado: especificação aprovada pelo responsável por “sim” após 121; plano de Fase 2 proposto em 122; código não iniciado.** Continuidade da etapa 4 aprovada em 104, preservando os recortes já entregues. Capacidade `force-confrontation`, sem criar novo domínio ou mapa de módulos. Documento de leitura: [121](docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md).
 
 ### Objetivo e premissas
 
@@ -440,4 +440,7 @@ Os verificadores novos terão comandos específicos no plano quando existirem. N
 
 Este recorte entrega conferência de entradas para o primeiro ensaio controlado; não entrega disparos automáticos, combate multimeios, reprodução de trajetórias ou aplicação de consumos no exercício. Depois dele ainda devem ser especificados: política de ações/alvos/iniciativa, ampliação do resolvedor para grupos, adaptador geográfico, tradução de resultado em sugestão de efeitos e origem durável do ensaio automático. Não alterar o schema `didactic` de 112 por conveniência.
 
-Revisão solicitada: aprovar a prontidão como primeira fatia da ligação automática, com demonstração inicial limitada ao par controlado e hipóteses visíveis, antes de integrar execução por grupos. A skill Spec Driven Development determina: “Do not advance to the next phase until the current one is validated.” A aprovação deste documento permitirá elaborar o plano; não aprova parâmetros reais, migração ou implementação de etapas posteriores.
+Revisão desta especificação concluída por “sim”: prontidão aprovada como primeira fatia da ligação automática, com demonstração inicial limitada ao par controlado e hipóteses visíveis, antes de integrar execução por grupos. A skill Spec Driven Development determina: “Do not advance to the next phase until the current one is validated.” A aprovação deste documento permitirá elaborar o plano; não aprova parâmetros reais, migração ou implementação de etapas posteriores.
+
+
+Plano técnico do Recorte 4-A: [tasks/force-confrontation/prontidao/plan.md](tasks/force-confrontation/prontidao/plan.md), proposto para revisão em 122. Lista detalhada e implementação ainda não iniciadas.

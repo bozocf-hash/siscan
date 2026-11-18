@@ -1,6 +1,6 @@
 # 121 — Prontidão para o ensaio automático controlado
 
-**Estado: especificação proposta, aguardando revisão do responsável.** Continuidade autorizada por “pode continuar”, após a correção 120. Não registra aprovação da nova especificação.
+**Estado: especificação aprovada pelo responsável por “sim”, em resposta à revisão solicitada.** Continuidade autorizada por “pode continuar”, após a correção 120. A aprovação permite elaborar o plano, sem aprovar parâmetros reais ou iniciar implementação.
 
 Contrato canônico: [SPEC-force-confrontation.md — Recorte 4-A](../../SPEC-force-confrontation.md#recorte-4-a--prontidão-para-o-ensaio-automático-controlado). Não duplicar o contrato neste registro.
 
@@ -22,6 +22,9 @@ Foco desta especificação: tornar essas lacunas verificáveis para o instrutor 
 
 ## Controles
 
-Especificação inclui fronteiras de entrada/saída, permissões, doze critérios AUTO-READY, limites de dados/recorte e estratégia de teste. Não foram escritos plano, tarefas, código, DDL, parâmetros de combate ou novas telas. Não foram executados testes nem iniciado/reiniciado servidor: edição exclusivamente documental e inspeção de código. Originais, bancos e planos anteriores preservados.
+Especificação inclui fronteiras de entrada/saída, permissões, doze critérios AUTO-READY, limites de dados/recorte e estratégia de teste. Na etapa de especificação não foram escritos plano, tarefas, código, DDL, parâmetros de combate ou novas telas. Não foram executados testes nem iniciado/reiniciado servidor: edição exclusivamente documental e inspeção de código. Originais, bancos e planos anteriores preservados.
 
 Conforme a skill [Spec Driven Development](C:/Users/bozoc/.codex/skills/spec-driven-development/SKILL.md), a revisão da especificação precede a elaboração do plano. A revisão solicitada é concreta: aceitar esta primeira fatia de prontidão ou ajustar seu escopo.
+
+
+Continuidade: plano de Fase 2 proposto em [122](122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md). Os limites e evidências acima permanecem; a aprovação não transforma o diagnóstico em motor automático.

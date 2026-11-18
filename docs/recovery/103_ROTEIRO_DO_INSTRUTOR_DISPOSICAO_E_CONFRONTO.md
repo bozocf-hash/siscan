@@ -1,6 +1,6 @@
 # 103 — Roteiro do instrutor: disposição das forças e confronto
 
-**Atualizado em 2026-11-17: fluxo de 116 e correções de apresentação [117](117_CORRECOES_UI_UX_MAPA_E_JULGAMENTO.md).** Versão parcial com julgamento didático, prévia, confirmação/rejeição e consulta dos efeitos no mapa ATLANTICADOR. “Preparar confronto” somente confere o par; o resultado oficial depende da confirmação explícita do instrutor. Confronto automático entre grupamentos ainda não está integrado.
+**Atualizado em 2026-11-18: julgamento 116, prontidão 124 e ensaio controlado [125](125_ENSAIO_AUTOMATICO_CONTROLADO_CPC.md).** Versão parcial com julgamento didático, prévia, confirmação/rejeição e consulta dos efeitos no mapa ATLANTICADOR. “Preparar confronto” somente confere o par; o resultado oficial depende da confirmação explícita do instrutor. Ensaio automático do par aéreo sintético disponível; confronto multimeios entre grupamentos permanece pendente.
 
 ## O que está disponível e o que ainda falta
 
@@ -9,7 +9,7 @@
 | Plotar/reposicionar meios adjudicados no mapa | Disponível, com regras existentes |
 | Criar, consultar, selecionar, enquadrar e arquivar grupamentos elegíveis | Implementado e verificado na prévia isolada da entrega 102 |
 | Preparar dossiê inicial AZUL/VERMELHO com snapshots | Backend de 98 conectado à conferência gráfica em 108; referências iniciais, posições de planejamento e hashes separados |
-| Executar ensaio temporal de dois grupamentos | Ainda não integrado; o ensaio CPC existente é de unidades individuais e parâmetros sintéticos |
+| Executar ensaio temporal do par no painel | Disponível em 125: um meio aéreo sintético por partido, hipóteses e política expressas. N×M e parâmetros físicos reais continuam pendentes |
 | Reproduzir eventos do confronto no mapa | Concepção em 97; ainda não implementada |
 | Julgamento didático, confirmação/rejeição e efeitos oficiais | Implementado e verificado no navegador isolado em 116; histórico persistente |
 
@@ -28,7 +28,7 @@ Código instalado e processo ativo são coisas diferentes. A entrega gráfica po
 9. **Conferir o par e enquadrar.** Usar **Enquadrar** (nome acessível “Enquadrar o par”); AZUL e VERMELHO aparecem juntos no mapa definido, sem mover os meios. Clicar no marcador ou no integrante abre suas referências no painel. Posição é de planejamento; configuração inicial não representa combustível/munição atuais. Dado desconhecido permanece não informado.
 10. **Continuar no CPC para julgar**, seguindo a Parte B. Para encerrar a consulta, use **Planejamento** (nome acessível “Voltar ao planejamento”); a camada do par sai e a perspectiva autorizada é recarregada. Trocar seleção/fontes invalida a prévia anterior. Uma preparação não reserva recursos para uso futuro.
 
-Grupos/histórico de composição continuam em memória e se perdem ao reiniciar o servidor. Propostas, decisões, efeitos oficiais e recibos do julgamento são duráveis na base habilitada. Nenhuma etapa cria um resultado automático de combate.
+Grupos/histórico de composição continuam em memória e se perdem ao reiniciar o servidor. Propostas, decisões, efeitos oficiais e recibos do julgamento são duráveis na base habilitada. Nenhuma etapa da Parte A executa combate; o ensaio controlado é uma ação separada na Parte D.
 
 A seção **1 · Forças preparadas** recolhe composição e referências depois da preparação. Expanda para rever os integrantes; clicar no marcador também abre a consulta. Na aba Meios, coordenadas e modo Calunga ficam em **Posição e representação**. Os rótulos do mapa usam o código do cadastro e a ficha mantém o nome completo.
 
@@ -70,7 +70,19 @@ Entrega [124](124_ENTREGA_PRONTIDAO_ENSAIO_CPC.md), disponível na prévia isola
 6. **Conferir entradas.** Corrigir erros e usar **Ver campo** nas pendências. Apenas o par aéreo sintético atualmente suportado pode atingir prontidão; outro domínio/composição recebe limite explícito. **Entradas prontas para ensaio controlado** confirma consistência das entradas, sem executar confronto ou aplicar efeitos. Ausência de munição pode produzir aviso mesmo com entradas completas.
 7. **Editar ou voltar.** Editar remove o resultado anterior. **Voltar ao julgamento** retorna à Parte B; havendo edição, cancelar o descarte conserva os valores e aceitar limpa as hipóteses transitórias. Recarregar a página também perde o perfil local. Não há gravação automática.
 
-## Parte D — O que continua futuro
+## Parte D — Executar o ensaio controlado
+
+Prévia de 125 em **`http://localhost:61274/`**, instrutor **1**, senha sintética **somente-teste-local**. A porta 61273 preserva a entrega anterior de prontidão; use 61274 para a execução completa.
+
+1. Preparar o par e preencher/conferir hipóteses conforme a Parte C. São suportadas duas unidades aéreas sintéticas, uma por partido, sem perda oficial confirmada.
+2. Expandir **Configurar ensaio controlado**. Escolher **Simultâneas**, **Iniciativa AZUL** ou **Iniciativa VERMELHO**. O sistema não presume quem dispara primeiro.
+3. Selecionar, para cada meio, um **Estoque ar-ar** ou **Nenhuma ação ofensiva**. Não há troca automática de armamento. O botão permanece bloqueado enquanto a seleção estiver incompleta.
+4. Acionar **Executar ensaio controlado**. O servidor reconfere a base; calcula uma tentativa por meio por minuto, condicionada a detecção, alcance, munição e estado de voo. Duração de 1 a 120 min, conforme perfil; encerra na primeira perda proposta. Taxa zero em voo impede execução, exigindo corrigir e reconferir a hipótese.
+5. Ler **Resultado sugerido do ensaio**. Expandir cada código do cadastro para vida em pontos, combustível em kg e estoques em itens. Conferir duração efetiva, perdas propostas e mísseis gastos. O resultado não altera os símbolos/posições ou estados oficiais do mapa.
+6. Expandir **Histórico** ou **Baixar relatório JSON** para todos os eventos, referências, política e estados. A lista da tela mostra até 100 eventos; o arquivo conserva o histórico completo. O relatório é transitório e deve ser salvo para consulta posterior.
+7. Alterar hipótese/política remove o resultado anterior; reconferir as entradas quando necessário e executar novamente. Para deliberar oficialmente, usar **Voltar ao julgamento** e seguir a Parte B. Não interpretar vida abstrata como índice operativo automaticamente.
+
+## Parte E — O que continua futuro
 
 Ensaio automático por grupamentos, reprodução temporal de eventos, regras/entradas reais validadas e integração logística de consumo de combate permanecem etapas próprias. O automático produzirá proposta para o mesmo caminho de revisão do instrutor, sem publicação automática por terminar o ensaio. Não confundir esta arbitragem didática com resolução física de combate.
 
@@ -88,4 +100,4 @@ Esgotamento: superfície/terrestre imobilizam; aeronave em voo tem perda propost
 
 ## Próximo passo
 
-O julgamento/confirmação/efeitos de 116 e a conferência de entradas de 124 estão entregues em prévias isoladas. Conforme a etapa 4 de 104, ainda é necessário definir política de ações e integrar execução e produtor automático de proposta por grupamentos. Ativação no principal exige backup consistente, janela, migração explícita e verificação próprios; não reiniciar a instância em uso para testar sem preservar as composições temporárias.
+Julgamento/confirmação/efeitos de 116, prontidão 124 e ensaio controlado 125 estão entregues em prévias isoladas. Conforme a etapa 4 de 104, ainda são necessários resolvedor multimeios, políticas ampliadas, adaptação geográfica e produtor de proposta com proveniência própria. Ativação no principal exige backup consistente, janela, migração explícita e verificação próprios; não reiniciar a instância em uso para testar sem preservar as composições temporárias.

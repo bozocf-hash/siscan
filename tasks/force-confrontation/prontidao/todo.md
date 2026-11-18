@@ -1,6 +1,6 @@
 # Tarefas — prontidão do ensaio CPC controlado
 
-**2026-11-17. Estado: Fase 3 proposta para revisão.** Especificação aprovada por “sim”; plano aprovado por “prossiga” após a solicitação de revisão. Base: [plano aprovado](plan.md), [SPEC-force-confrontation — Recorte 4-A](../../../SPEC-force-confrontation.md), [121](../../../docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md) e [122](../../../docs/recovery/122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md). A implementação não começou.
+**2026-11-17. Estado: Fase 3 aprovada por “sim”; implementação em andamento.** Especificação aprovada por “sim”; plano aprovado por “prossiga” após a solicitação de revisão. Base: [plano aprovado](plan.md), [SPEC-force-confrontation — Recorte 4-A](../../../SPEC-force-confrontation.md), [121](../../../docs/recovery/121_ESPECIFICACAO_PRONTIDAO_ENSAIO_AUTOMATICO.md) e [122](../../../docs/recovery/122_PLANO_PRONTIDAO_ENSAIO_AUTOMATICO.md). O responsável também dispensou as solicitações de aprovação da skill Spec Driven Development para a continuidade deste recorte.
 
 Após aprovação desta lista, executar sequencialmente com teste de comportamento falhando antes da mudança, verificação por incremento e commits coerentes. Checkpoints são verificações técnicas: comunicar evidências e continuar na execução autorizada, sem pedir aprovação a cada teste. Mudança material de contrato exige rever o ponto afetado. Preservar os planos anteriores, originais, DB3K, bases/processos em uso e decisões do instrutor.
 
@@ -14,7 +14,7 @@ Cada tarefa atualiza seu estado neste checklist. Evidências distinguem testes J
 
 ## READY-01 — Diagnóstico autorizado do par sem hipóteses
 
-- [ ] Implementado e verificado.
+- [x] Serviço inicial de diagnóstico implementado; quatro testes focados passaram. A cobertura adicional de perdas/limites será ampliada nos incrementos seguintes.
 - **Aceite:** serviço `consultar_prontidao` usa contexto público, escopo SQL de leitura e reconferência; devolve referência da base, perdas excluídas e pendências por campo/unidade. Nega operador/outro exercício antes de consultar grupos e informa cardinalidade/domínio não suportados sem reduzir composição. Não escreve nem cria RNG; todos os flags de execução/aplicação permanecem falsos.
 - **Verificar:** teste focado Python para consulta sem perfil, grupo incompatível, perda, estado desconhecido, contexto/hash alterado e exceção; comparar banco/registro/RNG antes/depois e independência das cópias. AUTO-READY-01/02/03/05/06/09.
 - **Dependência:** aprovação desta lista.

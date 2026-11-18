@@ -1,5 +1,5 @@
 // Illustrative side profiles, not scaled drawings or certified military symbols.
-export const kinds={unknown:'Não classificado',frigate:'Fragata',corvette:'Corveta',destroyer:'Contratorpedeiro',torpedo:'Torpedeiro',support:'Navio de apoio',carrier:'Porta-aviões',submarine:'Submarino',aircraft:'Aeronave',helicopter:'Helicóptero'};
+export const kinds={unknown:'Não classificado',frigate:'Fragata',corvette:'Corveta',destroyer:'Contratorpedeiro',torpedo:'Torpedeiro',support:'Navio de apoio',carrier:'Porta-aviões',submarine:'Submarino',aircraft:'Aeronave',helicopter:'Helicóptero militar'};
 // Filled profiles carry recognition at map scale; secondary lines are for the gallery.
 const shapes={
  unknown:{body:'M80 16 118 48 80 80 42 48Z',detail:'M80 31V53M80 61V65'},
@@ -28,8 +28,8 @@ const shapes={
   body:'M80 5C84 9 85 19 86 29L96 40 145 57 149 65 99 58 92 62 92 74 108 84V89L87 83 84 91H76L73 83 52 89V84L68 74V62L61 58 11 65 15 57 64 40 74 29C75 19 76 9 80 5Z',
   detail:'M80 15C75 23 76 31 80 34 84 31 85 23 80 15ZM73 44 71 74M87 44 89 74M77 60V83M83 60V83M33 57 61 49M127 57 99 49'},
  helicopter:{
-  body:'M63 47 17 36 11 22H6L10 45 61 61ZM60 45Q65 34 85 34H103Q122 36 133 50L139 61Q138 69 123 69H78Q63 68 58 60ZM83 23H87V35H83ZM25 19H143V23H25ZM77 68V76H81V68ZM117 68V76H121V68ZM61 79H139V75H67L61 71 57 73Z',
-  detail:'M106 40Q121 44 128 53H107ZM73 43H91V55H70ZM99 39V63M8 38H24M16 30V46'}
+  body:'M59 44 21 31 14 12H7L11 39 58 55ZM50 45 62 40H95L107 34H119L134 48 151 54 147 64 128 69H73L56 62ZM61 40V31L68 28H83L92 39ZM78 23H83V31H78ZM35 19H151V23H35ZM65 63H69V73H65ZM131 65H135V73H131ZM74 76A6 6 0 1 1 62 76A6 6 0 1 1 74 76ZM138 76A5 5 0 1 1 128 76A5 5 0 1 1 138 76ZM24 38 17 45H34L39 42Z',
+  detail:'M109 39H117L128 49H107ZM96 43H104V52H95ZM70 45H86V58H70ZM92 43V65M63 34H81M75 63H119M10 28H24M17 21V36M66 76H70M131 76H135'}
 };
 export function classify(unit){
  const text=`${unit.name||''} ${unit.category||''}`.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();

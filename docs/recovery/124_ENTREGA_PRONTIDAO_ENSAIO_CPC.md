@@ -65,6 +65,8 @@ Console do mapa sem avisos/erros capturados. Em 320 px, documento com 320 px e p
 
 Não houve migração/reinício do principal 8787, alteração do DB3K, PDF, ZIP ou frontend extraído original. Os dados/processos anteriores foram preservados. A sincronização documental/de código para `C:/Users/bozoc/Documents/siscan` não atualiza as rotas importadas por um processo Python antigo.
 
+Sincronização concluída: 18 arquivos conferidos previamente contra a base Git `6354781` e comparados byte a byte no destino, com `siscan-prototype/` mapeado para `prototype/`. Links relativos dos documentos conferidos e hashes dos planos anteriores `tasks/plan.md` e `tasks/todo.md` preservados. Commits sequenciais na branch `codex/initial-siscan`, no repositório autorizado `bozocf-hash/siscan`; bancos, originais e captura não integram a versão.
+
 ## Continuidade
 
 Permanecem necessários: política de ações/alvos/iniciativa, resolvedor de múltiplos meios, adaptação geográfica explícita, parâmetros/dados validados para cada domínio, contabilização defensiva aplicável, tradução do ensaio em proposta e proveniência durável própria. A decisão oficial continua sempre com o instrutor. O formulário não persiste perfis nem converte seu preenchimento em aprovação de dados técnicos.

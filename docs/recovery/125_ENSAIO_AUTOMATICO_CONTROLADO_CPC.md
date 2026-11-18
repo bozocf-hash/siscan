@@ -24,8 +24,8 @@ Controles de execução somente após prontidão positiva; nenhum estoque/ordem 
 
 ## Tarefas e aceites
 
-- [ ] AUTO-RUN-01: testes primeiro; adaptador do motor com validação de política, limite, hashes e reprodução; nenhuma mutação de domínio ou RNG global.
-- [ ] AUTO-RUN-02: HTTP protegido; pronta/incompleta/inválida/conflito/revogação/fonte indisponível, sem migração ou reinício principal.
+- [x] AUTO-RUN-01: testes primeiro; adaptador do motor com validação de política, limite, hashes e reprodução; nenhuma mutação de domínio ou RNG global. Oito testes de serviço passaram.
+- [x] AUTO-RUN-02: HTTP protegido; validação, conflito/revogação/fonte indisponível, sem migração ou reinício principal. Três testes HTTP passaram, incluindo comparação integral do banco antes/depois.
 - [ ] AUTO-RUN-03: execução e resumo no painel atual; edição e respostas atrasadas invalidadas; download transitório.
 - [ ] AUTO-RUN-04: navegador isolado, regressões, documentação, sincronização protegida e commits no repositório autorizado.
 

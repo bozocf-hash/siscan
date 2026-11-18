@@ -32,6 +32,7 @@ import map_groups
 import cpc_map
 import cpc_judgment
 import cpc_readiness
+import cpc_controlled_trial
 from unit_groups import GroupConflict, RegistroGrupamentos
 import mimetypes
 
@@ -562,6 +563,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.judgment_action(db,user,payload)
             elif path == '/api/cpc/trial-readiness':
                 self.cpc_readiness_action(db,user,payload)
+            elif path == '/api/cpc/controlled-trial':
+                self.cpc_controlled_trial_action(db,user,payload)
             elif path == '/api/cpc/preparations':
                 if urlparse(self.path).query:
                     self.send_json(400, {'error': 'Esta preparação não aceita parâmetros na URL.'})
@@ -634,6 +637,17 @@ class Handler(BaseHTTPRequestHandler):
         except PermissionError as exc:self.send_json(403,{'error':str(exc)})
         except (GroupConflict,cpc_judgment.state.Conflict) as exc:self.send_json(409,{'error':str(exc)})
         except KeyError:self.send_json(404,{'error':'Referência de prontidão não encontrada neste contexto.'})
+        except (ValueError,TypeError) as exc:self.send_json(400,{'error':str(exc)})
+        except sqlite3.Error:self.send_json(503,{'error':'Fonte ou estado indisponível; confira armazenamento e integridade.'})
+
+    def cpc_controlled_trial_action(self,db,user,payload):
+        try:
+            cpc_judgment.state.autorizar_instrutor(db,user,write=True)
+            if urlparse(self.path).query:raise ValueError('Este ensaio não aceita parâmetros na URL.')
+            self.send_json(200,cpc_controlled_trial.executar_ensaio(db,user,self.server.unit_group_registry,payload))
+        except PermissionError as exc:self.send_json(403,{'error':str(exc)})
+        except (GroupConflict,cpc_judgment.state.Conflict) as exc:self.send_json(409,{'error':str(exc)})
+        except KeyError:self.send_json(404,{'error':'Referência do ensaio não encontrada neste contexto.'})
         except (ValueError,TypeError) as exc:self.send_json(400,{'error':str(exc)})
         except sqlite3.Error:self.send_json(503,{'error':'Fonte ou estado indisponível; confira armazenamento e integridade.'})
 

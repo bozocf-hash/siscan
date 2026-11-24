@@ -1,5 +1,7 @@
 # 127 — Comprovação de unidades, escalas e condições de combustível
 
+**Complemento posterior — 2026-11-24:** [128](128_CONFERENCIA_VISUAL_COMBUSTIVEL_HORNET_NITEROI.md) registra novas capturas, comparação Hornet/882 e Niterói/1351 no 498/498a/compilação, capacidade do Hornet em kg, escala de combustíveis navais e vinte pontos. As limitações de acesso/capacidade abaixo descrevem a execução de 18/11. Sem homologação global ou promoção automática.
+
 **2026-11-18 · Comprovação amostral e diagnóstico entregues; homologação física global pendente.** Continuidade autorizada após 126; novas solicitações de aprovação da skill dispensadas pelo responsável. Essa dispensa não homologa unidades por inferência. Originais e estado operacional preservados.
 
 ## Método e escopo

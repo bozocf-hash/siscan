@@ -1,5 +1,7 @@
 # Mapa de capacidades — conclusão do backend SISCAN
 
+**2026-11-24 — evidência visual de combustível:** [128](docs/recovery/128_CONFERENCIA_VISUAL_COMBUSTIVEL_HORNET_NITEROI.md) associa capturas do Hornet/882 e Niterói/1351 a 32 registros idênticos no 498/498a/compilação. Vinte pontos discretos e três capacidades/escalas conferidos; sem alteração de código operacional, saldo, aprovação ou promoção global. Complementa os limites históricos de 127.
+
 **Estado: Fase 0 original aprovada pelo responsável em 2026-11-11**, por resposta expressa “aprovado”. Complemento de confronto/estado operativo registrado posteriormente em [80](docs/recovery/80_CONFRONTO_FORCAS_E_ESTADO_OPERATIVO.md), por nova instrução expressa, com faixas confirmadas. A decomposição/dependências desse complemento ficam propostas para revisão; preservadas as aprovações das capacidades anteriores e de `technical-catalog`. Não aprova automaticamente especificações individuais, valores Command ou implementação.
 
 ## Premissas e base documental

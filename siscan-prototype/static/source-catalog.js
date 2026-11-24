@@ -78,6 +78,27 @@ function renderTechnicalCatalog(parent) {
         image.addEventListener("error",()=>figure.replaceChildren(el("p",{class:"photo-empty",text:"Imagem local não disponível."})),{once:true});viewer.append(figure);
       } else viewer.append(el("div",{class:"photo-empty",text:"Sem imagem local para este registro"}));
       const body=el("div",{class:"platform-body"});
+      if(recordTable in categories) {
+        const team=el("select",{"aria-label":"Partido destinatário"},[el("option",{value:"AZUL",text:"AZUL"}),el("option",{value:"VERMELHO",text:"VERMELHO"})]);
+        const quantity=el("input",{type:"number",min:"1",max:"50",value:"1","aria-label":"Quantidade de exemplares"});
+        const status=el("p",{role:"status",class:"muted",text:"Disponível para planejamento. Cálculo técnico pendente; saldo atual não definido."});
+        const submit=el("button",{type:"submit",class:"btn btn-secondary",text:"Disponibilizar ao partido"});
+        const form=el("form",{class:"dossier-section"},[el("h3",{text:"Planejamento do exercício"}),el("label",{text:"Partido "},[team]),el("label",{text:" Exemplares "},[quantity]),submit,status]);
+        let intent=null;
+        form.addEventListener("submit",async event=>{
+          event.preventDefault();
+          const request={table:recordTable,id:String(id),team:team.value,quantity:Number(quantity.value)};
+          const key=JSON.stringify(request);
+          if(intent?.key!==key)intent={key,command_id:crypto.randomUUID()};
+          submit.disabled=true;status.textContent="Disponibilizando exemplares…";
+          try {
+            const result=await api("/api/planning-catalog/allocate",{...request,command_id:intent.command_id});
+            status.textContent=`${result.asset_ids.length} exemplar(es) disponível(is) ao partido ${result.team}. Abra o mapa para plotar e compor grupamentos navais/aéreos. Cálculo técnico pendente.`;
+            team.disabled=true;quantity.disabled=true;submit.textContent="Exemplares disponibilizados";
+          }catch(error){status.textContent=error.message;submit.disabled=false;}
+        });
+        body.append(form);
+      }
       body.append(el("p",{class:"source-caveat",text:"Valores originais. As unidades identificam evidências amostrais ou referências documentais; as pendentes são indicadas em cada campo. Consulte Unidades e evidências desta ficha para os limites."}));
       const primary=Object.entries(fields).filter(([key])=>key in labels);
       body.append(el("section",{class:"dossier-section"},[el("h3",{text:"Dados gerais"}),fieldList(primary,data.domains,data.measurements)]));

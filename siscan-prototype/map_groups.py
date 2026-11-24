@@ -4,6 +4,7 @@ import uuid
 
 import engine_units
 import map_units
+import planning_catalog
 
 WARNING = 'Grupamentos temporários: composições e histórico se perdem ao reiniciar o servidor.'
 
@@ -31,10 +32,11 @@ def view(db, user: dict, team: str) -> dict:
         assets = map_units.listing(db, user, team)['units']
         instances = {u['asset_id']: u for u in engine_units.list_units(db, user)['units']
                      if u['team'] == team and u['allocated']}
+        instances.update(planning_catalog.instances(db,user,team))
         inventory, units = {}, []
         for asset in assets:
             instance = instances.get(asset['id'])
-            evidence = _controlled_domain(db, instance) if instance else None
+            evidence = (instance.get('domain_evidence') or _controlled_domain(db, instance)) if instance else None
             item = dict(asset_id=asset['id'], unit_id=instance['unit_id'] if instance else None,
                         code=asset['code'], name=asset['name'], latitude=asset['latitude'],
                         longitude=asset['longitude'], position_revision=asset['position_revision'],

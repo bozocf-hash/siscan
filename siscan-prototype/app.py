@@ -20,6 +20,7 @@ from urllib.parse import parse_qs, urlparse
 from tools.register_source_references import REFERENCE_SCHEMA
 from tools.import_technical_values import TECHNICAL_SCHEMA
 import source_catalog
+import planning_catalog
 import resource_store
 import engine_input
 import engine_units
@@ -183,6 +184,7 @@ CREATE INDEX IF NOT EXISTS idx_events_exercise ON events(exercise_id,created_at)
 SCHEMA += REFERENCE_SCHEMA
 SCHEMA += TECHNICAL_SCHEMA
 SCHEMA += engine_units.SCHEMA
+SCHEMA += planning_catalog.SCHEMA
 SCHEMA += engine_runtime.SCHEMA
 SCHEMA += engine_continuity.SCHEMA
 SCHEMA += fuel_limits.SCHEMA
@@ -537,6 +539,13 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/logout":
                 db.execute("DELETE FROM sessions WHERE token_hash=?", (session["token_hash"],))
                 self.send_json(HTTPStatus.OK, {"ok": True}, cookie=f"{COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0")
+            elif path == '/api/planning-catalog/allocate':
+                try:
+                    self.send_json(200,planning_catalog.create(db,user,COMPILED_DB_PATH,payload))
+                except PermissionError as exc:self.send_json(403,{'error':str(exc)})
+                except engine_runtime.Conflict as exc:self.send_json(409,{'error':str(exc)})
+                except ValueError as exc:self.send_json(400,{'error':str(exc)})
+                except (sqlite3.Error,OSError):self.send_json(503,{'error':'Catálogo indisponível; nenhum exemplar parcial mantido.'})
             elif path == "/api/submission":
                 self.save_submission(db, user, payload)
             elif path == "/api/review":

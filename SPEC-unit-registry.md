@@ -1,5 +1,7 @@
 # Spec: unit-registry — composição versionada de grupamentos
 
+**Incremento autorizado e entregue em 2026-11-24 — [129](docs/recovery/129_CATALOGO_PARA_PLANEJAMENTO_E_GRUPAMENTOS.md):** exemplares de planejamento derivados da compilação podem integrar grupos navais/aéreos sem prontidão física. Provedor `planning_catalog` conserva hash/tabela/ID e snapshot imutável com prontidão falsa; adjudicação ao partido permanece necessária. Grupos continuam em memória; instâncias/posições são persistidas. Essa extensão amplia as referências descritivas aceitas na composição e não promove atributos reais para cálculo ou substitui a arbitragem.
+
 **Estado: especificação aprovada e recorte implementado em 2026-11-16.** Escopo, especificação, plano e tarefas foram aprovados em interações distintas; a lista de Fase 3 recebeu “sim”. [Plano](tasks/unit-registry/plan.md) e [tarefas](tasks/unit-registry/todo.md) preservam o trabalho aberto de `technical-catalog`. Entrega e evidências em [93](docs/recovery/93_ENTREGA_GRUPAMENTOS_EM_MEMORIA.md), sem API/banco ou integração física.
 
 **Recorte 2 implementado e verificado em 2026-11-16:** especificação, plano e tarefas aprovados; entrega em [102](docs/recovery/102_ENTREGA_GRUPAMENTOS_NO_MAPA.md). Composição/consulta gráfica no mapa ATLANTICADOR já definido, sem confronto integrado. Roteiro do instrutor em [103](docs/recovery/103_ROTEIRO_DO_INSTRUTOR_DISPOSICAO_E_CONFRONTO.md). Entrega 93 preservada.

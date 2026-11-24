@@ -1,5 +1,7 @@
 # Mapa de capacidades — conclusão do backend SISCAN
 
+**2026-11-24 — catálogo para planejamento entregue:** [129](docs/recovery/129_CATALOGO_PARA_PLANEJAMENTO_E_GRUPAMENTOS.md) liga seleção de plataforma, criação de exemplares/adjudicação por partido, plotagem e composição naval/aérea. Disponibilidade de planejamento separada da prontidão de cálculo; não promove dados técnicos. 44 scripts Python, 20 testes JS e percurso real no mapa passaram. Instâncias persistem; persistência de grupamentos continua pendente. Principal e planos anteriores preservados.
+
 **2026-11-24 — evidência visual de combustível:** [128](docs/recovery/128_CONFERENCIA_VISUAL_COMBUSTIVEL_HORNET_NITEROI.md) associa capturas do Hornet/882 e Niterói/1351 a 32 registros idênticos no 498/498a/compilação. Vinte pontos discretos e três capacidades/escalas conferidos; sem alteração de código operacional, saldo, aprovação ou promoção global. Complementa os limites históricos de 127.
 
 **Estado: Fase 0 original aprovada pelo responsável em 2026-11-11**, por resposta expressa “aprovado”. Complemento de confronto/estado operativo registrado posteriormente em [80](docs/recovery/80_CONFRONTO_FORCAS_E_ESTADO_OPERATIVO.md), por nova instrução expressa, com faixas confirmadas. A decomposição/dependências desse complemento ficam propostas para revisão; preservadas as aprovações das capacidades anteriores e de `technical-catalog`. Não aprova automaticamente especificações individuais, valores Command ou implementação.
